@@ -1,0 +1,320 @@
+<header>
+</header>
+
+<div class="loader" *ngIf="sloader == 1"></div>
+<div class="no-print title">
+    <!-- RELATÓRIO DE PRODUTOS DE ORDEM DE SERVIÇO -->
+    RELATÓRIOS
+</div>
+<mat-tab-group dynamicHeight dynamicWidth [(selectedIndex)]="tabindex">
+    <ng-container>
+        <mat-tab label="Produtos de ordens de serviço">
+            <form [formGroup]="buscaForm" style="padding-left: 3%;">
+                <div class="row no-print" style="padding-top: 2%; width: 50%;">
+                    <div class="col-md-6">
+                        De:
+                        <input class="form-control" formControlName="dtinicio" type="date" min="1800-12-31"
+                            max="2999-12-31" placeholder="DD/MM/AAAA">
+                    </div>
+                    <div class="col-md-6">
+                        Até:
+                        <input class="form-control" formControlName="dtfim" type="date" min="1800-12-31"
+                            max="2999-12-31" placeholder="DD/MM/AAAA">
+                    </div>
+                </div>
+                <div class="row no-print" style="padding-top: 2%; width: 50%;">
+                    <div class="col-md-6">
+                        <a>Tipo de data:</a>
+                        <select class="form-control" formControlName="tipodata" required>
+                            <option value="data_entrega" selected>Data de entrega</option>
+                            <option value="data_recebimento">Data de recebimento</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <a>Unidade:</a>
+                        <select class="form-control" id="inputunidade" formControlName="unidade" required>
+                            <option value="todas" selected>Todas</option>
+                            <option value="ODC Nova Iguaçu I (Centro)">ODC Nova Iguaçu I
+                                (Centro)
+                            </option>
+                            <option value="ODC Nova Iguaçu II (Centro)">ODC Nova Iguaçu II
+                                (Centro)
+                            </option>
+                            <option value="ODC Nova Iguaçu III (Centro)">ODC Nova Iguaçu III
+                                (Centro)
+                            </option>
+                            <option value="ODC Nova Iguaçu IV (Centro)">ODC Nova Iguaçu IV
+                                (Centro)
+                            </option>
+                            <option value="ODC Belford Roxo (Centro)">ODC Belford Roxo
+                                (Centro)
+                            </option>
+                            <option value="ODC São João de Meriti (Centro)">ODC São João de
+                                Meriti
+                                (Centro)</option>
+                            <option value="ODC Vilar dos Teles (Centro)">ODC Vilar dos Teles
+                                (Centro)</option>
+                            <option value="ODC Pavuna (Centro)">ODC Pavuna
+                                (Centro)</option>
+                            <option value="Partmed">Partmed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row no-print" style="padding-top: 1%; width: 100%;">
+                    <div class="col-md-3">
+                        Laboratório:
+                        <select class="form-control" (change)="inputLab()" formControlName="laboratorio" type="text">
+                            <option value="todos">TODOS</option>
+                            <ng-container *ngFor="let f of laboratorios; let i = index">
+                                <option value="{{f.nome}}">{{f.nome}}</option>
+                            </ng-container>
+                            <option value="outro">OUTRO</option>
+                        </select>
+                    </div>
+                    <ng-container *ngIf="showlabinput == 1 ">
+                        <div class="col-md-3">
+                            Digite o nome do laboratório
+                            <input class="form-control" formControlName="labinput" type="text">
+                        </div>
+                    </ng-container>
+                </div>
+
+                <button class="no-print btn btn-primary"
+                    style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;" (click)="getOs()">Buscar</button>
+                <!-- <button class="no-print btn btn-primary" style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                        (click)="download()">Download?</button> -->
+            </form>
+            <div id="printarea" *ngIf="prodoslist.length > 0">
+                <div class="pa">
+                    <div style="margin-bottom: 12px;margin-top: 12px; width: 100%;">
+                        <div class="row" style="margin-left: 12px;">
+                            <b>RELATÓRIO DE PRODUTOS DE ORDENS DE SERVIÇOS</b>
+                        </div>
+                        <div class="row" style="margin-left: 12px;">
+                            <div class="col-md-4">
+                                PERÍODO: {{dta | date:'dd/MM/yyyy'}} A {{dtb |
+                                date:'dd/MM/yyyy'}}
+                            </div>
+                            <div class="col-md-1">
+                                QTD:
+                            </div>
+                            <div class="col-md-3">
+                                {{count}}
+                            </div>
+                        </div>
+                        <div class="row" style="margin-left: 12px;">
+                            <div class="col-md-4">
+                                EMISSAO: {{thisday | date: 'dd/MM/yyyy'}} ÀS {{thisday | date: 'HH:mm'}}
+                            </div>
+                            <div class="col-md-1">
+                                Total:
+                            </div>
+                            <div class="col-md-3">
+                                {{total | currency}}
+                            </div>
+                        </div>
+                        <div class="row" style="margin-left: 12px; margin-top: 4px; margin-bottom: 4px;">
+                            <button class="no-print btn btn-primary" style="margin-right: 2%;"
+                                (click)="print()">Imprimir</button>
+                            <button class="no-print btn btn-success" (click)="download()">Exportar
+                                CSV</button>
+
+                        </div>
+                    </div>
+                    <!-- <ng-container *ngFor="let v of vendalist; let i = index">
+                    </ng-container> -->
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="pad lfont" style="border-bottom: solid 1px;" scope="col">Nº OS</th>
+                                <th class="pad lfont" style="border-bottom: solid 1px;" scope="col">DOC ODC</th>
+                                <th class="pad lfont" style="border-bottom: solid 1px;" scope="col">LAB</th>
+                                <th class="pad lfont" style="border-bottom: solid 1px;" scope="col">PACIENTE</th>
+                                <th class="pad lfont" style="border-bottom: solid 1px;" scope="col">CPF</th>
+                                <th class="pad lfont" style="border-bottom: solid 1px;" scope="col">PRODUTO</th>
+                                <th class="pad lfont" style="border-bottom: solid 1px;" scope="col">VALOR</th>
+                                <th class="pad lfont" style="border-bottom: solid 1px;" scope="col">QTD</th>
+                                <th class="pad lfont" style="border-bottom: solid 1px;" scope="col">TOTAL</th>
+                                <th class="pad lfont" style="border-bottom: solid 1px;" scope="col">DATA ENTREGA</th>
+                                <th class="pad lfont" style="border-bottom: solid 1px;" scope="col">DATA RECEB</th>
+                                <th class="pad lfont" style="border-bottom: solid 1px;" scope="col">UNIDADE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let v of prodoslist; let i = index">
+                                <td class="pad" style="border: solid 1px;">{{v.idos}}</td>
+                                <td class="pad" style="border: solid 1px;">{{v.documento}}</td>
+                                <td class="pad" style="border: solid 1px;">{{v.laboratorio}}</td>
+                                <td class="pad" style="border: solid 1px;">{{v.paciente | uppercase}}</td>
+                                <td class="pad" style="border: solid 1px;">{{v.cpf}}</td>
+                                <td class="pad" style="border: solid 1px;">{{v.produto | uppercase}}</td>
+                                <td class="pad" style="border: solid 1px;">{{v.valor | currency}}</td>
+                                <td class="pad" style="border: solid 1px;">{{v.qtd}}</td>
+                                <td class="pad" style="border: solid 1px;">{{v.total | currency}}</td>
+                                <td class="pad" style="border: solid 1px;">{{v.data_entrega | date:'dd/MM/yyyy'}}</td>
+                                <td class="pad" style="border: solid 1px;">{{v.data_recebimento | date:'dd/MM/yyyy'}}
+                                </td>
+                                <td class="pad" style="border: solid 1px;">{{v.unidade | uppercase}}</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </mat-tab>
+    </ng-container>
+    <ng-container>
+        <mat-tab label="Protocolos de entrega">
+            <form [formGroup]="protEntrForm" style="padding-left: 3%;">
+                <div class="row no-print" style="padding-top: 2%; width: 50%;">
+                    <div class="col-md-6">
+                        Data:
+                        <input class="form-control" formControlName="dt" type="date" min="1800-12-31" max="2999-12-31"
+                            placeholder="DD/MM/AAAA">
+                    </div>
+                </div>
+                <!-- <div class="row no-print" style="padding-top: 2%; width: 50%;">
+                    <div class="col-md-6">
+                        <a>Tipo de data:</a>
+                        <select class="form-control" formControlName="tipodata" required>
+                            <option value="data_entrega" selected>Data de entrega</option>
+                            <option value="data_recebimento">Data de recebimento</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <a>Unidade:</a>
+                        <select class="form-control" id="inputunidade" formControlName="unidade" required>
+                            <option value="todas" selected>Todas</option>
+<option value="ODC Nova Iguaçu I (Centro)">ODC Nova Iguaçu I
+                                (Centro)
+                            </option>
+                            <option value="ODC Nova Iguaçu II (Centro)">ODC Nova Iguaçu II
+                                (Centro)
+                            </option>
+                            <option value="ODC Nova Iguaçu III (Centro)">ODC Nova Iguaçu III
+                                (Centro)
+                            </option>
+                            <option value="ODC Nova Iguaçu IV (Centro)">ODC Nova Iguaçu IV
+                                (Centro)
+                            </option>
+                            <option value="ODC Belford Roxo (Centro)">ODC Belford Roxo
+                                (Centro)
+                            </option>
+                            <option value="ODC São João de Meriti (Centro)">ODC São João de
+                                Meriti
+                                (Centro)</option>
+                            <option value="ODC Vilar dos Teles (Centro)">ODC Vilar dos Teles
+                                (Centro)</option>
+        <option value="ODC Pavuna (Centro)">ODC Pavuna
+                                (Centro)</option>
+                            <option value="Partmed">Partmed</option>
+                        </select>
+                    </div>
+                </div> -->
+                <div class="row no-print" style="padding-top: 1%; width: 100%;">
+                    <div class="col-md-3">
+                        Laboratório:
+                        <select class="form-control" formControlName="laboratorio" type="text">
+                            <!-- <option value="todos">TODOS</option> -->
+                            <ng-container *ngFor="let f of laboratorios; let i = index">
+                                <option value="{{f.nome}}">{{f.nome | uppercase}}</option>
+                            </ng-container>
+                            <!-- <option value="outro">OUTRO</option> -->
+                        </select>
+                    </div>
+                    <!-- <ng-container *ngIf="showlabinput == 1 ">
+                        <div class="col-md-3">
+                            Digite o nome do laboratório
+                            <input class="form-control" formControlName="labinput" type="text">
+                        </div>
+                    </ng-container> -->
+                </div>
+
+                <button class="no-print btn btn-primary"
+                    style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                    (click)="getOsB()">Buscar</button>
+                <ng-container *ngIf="prodosblist.length > 0">
+                    <button class="no-print btn btn-primary"
+                        style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                        (click)="printProtOs()">Imprimir</button>
+                    <!-- <button class="no-print btn btn-primary"
+                        style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                        (click)="printProtOsB()">Imprimir TST</button> -->
+                </ng-container>
+
+                <!-- <button class="no-print btn btn-primary" style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                        (click)="download()">Download?</button> -->
+            </form>
+            <ng-container *ngIf="prodosblist.length > 0">
+                <div id="printprot">
+                    <div id="container">
+                        <div class="row">
+                            <img *ngIf="user.unidade != 'Partmed'" src="assets/images/odclogo.png" style="float:left;">
+                            <img *ngIf="user.unidade == 'Partmed'" src="assets/images/logopartmed.png"
+                                style="float:right;">
+                            <!-- <img *ngIf="user.financiador != 'BANCO JF'" src="/assets/images/odclogo.png" style="float:left;">
+                <img *ngIf="user.financiador == 'BANCO JF'" src="/assets/images/jflogo.png" style="float:left;"> -->
+                        </div>
+                        <div class="lmarg0 row" style="justify-content: center; font-size: large; margin-bottom: 30px;">
+                            <b>PROTOCOLO DE ENTREGA</b>
+                        </div>
+                        <div class="lmarg0 row" style="margin-bottom: 120px;">
+                            DECLARO PARA OS DEVIDOS FINS ESTAR CIENTE QUE OS PRODUTOS LISTADOS ABAIXO FORAM COLETADOS.
+                        </div>
+                        <div class="lmarg0 row" style="margin-bottom: 30px;">
+                            <div class="col-md-6" style="padding-left: 0px; padding-right: 0px;">
+                                <div style="position: absolute;bottom: 20px;">
+                                    {{endereco}} <br>
+                                    {{bairro}} | {{ciduf}} <br>
+                                    {{tel}} <br>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="padding-left: 0px; padding-right: 0px;text-align: end;">
+                                {{cidade}}, {{dia | date: 'dd'}} de {{dia | date: 'MMMM'}} de
+                                {{dia | date: 'yyyy'}}.<br><br><br><br>
+                                _______________________________________________________<br>
+                                RESPONSÁVEL PELA COLETA
+                            </div>
+                        </div>
+                        <div class="lmarg5 row" style="margin-bottom: 5px;">
+                            TOTAL:&nbsp;<b>{{countb}}</b>&nbsp;PRODUTO<ng-container *ngIf="countb > 1">S
+                            </ng-container>
+                        </div>
+                        <ng-container *ngFor="let a of prodosblist; let ai = index">
+                            <div class="lmarg5 w100 row"
+                                style="border: solid 1px; margin-bottom: 10px; break-inside: avoid;">
+                                <div class="lmarg0 w100 row" style="border-bottom: solid 1px; font-weight: bold">
+                                    <div class="lpad5 rborder col-md-3">
+                                        Ordem de serviço nº: {{a.idos}}
+                                    </div>
+                                    <div class="lpad5 rborder col-md-5">
+                                        Paciente: {{a.paciente | uppercase}}
+                                    </div>
+                                    <div class="lpad5 col-md-4">
+                                        CPF: {{a.cpf | mask:'999.999.999-99'}}
+                                    </div>
+                                </div>
+                                <ng-container *ngFor="let b of prodosblist[ai]; let bi = index">
+                                    <div class="lmarg0 w100 row"
+                                        [ngClass]="{'ulrow' : bi != (prodosblist[ai].length - 1)}">
+                                        <div class="lpad5 rborder col-md-7">
+                                            {{b.produto | uppercase}}
+                                        </div>
+                                        <div class="lpad5 rborder col-md-1" style="text-align: center;">
+                                            QTD: {{b.qtd}}
+                                        </div>
+                                        <div class="lpad5 col-md-4">
+                                            Data prevista de entrega: {{b.data_entrega | date: 'dd/MM/yyyy'}}
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </div>
+             
+                </div>
+            </ng-container>
+        </mat-tab>
+    </ng-container>
+
+</mat-tab-group>

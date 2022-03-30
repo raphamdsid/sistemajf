@@ -1,0 +1,57 @@
+.center {
+    text-align: center;
+    padding: 1%;
+}
+.btnd {
+    height: 100%;
+    padding: 5.7px;
+    width: 100%;
+    border-radius: 0px;
+}
+// .fixrow {
+//     // height: 45px;
+// }
+
+// .fixtxt {
+//     position: relative;
+//     // left: 10%;
+//     // right: 10%;
+//     top: 20%;
+//     text-transform: none;
+// }
+
+.fixtxtdt {
+    position: relative;
+    // left: 10%;
+    // right: 10%;
+    // top: 20%;
+    text-transform: none;
+    text-decoration: none;
+}
+
+.fixtxt {
+    position: relative;
+    // left: 10%;
+    // right: 10%;
+    // top: 20%;
+    text-transform: none;
+    text-decoration: none;
+    color: black;
+}
+.loader {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background-image: url(/assets/images/loader.gif);
+    background-repeat: no-repeat;
+    background-size: 50%;
+    background-attachment: fixed;
+    background-position: center;
+    background-color: white;
+    // background: url(http://sistema.grupojf.com.br/assets/images/loader.gif)
+    //             50% 50% no-repeat rgb(249,249,249);
+    opacity: 0.5;
+}

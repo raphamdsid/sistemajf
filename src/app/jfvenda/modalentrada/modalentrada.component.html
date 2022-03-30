@@ -1,0 +1,101 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<h1 mat-dialog-title style="text-align: center;">Nova Entrada</h1>
+<div>
+    <form [formGroup]="newEntForm" autocomplete="off">
+        <div class="row" style=" justify-content: center; margin-top: 4%;">
+            <div class="col-md-3">
+                Tipo de Entrada:
+                <select class="form-control" (change)="resetForm()" formControlName="tipo" type="text" tabindex="21">
+                    <option value="financiado">FINANCIADA</option>
+                    <option value="naofinanciado">NÃO FINANCIADA</option>
+                </select>
+            </div>
+            <ng-container *ngIf="newEntForm.controls['tipo'].value == 'financiado'">
+                <div class="col-md-4">
+                    Nome:
+                    <select class="form-control" formControlName="nome" type="text" tabindex="21">
+                        <ng-container *ngFor="let f of data.financiadores; let fi = index">
+                            <option value="{{f.nome}}">{{f.nome}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    Valor:
+                    <input class="form-control" onfocus="this.select()" formControlName="valor" tabindex="22"
+                        type="text" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                </div>
+                <div class="col-md-3">
+                    Documento Financeiro:
+                    <input class="form-control" onfocus="this.select()" onkeypress='return (event.charCode != 59)'
+                        formControlName="doc" type="text" tabindex="23">
+                </div>
+            </ng-container>
+            <ng-container *ngIf="newEntForm.controls['tipo'].value == 'naofinanciado'">
+                <div class="col-md-4">
+                    Nome:
+                    <select class="form-control" formControlName="nome" type="text" tabindex="21">
+                        <ng-container *ngFor="let e of data.entradas; let i = index">
+                            <option value="{{e.nome}}">{{e.nome}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    Valor:
+                    <input class="form-control" onfocus="this.select()" formControlName="valor" tabindex="22"
+                        type="text" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                </div>
+                <div class="col-md-3" *ngIf="newEntForm.controls['nome'].value == 'CRÉDITO NA CLÍNICA'">
+                    Documento ODC:
+                    <input class="form-control" onfocus="this.select()"
+                        onkeypress='return (event.charCode >= 47 && event.charCode <= 57)'
+                        placeholder="Multiplos contratos separados por /" formControlName="doc" type="text"
+                        tabindex="23">
+                </div>
+            </ng-container>
+        </div>
+        <div class="row" style="margin-top: 5%; justify-content: center;">
+            <div class="col-md-4">
+                <button class="btn btn-primary" style="width:48%; margin-right: 4%;"
+                    (click)="newEntrada()">Adicionar</button>
+                <button class="btn btn-danger" style="width:48%;" (click)="onNoClick()">Fechar</button>
+            </div>
+        </div>
+    </form>
+    <div *ngIf="fentradas.length > 0" style="margin-top: 2%; margin-bottom: 2%;">
+        <div class="row" style="justify-content: center; margin-bottom: 1%;">
+            <div class="col-md-11" style="padding:0">
+                Total de entrada: {{totalentrada | currency}}
+            </div>
+        </div>
+        <div class="row" style="justify-content: center;">
+            <div class="col-md-5"
+                style="padding:7px;border-left:solid;border-top:solid;border-right: solid;border-bottom:solid">
+                <b>NOME</b>
+            </div>
+            <div class="col-md-3" style="padding:7px;border-top:solid;border-bottom:solid;border-right: solid;">
+                <b>VALOR</b>
+            </div>
+            <div class="col-md-2" style="padding:7px;border-top:solid;border-bottom:solid;border-right: solid;">
+                <b>DOC</b>
+            </div>
+            <div class="col-md-1">
+            </div>
+        </div>
+        <ng-container *ngFor="let e of fentradas; let ie = index">
+            <div class="row" style="justify-content: center;">
+                <div class="col-md-5" style="padding:7px;border-left:solid;border-bottom:solid;border-right: solid;">
+                    {{e.nome | uppercase}}
+                </div>
+                <div class="col-md-3" style="padding:7px;border-right: solid;border-bottom:solid;">
+                    {{e.valor | currency}}
+                </div>
+                <div class="col-md-2" style="padding:7px;border-right: solid;border-bottom:solid;">
+                    {{e.cododc}}
+                </div>
+                <div class="col-md-1">
+                    <img class="delbtn" src='assets/images/delete.png' (click)="deleteEntrada(ie)">
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

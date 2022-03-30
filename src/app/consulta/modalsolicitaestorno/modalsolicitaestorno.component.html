@@ -1,0 +1,96 @@
+<div class="loader" *ngIf="sloader == 1"></div>
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<ng-container *ngIf="page == 0">
+    <ng-container *ngIf="data.waitestorno == 0">
+        <h1 mat-dialog-title style="text-align: center;"><a>Solicitar Estorno</a></h1>
+        <div>
+            <form [formGroup]="solicitaEstornoForm" autocomplete="off">
+                <div class="row" style="text-align: left; margin-bottom: 2%;">
+                    <div class="col-md-4">
+                        Valor a ser estornado:
+                        <input onfocus="this.select()" class="form-control" formControlName="valor" tabindex="1"
+                            type="text" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                    </div>
+                    <div class="col-md-5" *ngIf="data.venda.financiador == 'BANCO JF'">
+                        Forma de pagamento do estorno:
+                        <select class="form-control" formControlName="fpag" tabindex="2">
+                            <option value="PIX">PIX</option>
+                            <option value="TRANSFERÊNCIA BANCÁRIA">TRANSFERÊNCIA BANCÁRIA</option>
+                            <option value="CRÉDITO NO CARTÃO">CRÉDITO NO CARTÃO</option>
+                            <option value="DINHEIRO">DINHEIRO</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="text-align: left; margin-bottom: 3%;">
+                    <div class="col-md-12">
+                        Motivo:
+                        <textarea class="form-control" maxlength="200" formControlName="txt" tabindex="3"
+                            style="height: 100px;resize:none">
+
+                    </textarea>
+                    </div>
+                </div>
+                <div class="row" style="justify-content: center;">
+                    <div class="col-md-4" style="display: contents;">
+                        <button style="margin-left:2%;margin-right:2%;" class="btn btn-primary"
+                            (click)="modalSubmit()">Confirmar</button>
+                        <button style="margin-right:2%;margin-left:2%;" class="btn btn-danger"
+                            (click)="onNoClick()">Cancelar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="data.waitestorno == 1">
+        <h1 mat-dialog-title style="text-align: center;"><a>Estorno solicitado</a></h1>
+        <div class="row" style="text-align: left; margin-bottom: 2%;">
+            <div class="col-md-4">
+                Valor a ser estornado:
+                <input class="form-control" type="text" value="{{data.venda.waitestornovalor | currency}}" readonly>
+            </div>
+            <div class="col-md-5" *ngIf="data.venda.financiador == 'BANCO JF'">
+                Forma de pagamento do estorno:
+                <input class="form-control" readonly value="{{data.venda.waitestornofpag | uppercase}}">
+            </div>
+        </div>
+        <div class="row" style="text-align: left; margin-bottom: 2%;">
+            <div class="col-md-4">
+                Solicitante:
+                <input class="form-control" type="text" value="{{data.venda.waitestornouser}}" readonly>
+            </div>
+        </div>
+        <div class="row" style="text-align: left; margin-bottom: 3%;">
+            <div class="col-md-12">
+                Motivo:
+                <textarea class="form-control" readonly
+                    style="height: 100px;resize:none">{{data.venda.waitestornotxt | uppercase}}</textarea>
+            </div>
+        </div>
+        <div class="row" style="justify-content: center;">
+            <div class="col-md-4" style="display: contents;">
+                <button style="margin-left:2%;margin-right:2%;" class="btn btn-success"
+                    (click)="printProposta()">Requerimento</button>
+            </div>
+            <div class="col-md-4" style="display: contents;">
+                <button style="margin-left:2%;margin-right:2%;" class="btn btn-primary" (click)="nextPage()">Cancelar
+                    solicitação</button>
+                <button style="margin-right:2%;margin-left:2%;" class="btn btn-danger"
+                    (click)="onNoClick()">Fechar</button>
+            </div>
+        </div>
+    </ng-container>
+</ng-container>
+<ng-container *ngIf="page == 1">
+    <form [formGroup]="pwdEstornoForm" autocomplete="off">
+        <div class="fill row" style="text-align: center; justify-content: center; font-weight: bold;">
+            <a>INSIRA SUA SENHA PARA CONFIRMAR O CANCELAMENTO</a>
+        </div>
+        <div class="fill row justify-content-center" style="margin-bottom: 2%; margin-top: 1%;">
+            <input type="password" class="form-control" formControlName="pwd" style="width: 30%;">
+        </div>
+        <div class="fill row justify-content-center">
+            <button class="btn btn-success" style="margin-right: 7px;" (click)="verifyPwd()"><a>Confirmar</a></button>
+            <button class="btn btn-danger" (click)="returnPage()"><a>Retornar</a></button>
+        </div>
+    </form>
+</ng-container>

@@ -1,0 +1,96 @@
+.menu {
+  min-height: 60px;
+  color: #fff;
+  font-size: 25px;
+  text-align: left;
+  display: flex;
+  padding: 0 40px;
+  width: 100%;
+  align-content: center;
+  flex-direction: row;
+  justify-content: space-between;
+
+  border-bottom: 1px white solid;
+}
+// a {
+//   color: black;
+//   text-decoration: none;
+// }
+
+.img-fluid {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.menuuser {
+  padding-top: 5%;
+  padding-bottom: 5%;
+  padding-left: 10%;
+  padding-bottom: 3%;
+  color: black;
+  font-size: 15px;
+  border-bottom: solid black 2px;
+  font-size: 12px;
+}
+
+.menurow {
+  padding-top: 5%;
+  padding-bottom: 5%;
+  padding-left: 10%;
+  padding-bottom: 3%;
+  color: black;
+  font-size: 15px;
+  border-bottom: solid black 2px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.userlbltxt {
+  margin-bottom: 0;
+}
+.menurow:hover {
+  background-color: rgba(85, 85, 85, 0.438);
+}
+.sidemenu {
+  background-color: rgba(216, 215, 215, 0.801);
+  border-right: black solid 4px;
+  //position: absolute;
+  height: 100%;
+}
+
+.logoff {
+  border-top: solid black 2px;
+  border-bottom: solid black 2px;
+  text-align: center;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  margin-top: 40%;
+  bottom: 3%;
+  padding-left: 10%;
+  cursor: pointer;
+}
+.logoff:hover {
+  background-color: rgba(216, 72, 72, 0.562);
+}
+.btn-logoff {
+  background: none;
+  border: none;
+}
+.container_img {
+  // width:100%;
+  height: 70%;
+  position: relative;
+  // object-fit: cover;
+  margin-top: 5%;
+}
+.bgimage {
+  //background: url(/assets/images/JF-GRUPO-DEGRADE2-FUNDO-CINZA_RGB.jpg);
+  background-size: 100% 100%;
+}
+.bg {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  // background-size: auto 100%;
+}

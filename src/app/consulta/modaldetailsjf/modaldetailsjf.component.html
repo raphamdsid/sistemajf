@@ -1,0 +1,158 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<h1 mat-dialog-title style="text-align: center; margin: 0px 0 8px;"><a>Detalhes da Venda</a></h1>
+<!-- <div style="text-align:left; overflow-y: auto;"> -->
+<div class="vendrow row" style="border-top: solid 1px;">
+    <div class="vendcol col-md-8">
+        Cliente: <b>{{data.venda.cliente | uppercase}}</b>
+    </div>
+    <div class="lbor vendcol col-md-4">
+        CPF: <b>{{data.venda.cpfpaciente}}</b>
+    </div>
+</div>
+<div class="vendrow row">
+    <div class="vendcol col-md-6">
+        Financiador: <b>{{data.venda.financiador | uppercase}}</b>
+    </div>
+    <ng-container *ngIf="data.venda.isnotfiador == 0">
+        <div class="lbor vendcol col-md-6">
+            Possui fiador? <b>NÃO</b>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="data.venda.isnotfiador == 1">
+        <div class="lbor vendcol col-md-6">
+            Possui fiador? <b>SIM</b>
+        </div>
+    </ng-container>
+</div>
+<ng-container *ngIf="data.venda.isnotfiador == 1">
+    <div class="vendrow row">
+        <div class="vendcol col-md-8">
+            Fiador: <b>{{data.venda.fiador | uppercase}}</b>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            CPF: <b>{{data.venda.cpffiador}}</b>
+        </div>
+    </div>
+</ng-container>
+<div class="vendrow row">
+    <div class="vendcol col-md-6">
+        DOC ODC: <b>{{data.venda.docodc}}</b>
+    </div>
+    <div class="lbor vendcol col-md-6">
+        DOC Financeiro: <b *ngIf="data.venda.financiador == 'BANCO JF'">{{data.venda.id}}</b> <b
+            *ngIf="data.venda.financiador != 'BANCO JF'">{{data.venda.docfinanceiro}}</b>
+    </div>
+</div>
+<ng-container *ngIf="data.venda.financiador != 'BANCO JF'">
+    <div class="vendrow row">
+        <div class="vendcol col-md-4">
+            Valor total: <b>{{data.venda.valortotal | currency}}</b>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            <ng-container *ngIf="data.venda.valoratual < data.venda.valortotal">
+                Valor atual: <b>{{data.venda.valoratual | currency}}</b>
+            </ng-container>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            Parcelamento: <b>{{data.venda.parcela}}X de {{data.venda.valorparcela | currency}}</b>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="data.venda.financiador == 'BANCO JF'">
+    <div class="vendrow row">
+        <div class="vendcol col-md-4">
+            Valor total: <b>{{data.venda.valortotal | currency}}</b>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            <ng-container *ngIf="data.venda.valoratual < data.venda.valortotal">
+                Valor atual: <b>{{data.venda.valoratual | currency}}</b>
+            </ng-container>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            <ng-container *ngIf="data.venda.parcela > 0">
+                Parcelamento: <b>{{data.venda.parcela}}X de {{data.venda.valorparcela | currency}}</b>
+            </ng-container>
+            <ng-container *ngIf="data.venda.parcela == 0">
+                Sem parcelamento
+            </ng-container>
+        </div>
+    </div>
+    <div class="vendrow row">
+        <div class="vendcol col-md-4">
+            Valor Comercial: <b>{{data.venda.valorcomercial | currency}}</b>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            Valor Avaliacao: <b>{{data.venda.valoravaliacao | currency}}</b>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            Valor Tabela: <b>{{data.venda.valortabela | currency}}</b>
+        </div>
+    </div>
+    <div class="vendrow row">
+        <div class="vendcol col-md-6">
+            Cadastrado por: <b>{{data.venda.createdby | uppercase}}</b>
+        </div>
+        <div class="lbor vendcol col-md-6">
+            Unidade: <b>{{data.venda.unidade | uppercase}}</b>
+        </div>
+    </div>
+    <div class="row" style="justify-content: space-around; margin-bottom: 3%; margin-top: 2%;">
+        <div class="col-md-12" style="border-top: solid;">
+            <div class="row"
+                style="justify-content: center; border-bottom: solid; border-right: solid; border-left: solid; background-color: #18f534d9;">
+                <b>PRODUTOS</b>
+            </div>
+            <div class="row" style="background-color: #80808085; border-bottom: solid;">
+                <div class="col-md-2 cols" style="border-left: solid;">
+                    <b>Código</b>
+                </div>
+                <div class="col-md-10 cols" style="border-left: solid; border-right: solid;">
+                    <b>Nome</b>
+                </div>
+            </div>
+            <ng-container *ngFor="let p of data.venda.produtos; let pi = index">
+                <div class="row">
+                    <div class="col-md-2 cols" style="border-bottom: solid; border-left: solid;">
+                        {{p.produto}}
+                    </div>
+                    <div class="col-md-10 cols" style="border-bottom: solid; border-left: solid; border-right: solid;">
+                        {{p.nome | uppercase}}
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="row" style="justify-content: space-around; margin-bottom: 3%; margin-top: 2%;">
+        <div class="col-md-12" style="border-top: solid;" *ngIf="data.venda.entradas.length > 0">
+            <div class="row"
+                style="justify-content: center; border-bottom: solid;border-left: solid; border-right: solid; background-color: #6a5acded;">
+                <b>ENTRADAS</b>
+            </div>
+            <div class="row" style="background-color: #80808085; border-bottom: solid;">
+                <div class="col-md-6 cols" style="border-left: solid;">
+                    <b>Tipo entrada</b>
+                </div>
+                <div class="col-md-3 cols" style="border-left: solid;">
+                    <b>Valor</b>
+                </div>
+                <div class="col-md-3 cols" style="border-left: solid; border-right: solid;">
+                    <b>DOC</b>
+                </div>
+            </div>
+            <ng-container *ngFor="let e of data.venda.entradas; let ei = index">
+                <div class="row">
+                    <div class="col-md-6 cols" style="border-bottom: solid; border-left: solid;">
+                        {{e.nome | uppercase}}
+                    </div>
+                    <div class="col-md-3 cols" style="border-bottom: solid; border-left: solid;">
+                        {{e.valor | currency}}
+                    </div>
+                    <div class="col-md-3 cols" style="border-bottom: solid; border-left: solid; border-right: solid;">
+                        {{e.cododc}}
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</ng-container>
+<!-- </div> -->

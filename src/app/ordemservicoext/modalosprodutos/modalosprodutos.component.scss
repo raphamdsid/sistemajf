@@ -1,0 +1,28 @@
+.delbtn {
+    position: absolute;
+    width: 40px;
+    height: 100%;
+    cursor: pointer;
+}
+.searcharea {
+    position: relative;
+}
+.searchresult {
+    position: absolute;
+    top: 60px;
+    width: 100%;
+    background-color: #fff;
+    z-index: 100;
+}
+.center {
+    margin: auto;
+    width: 100%;
+    border: 1px groove #96d2ee;
+    padding: 10px;
+    border-radius: 5px;
+}
+.center:hover {
+    background-color: rgba(10, 45, 245, 0.158);
+    cursor: pointer;
+    border: 2px solid rgb(10, 45, 245);
+}

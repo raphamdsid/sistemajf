@@ -1,0 +1,372 @@
+<div class="loader" *ngIf="sloader == 1"></div>
+
+<div class="no-print title">
+    CADASTRAR VENDA - PADRÃO
+</div>
+<mat-tab-group dynamicHeight dynamicWidth [(selectedIndex)]="tabindex">
+    <mat-tab label="Venda financiada">
+        <ng-container *ngIf="vendalayout==1">
+            <form [formGroup]="vendaForm" autocomplete="off" style="padding-top: 2%;">
+                <!-- <div class="row" style="margin-bottom: 10px;">
+            Teste nome
+            <input id="idinp" name="nameinp" class="form-control" (keypress)="getkey($event, 'nome')">
+        </div>
+        <div class="row" style="margin-bottom: 10px;">
+            Teste num
+            <input id="idinp" name="nameinp" class="form-control" (keypress)="getkey($event, 'num')">
+        </div> -->
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-md-6">
+                        Nome do Paciente:
+                        <input class="form-control" (focusout)="validNome('cliente')"
+                            (keypress)="getkey($event, 'nome')" formControlName="cliente" type="text" tabindex="1">
+                        <div class="row" style="margin-top: 2px;">
+                            <div class="col">
+                                <label class="form-check-label" style="margin-top: 2px;" for="flexCheckDefault">
+                                    O paciente não é responsável financeiro
+                                </label>
+                                <input class="form-check-input" style="margin-top: 6px; margin-left: 7px;"
+                                    (change)="resetFiador()" formControlName="isnotfiador" type="checkbox" value=""
+                                    id="checkwhats" tabindex="2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <ng-container *ngIf="vendaForm.value.isnotfiador==false">
+                            CPF do Paciente:
+                            <input class="form-control" (keypress)="getkey($event, 'num')" formControlName="cpfpaciente"
+                                type="text" mask="000.000.000-99" tabindex="3" (focusout)="cpfValid(1)" #pacientecpf
+                                placeholder="Apenas números">
+                        </ng-container>
+                        <ng-container *ngIf="vendaForm.value.isnotfiador==true">
+                            CPF do Paciente:
+                            <input class="form-control" (keypress)="getkey($event, 'num')" formControlName="cpfpaciente"
+                                type="text" mask="000.000.000-99" tabindex="3" #pacientecpf
+                                placeholder="Apenas números">
+                        </ng-container>
+                    </div>
+
+                    <!-- <div class="col-md-3">
+                        <img *ngIf="vendaForm.value.financiador=='SANTANDER'" class="bankImg"
+                            src="assets/images/santander.jpg">
+                        <img *ngIf="vendaForm.value.financiador=='DR. CASH'" class="bankImg"
+                            src="assets/images/drcash.jpg">
+                        <img *ngIf="vendaForm.value.financiador=='CREDZ'" class="bankImg" src="assets/images/credz.png">
+                        <img *ngIf="vendaForm.value.financiador=='BRASILCARD'" class="bankImg"
+                            src="assets/images/brasilcard.jpg">
+                        <img *ngIf="vendaForm.value.financiador=='SANTANDER INVISALIGN'" class="bankImg"
+                            src="assets/images/invisalign.png">
+                    </div> -->
+                </div>
+                <div class="row" style="margin-bottom: 10px;">
+                    <ng-container *ngIf="vendaForm.value.isnotfiador==true">
+                        <div class="col-md-6">
+                            Nome do Fiador:
+                            <input class="form-control" (focusout)="validNome('fiador')" formControlName="fiador"
+                                type="text" tabindex="4">
+                        </div>
+                        <div class="col-md-3">
+                            CPF do Fiador:
+                            <input class="form-control" (keypress)="getkey($event, 'num')" formControlName="cpffiador"
+                                type="text" mask="000.000.000-99" tabindex="4" (focusout)="cpfValid(2)" #fiadorcpf
+                                placeholder="Apenas números">
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-md-3">
+                        Financiador:
+                        <select class="form-control" formControlName="financiador" type="text" tabindex="5">
+                            <ng-container *ngFor="let f of financiadores; let i = index">
+                                <option value="{{f.nome}}">{{f.nome}}</option>
+                            </ng-container>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        Valor total:
+                        <input class="form-control" id="valtot" onfocus="this.select()" formControlName="valortotal"
+                            tabindex="6" type="text" (keypress)="getkey($event, 'num')"
+                            (keyup)="checkCoin('valortotal')" currencyMask
+                            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-md-2">
+                        Parcelas:
+                        <input class="form-control" formControlName="parcela" (keypress)="getkey($event, 'num')"
+                            (input)="fixParcela()" type="number" min="1" max="99" tabindex="7">
+                    </div>
+                    <div class="col-md-5">
+                        Doc Proposta Financeira:
+                        <input class="form-control" (keypress)="getkey($event, 'docfin')"
+                            formControlName="docfinanceiro" type="text" tabindex="8">
+                    </div>
+                    <div class="col-md-5">
+                        Doc ODC:
+                        <input class="form-control" (keypress)="getkey($event, 'docodc')"
+                            placeholder="Multiplos contratos separados por /" formControlName="docodc" type="text"
+                            tabindex="9">
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 10px;">
+                    <button class="btn btn-primary" style="margin-left: 15px;margin-top: 5px;"
+                        (click)="saveVenda()">Gravar</button>
+                    <button class="btn btn-danger" style="margin-left: 15px;margin-top: 5px;"
+                        (click)="clearFormVenda()">Limpar</button>
+                </div>
+            </form>
+        </ng-container>
+        <ng-container *ngIf="vendalayout==2">
+            <button style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;" class="no-print btn btn-primary"
+                (click)="printComprovante()">Imprimir</button>
+            <button style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;" class="no-print btn btn-success"
+                (click)="newVenda()">Nova venda</button>
+            <div id="printcomprovante">
+                <ng-container *ngIf="objprint.isnotfiador == false">
+                    <div class="comprovante">
+                        RECIBO DE CADASTRO DE VENDA<br />
+                        Usuário:<br />
+                        <b>{{user.username | uppercase}}</b><br />
+                        <!-- Funcionário:<br />
+                    <b>{{user.nome | uppercase}}</b><br /> -->
+                        Unidade:<br />
+                        <b>{{user.unidade | uppercase}}</b><br />
+                        Data - <b>{{objprint.createdat | date: 'dd/MM/yyyy - HH:mm'}}</b> <br />
+                        *************************<br />
+                        Nome: <br />
+                        <b>{{objprint.cliente | uppercase}}</b><br />
+                        CPF: <br />
+                        <b>{{objprint.cpfpaciente}}</b><br />
+                        Possui fiador? <b>NÃO</b><br />
+                        Financiador:<br />
+                        <b>{{objprint.financiador | uppercase}}</b><br />
+                        Doc Proposta Financeira:<br />
+                        <b>{{objprint.docfinanceiro}}</b><br />
+                        Doc ODC:<br />
+                        <b>{{objprint.docodc}}</b><br />
+                        Valor total:<br />
+                        <b>{{objprint.valortotal | currency}}</b> <br />
+                        Parcelas:<br />
+                        <b>{{objprint.parcela}}</b> <br />
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="objprint.isnotfiador == true">
+                    <div class="comprovante">
+                        RECIBO DE CADASTRO DE VENDA<br />
+                        Usuário:<br />
+                        <b>{{user.username | uppercase}}</b><br />
+                        Funcionário:<br />
+                        <b>{{user.nome | uppercase}}</b><br />
+                        Unidade:<br />
+                        <b>{{user.unidade | uppercase}}</b><br />
+                        Data - <b>{{objprint.createdat | date: 'dd/MM/yyyy - HH:mm'}}</b><br />
+                        *************************<br />
+                        Nome:<br />
+                        <b>{{objprint.cliente | uppercase}}</b><br />
+                        CPF Paciente:<br />
+                        <b>{{objprint.cpfpaciente}}</b><br />
+                        Possui fiador? <b>SIM</b><br />
+                        Fiador:<br />
+                        <b>{{objprint.fiador | uppercase}}</b><br />
+                        CPF Fiador:<br />
+                        <b>{{objprint.cpffiador}}</b><br />
+                        Financiador:<br />
+                        <b>{{objprint.financiador | uppercase}}</b><br />
+                        Doc Proposta Financeira:<br />
+                        <b>{{objprint.docfinanceiro}}</b><br />
+                        Doc ODC:<br />
+                        <b>{{objprint.docodc}}</b><br />
+                        Valor total:<br />
+                        <b>{{objprint.valortotal | currency}}</b><br />
+                        Parcelas:<br />
+                        <b>{{objprint.parcela}}</b> <br />
+                    </div>
+                </ng-container>
+            </div>
+
+        </ng-container>
+    </mat-tab>
+    <mat-tab label="Venda não financiada">
+        <form [formGroup]="nvendaForm" autocomplete="off" style="width: 100%; margin-top: 1%;">
+            <div class="row" style="margin-right: 0px; margin-left: 0px;">
+                <div class="row" style="margin-bottom: 10px;margin-left: 0px;width: 100%;">
+                    <div class="col-md-6">
+                        Nome do Paciente:
+                        <input class="form-control" (focusout)="validNome('cliente')"
+                            (keypress)="getkey($event, 'nome')" formControlName="cliente" type="text" tabindex="1">
+                    </div>
+                    <div class="col-md-3">
+                        CPF do Paciente:
+                        <input class="form-control" formControlName="cpfpaciente" type="text" mask="000.000.000-00"
+                            tabindex="2" #pacientecpf placeholder="Apenas números" (keypress)="getkey($event, 'num')">
+                    </div>
+                    <div class="col-md-3">
+                        DOC ODC:
+                        <input class="form-control" (keypress)="getkey($event,'docodc')"
+                            placeholder="Multiplos contratos separados por /" formControlName="docvenda" type="text"
+                            tabindex="4">
+                    </div>
+                    <!-- <ng-container *ngIf="vendaForm.value.isnotfiador==false">
+                    </ng-container> -->
+                </div>
+                <div class="col-md-9" style="padding-left: 0px;padding-right: 0px;">
+                    <div class="row" style="margin-bottom: 10px;">
+                        <div class="col-md-4 searcharea">
+                            Adicionar produto <a
+                                style="color: red;text-decoration: underline;cursor: pointer; font-size: 10px;"
+                                (click)="showProdList()">[?]</a>
+                            <!-- <button class="btn btn-primary" style="right:0;bottom:0;left:0;"
+                                    (click)="showProdList()"><a style="font-size: 10px;">?</a></button> -->
+                            <input class="form-control" formControlName="buscaproduto" tabindex="7" type="text"
+                                placeholder="CÓDIGO OU DESCRIÇÃO" (keyup)="buscaProduto()">
+                            <div class="searchresult">
+                                <ng-container *ngIf="objbuscap.length > 0 && vendaForm.value.buscaproduto !='' ">
+                                    <div *ngFor="let c of objbuscap; let ci=index" (click)="addProduto(c, ci)"
+                                        class="center"
+                                        style=" border-style: groove; border-width: 1px; margin-bottom: 2px;">
+                                        COD: {{c.produto}} - {{c.nome | uppercase}}
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div class="col-md-1" style="align-self: self-end;">
+                            <button style="font-size: 12px;height: 38px; padding: 0px 13px;"
+                                (click)="procEmergencialModal()" *ngIf="prodemg == 0"
+                                class="btn btn-primary">Procedimento emergencial</button>
+                            <button
+                                style="font-size: 12px;height: 38px; padding: 0px 13px; background-color: gray; border-color: gray;"
+                                *ngIf="prodemg == 1" class="btn btn-primary">Procedimento emergencial</button>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="produtos.length > 0">
+                        <div class="col-md-3">
+                            R$ Avaliação <a *ngIf="discount > 0" style="color: red;">-{{discount}}%</a>
+                            <input onfocus="this.select()" class="form-control" formControlName="valoravaliacao"
+                                tabindex="8" type="text" currencyMask
+                                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                                (focusout)="inputAvaliacao()">
+                        </div>
+
+
+                        <div class="col-md-3">
+                            <ng-container *ngIf="showcontent == 1">Desconto</ng-container>
+                            <input onfocus="this.select()" *ngIf="showcontent == 1" class="form-control"
+                                formControlName="desconto" tabindex="9" type="text" (keypress)="getkey($event, 'num')"
+                                (focusout)="setDesconto()" (keyup)="fixPercentage()" currencyMask
+                                [options]="{ prefix: '', suffix: '%', thousands: '.', decimal: ',' }">
+                        </div>
+
+                        <div class="col-md-3">
+                            R$ no comercial
+                            <input class="form-control" formControlName="valorcomercial" type="text" currencyMask
+                                (change)="setTotFin()" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                                readonly>
+                        </div>
+                        <!-- AQUI -->
+                        <!-- <div class="col-md-1">
+                                    <button class="btn btn-primary" style="position: absolute;right:0;bottom:0;left:0;"
+                                        (click)="showProdList()">?</button>
+                                </div> -->
+                        <!-- AQUI -->
+                    </div>
+                    <div class="row" *ngIf="produtos.length > 0" style="margin-top: 1%;">
+                        <fieldset id="pagfield" *ngIf="showcontent == 1">
+                            <legend style="width: auto; padding: 5px;margin-left: 20px;">Formas de pagamento</legend>
+                            <div class="row" style="justify-content: center; margin-bottom: 20px;">
+                                <div class="col-md-2" style="text-align: center;">
+                                    <button class="btn btn-primary" *ngIf="showcontent == 1"
+                                        style="font-size: 12px;height: 38px; padding: 0px 13px;"
+                                        (click)="showFpag()">Adicionar</button>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="fpagarr.length == 0">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Não há formas de pagamento</label>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="fpagarr.length > 0">
+                                <ng-container *ngFor="let fp of fpagarr; let fpi = index">
+                                    <div class="row"
+                                        style="margin-bottom: 10px;padding-top:10px; border-top: solid 1px; justify-content: space-between; margin-left: 0px; margin-right: 0px;"
+                                        [ngClass]="{'lastrow' : fpi == (fpagarr.length - 1)}">
+                                        <div class="col-md-3">
+                                            {{fp.tipopag | uppercase}}
+                                        </div>
+                                        <div class="col-md-3">
+                                            {{fp.val | currency}}
+                                        </div>
+                                        <div class="col-md-3">
+                                            {{fp.val | currency}}
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                        </fieldset>
+
+
+
+                    </div>
+
+                    <div class="row" *ngIf="produtos.length > 0" style="margin-top: 1%;">
+
+                        <div class="col-md-3"></div>
+                    </div>
+                    <!-- <div class="row" style="margin-bottom: 10px;">
+                                <div class="col">
+                                    Doc Proposta Financeira:
+                                    <input class="form-control" formControlName="docfinanceiro" type="text" tabindex="20">
+                                </div>
+                                <div class="col">
+                                    Doc ODC:
+                                    <input class="form-control" formControlName="docodc" type="text" tabindex="20">
+                                </div>
+                            </div> -->
+                    <div class="row" style="margin-bottom: 10px;">
+                        <button class="btn btn-primary" style="margin-left: 15px;margin-top: 5px;"
+                            (click)="saveVenda()">Gravar</button>
+                        <!-- <button class="btn btn-danger" style="margin-left: 15px;margin-top: 5px;"
+                                    (click)="clearFormVenda()">Limpar</button> -->
+                    </div>
+                </div>
+                <div class="col-md-3" style="margin-top: 5%; padding-right: 3%;">
+                    <!-- <p style="font-weight: bold;">PRODUTOS</p> -->
+                    <!-- <button (click)="objparcelamento()">Calcular resultado:</button> -->
+                    <div *ngFor="let d of produtos; let i = index; ">
+
+                        <div class="row"
+                            style="border-right: solid 1px;border-left: solid 1px;border-top: solid 1px;border-bottom: solid 1px;"
+                            *ngIf="i == 0">
+                            <div class="col-md-1 centercode">
+                                <a style="font-weight: bold">COD</a>
+                            </div>
+                            <div class="col-md-9 centerdesc">
+                                <a style="font-weight: bold; ">PRODUTO</a>
+                            </div>
+                            <div class="col-md-1 dummydelprod">
+
+                            </div>
+                        </div>
+                        <div class="row"
+                            style="min-height:40px; border-right: solid 1px;border-left: solid 1px;border-bottom: solid 1px;">
+                            <div class="col-md-1 centercode">
+                                <a style="font-size: 11px;">{{d.produto}}</a>
+                            </div>
+                            <div class="col-md-9 centerdesc">
+                                <a style="font-size: 11px;">{{d.nome}}</a>
+                            </div>
+                            <!-- <div class="col-md-1">
+                                            <button class="prodlistbtn btn btn-danger">X</button>
+                                        </div> -->
+                            <div class="delprod col-md-1" (click)="excluiProduto(i)">
+                                <img class="delbtn" src='assets/images/delete.png'>
+                                <!-- <a style="font-weight: bold; font-size: large;">X</a> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,996 @@
+<header>
+</header>
+
+<div class="loader" *ngIf="sloader == 1"></div>
+<div class="no-print title">
+    CONSULTA
+</div>
+<mat-tab-group dynamicHeight dynamicWidth [(selectedIndex)]="tabindex">
+    <ng-container *ngIf="role == 'admin' || role == 'comercial' || role == 'gerente'">
+        <mat-tab label="Vendas">
+            <form [formGroup]="buscaForm" style="padding-left: 3%;">
+                <div class="row no-print" style="padding-top: 2%; width: 50%;">
+                    <div class="col-md-6">
+                        De:
+                        <input class="form-control" formControlName="dtinicio" type="date" min="1800-12-31"
+                            max="2999-12-31" placeholder="DD/MM/AAAA">
+                    </div>
+                    <div class="col-md-6">
+                        Até:
+                        <input class="form-control" formControlName="dtfim" type="date" min="1800-12-31"
+                            max="2999-12-31" placeholder="DD/MM/AAAA">
+                    </div>
+                </div>
+                <div class="row no-print" style="padding-top: 1%; width: 50%;">
+                    <div class="col-md-6">
+                        Entre:
+                        <input class="form-control" formControlName="valinicio" type="text" currencyMask
+                            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                    </div>
+                    <div class="col-md-6">
+                        e
+                        <input class="form-control" formControlName="valfim" type="text" currencyMask
+                            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                    </div>
+                </div>
+                <div class="row no-print" style="padding-top: 1%; width: 100%;">
+                    <div class="col-md-3">
+                        CPF:
+                        <input class="form-control" formControlName="cpf" type="text" mask="000.000.000-99"
+                            placeholder="Apenas números">
+                    </div>
+                    <div class="col-md-3">
+                        <a>Unidade:</a>
+                        <select class="form-control" id="inputunidade" formControlName="unidade" required>
+                            <option value="todas" selected>Todas</option>
+                            <ng-container *ngFor="let u of unidlist;let ui = index">
+                                <option value="{{u.val}}">{{u.nome}}</option>
+                            </ng-container>
+                            <!-- <option value="Partmed">Partmed</option>
+                        <option value="Pramelhor">Pramelhor</option> -->
+                            <!-- <option value="Outro local">Outro local</option> -->
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        Financiador:
+                        <select class="form-control" formControlName="financiador" type="text">
+                            <option value="todos">Todos</option>
+                            <option value="BANCO JF">BANCO JF</option>
+                            <ng-container *ngFor="let f of financiadores; let i = index">
+                                <option value="{{f.nome}}">{{f.nome}}</option>
+                            </ng-container>
+                        </select>
+                    </div>
+                </div>
+                <button class="no-print btn btn-primary"
+                    style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                    (click)="getVendas()">Buscar</button>
+                <!-- <button class="no-print btn btn-primary" style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                (click)="download()">Download?</button> -->
+            </form>
+            <ng-container *ngFor="let v of vendalist; let i = index">
+                <ng-container *ngIf="showcomp==0">
+                    <ng-container *ngIf="i==0">
+                        <div class="no-print row" style="margin-left: 5px; margin-bottom: 3px; width: 50%;">
+                            <div class="box green"></div><a style="margin-top: 5px;margin-right: 10px;">Venda ativa</a>
+                            <div class="box orange"></div><a style="margin-top: 5px;margin-right: 10px;">Estorno
+                                parcial</a>
+                            <div class="box red"></div><a style="margin-top: 5px;">Estorno total</a>
+                        </div>
+                    </ng-container>
+                    <div class="no-print" style="width: 99%;margin-left: 0.5%;margin-right: 0.5%;">
+                        <ng-container *ngIf="v.financiador != 'BANCO JF'">
+                            <div class="col-md-12" *ngIf="v.stats=='ativo'"
+                                style="border: solid; margin-bottom: 1%; border-radius: 5px; background-color: #7dff88;">
+                                <div class="row" style="margin-top: 4px;">
+                                    <div class="col-md-4">
+                                        Cliente: <b>{{v.cliente | uppercase}}</b>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <button style="float: right; margin-left: 7px;" class="no-print btn btn-primary"
+                                            (click)="showComprovante(1, i)">Comprovante</button>
+                                        <button
+                                            style="float: right; margin-left: 7px; font-size: 12px;height: 38px;padding: 0px 5px;width: 78px;"
+                                            class="no-print btn btn-danger"
+                                            *ngIf="(role=='gerente' && user.unidade == v.unidade && v.waitestornostatus == 1)"
+                                            (click)="estornaVenda(i)">Estorno Solicitado</button>
+                                        <button style="float: right; margin-left: 7px; width: 78px;"
+                                            class="no-print btn btn-danger"
+                                            *ngIf="(role=='gerente' && user.unidade == v.unidade && v.waitestornostatus == 0)"
+                                            (click)="estornaVenda(i)">Estorno</button>
+                                        <button style="float: right;" class="no-print btn btn-dark"
+                                            *ngIf="role == 'admin'" (click)="editVenda(i)">Editar Venda</button>
+                                        <!-- <button style="float: right;" class="no-print btn btn-success">Nova venda</button> -->
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="v.isnotfiador==0">
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Paciente: {{v.cpfpaciente}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            Possui fiador? <b>NÃO</b>
+                                        </div>
+                                        <!-- <div class="col-md-3">
+                            </div> -->
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="v.isnotfiador==1">
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Paciente: {{v.cpfpaciente}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            Possui fiador? <b>SIM</b>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Fiador: {{v.cpffiador}}
+                                        </div>
+                                        <div class="col-md-8">
+                                            Fiador: <b>{{v.fiador | uppercase}}</b>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Financiador: {{v.financiador | uppercase}}
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        Cadastrado em: {{v.createdat | date:'dd/MM/yyyy'}} às {{v.createdat |
+                                        date:'HH:mm'}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Valor total: {{v.valortotal | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- Valor atual: {{v.valoratual | currency}} -->
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- Valor estornado: {{v.valorestorno | currency}} -->
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Quantidade de parcelas: {{v.parcela}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor das parcelas: {{v.valorparcela | currency}}
+                                    </div>
+
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Doc Proposta Financeira: {{v.docfinanceiro}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        Doc Odontocompany: {{v.docodc}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 4px; margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Usuário: {{v.createdby}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        Unidade: {{v.unidade | uppercase}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" *ngIf="v.stats=='estorno'"
+                                style="border: solid; margin-bottom: 1%; border-radius: 5px; background-color: #ff8181;">
+                                <div class="row" style="margin-top: 4px;">
+                                    <div class="col-md-4">
+                                        Cliente: <b>{{v.cliente | uppercase}}</b>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <button style="float: right; margin-left: 7px;" class="no-print btn btn-primary"
+                                            (click)="showComprovante(1, i)">Comprovante</button>
+                                        <button style="float: right; margin-left: 7px; color: white;"
+                                            class="no-print btn btn-success" *ngIf="role == 'admin'"
+                                            (click)="cancelaEstorno(i)">Cancel. Estorno</button>
+                                        <!-- <button style="float: right;" class="no-print btn btn-dark" *ngIf="role == 'admin'"
+                                (click)="editVenda(i)">Editar Venda</button> -->
+                                        <!-- <button style="float: right;" class="no-print btn btn-success">Nova venda</button> -->
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="v.isnotfiador==0">
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Paciente: {{v.cpfpaciente}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            Possui fiador? <b>NÃO</b>
+                                        </div>
+                                        <!-- <div class="col-md-3">
+                            </div> -->
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="v.isnotfiador==1">
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Paciente: {{v.cpfpaciente}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            Possui fiador? <b>SIM</b>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Fiador: {{v.cpffiador}}
+                                        </div>
+                                        <div class="col-md-8">
+                                            Fiador: <b>{{v.fiador | uppercase}}</b>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Financiador: {{v.financiador | uppercase}}
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        Cadastrado em: {{v.createdat | date:'dd/MM/yyyy'}} às {{v.createdat |
+                                        date:'HH:mm'}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Valor total: {{v.valortotal | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor atual: {{v.valoratual | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor estornado: {{v.valorestorno | currency}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Quantidade de parcelas: {{v.parcela}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor das parcelas: {{v.valorparcela | currency}}
+                                    </div>
+
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Doc Proposta Financeira: {{v.docfinanceiro}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        Doc Odontocompany: {{v.docodc}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 4px; margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Usuário: {{v.createdby}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        Unidade: {{v.unidade | uppercase}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" *ngIf="v.stats=='estorno parcial'"
+                                style="border: solid; margin-bottom: 1%; border-radius: 5px; background-color: #ffdd81;">
+                                <div class="row" style="margin-top: 4px;">
+                                    <div class="col-md-4">
+                                        Cliente: <b>{{v.cliente | uppercase}}</b>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <button style="float: right; margin-left: 7px;" class="no-print btn btn-primary"
+                                            (click)="showComprovante(1, i)">Comprovante</button>
+                                        <button style="float: right; margin-left: 7px; color: white;"
+                                            class="no-print btn btn-success" *ngIf="role == 'admin'"
+                                            (click)="cancelaEstorno(i)">Cancel. Estorno</button>
+                                        <button
+                                            style="float: right; margin-left: 7px; font-size: 12px;height: 38px;padding: 0px 5px;width: 78px;;"
+                                            class="no-print btn btn-danger"
+                                            *ngIf="(role=='gerente' && user.unidade == v.unidade && v.waitestornostatus == 1)"
+                                            (click)="estornaVenda(i)">Estorno Solicitado</button>
+                                        <button style="float: right; margin-left: 7px; width: 78px;;"
+                                            class="no-print btn btn-danger"
+                                            *ngIf="(role=='gerente' && user.unidade == v.unidade && v.waitestornostatus == 0)"
+                                            (click)="estornaVenda(i)">Estorno</button>
+                                        <!-- <button style="float: right;" class="no-print btn btn-dark" *ngIf="role == 'admin'"
+                                (click)="editVenda(i)">Editar Venda</button> -->
+                                        <!-- <button style="float: right;" class="no-print btn btn-success">Nova venda</button> -->
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="v.isnotfiador==0">
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Paciente: {{v.cpfpaciente}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            Possui fiador? <b>NÃO</b>
+                                        </div>
+                                        <!-- <div class="col-md-3">
+                            </div> -->
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="v.isnotfiador==1">
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Paciente: {{v.cpfpaciente}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            Possui fiador? <b>SIM</b>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Fiador: {{v.cpffiador}}
+                                        </div>
+                                        <div class="col-md-8">
+                                            Fiador: <b>{{v.fiador | uppercase}}</b>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Financiador: {{v.financiador | uppercase}}
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        Cadastrado em: {{v.createdat | date:'dd/MM/yyyy'}} às {{v.createdat |
+                                        date:'HH:mm'}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Valor total: {{v.valortotal | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor atual: {{v.valoratual | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor estornado: {{v.valorestorno | currency}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Quantidade de parcelas: {{v.parcela}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor das parcelas: {{v.valorparcela | currency}}
+                                    </div>
+
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Doc Proposta Financeira: {{v.docfinanceiro}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        Doc Odontocompany: {{v.docodc}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 4px; margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Usuário: {{v.createdby}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        Unidade: {{v.unidade | uppercase}}
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="v.financiador == 'BANCO JF'">
+                            <div class="col-md-12" *ngIf="v.stats=='ativo'"
+                                style="border: solid; margin-bottom: 1%; border-radius: 5px; background-color: #7dff88;">
+                                <div class="row" style="margin-top: 4px;">
+                                    <div class="col-md-4">
+                                        Cliente: <b>{{v.cliente | uppercase}}</b>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <button style="float: right; margin-left: 7px;" class="no-print btn btn-primary"
+                                            (click)="jfContrato(i)">Contrato</button>
+                                        <button style="float: right; margin-left: 7px;" class="no-print btn btn-info"
+                                            (click)="detailsVendaJF(i)">Detalhes</button>
+                                        <button
+                                            style="float: right; margin-left: 7px; font-size: 12px;height: 38px;padding: 0px 5px;width: 78px;"
+                                            class="no-print btn btn-danger"
+                                            *ngIf="(role=='gerente' && user.unidade == v.unidade && v.waitestornostatus == 1)"
+                                            (click)="estornaVenda(i)">Estorno Solicitado</button>
+                                        <button style="float: right; margin-left: 7px; width: 78px;"
+                                            class="no-print btn btn-danger"
+                                            *ngIf="(role=='gerente' && user.unidade == v.unidade && v.waitestornostatus == 0)"
+                                            (click)="estornaVenda(i)">Estorno</button>
+                                        <!-- <button style="float: right;" class="no-print btn btn-dark" *ngIf="role == 'admin'"
+                                (click)="editVenda(i)">Editar Venda</button> -->
+
+                                        <!-- <button style="float: right;" class="no-print btn btn-success">Nova venda</button> -->
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="v.isnotfiador==0">
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Paciente: {{v.cpfpaciente}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            Possui fiador? <b>NÃO</b>
+                                        </div>
+                                        <!-- <div class="col-md-3">
+                            </div> -->
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="v.isnotfiador==1">
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Paciente: {{v.cpfpaciente}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            Possui fiador? <b>SIM</b>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Fiador: {{v.cpffiador}}
+                                        </div>
+                                        <div class="col-md-8">
+                                            Fiador: <b>{{v.fiador | uppercase}}</b>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Financiador: {{v.financiador | uppercase}}
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        Cadastrado em: {{v.createdat | date:'dd/MM/yyyy'}} às {{v.createdat |
+                                        date:'HH:mm'}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Valor Total: {{v.valortotal | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- Valor avaliação: {{v.valoravaliacao | currency}} -->
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Valor tabelado: {{v.valortabela | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor avaliação: {{v.valoravaliacao | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor comercial: {{v.valorcomercial | currency}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Valor financiado: {{v.valorfinanciado | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor entrada: {{v.valorentrada | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <ng-container *ngIf="v.desconto > 0">
+                                            Desconto: {{v.desconto}}%
+                                        </ng-container>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Quantidade de parcelas: {{v.parcela}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor das parcelas: {{v.valorparcela | currency}}
+                                    </div>
+
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Doc Proposta Financeira: {{v.id}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        Doc Odontocompany: {{v.docodc}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 4px; margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Usuário: {{v.createdby}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        Unidade: {{v.unidade | uppercase}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" *ngIf="v.stats=='estorno'"
+                                style="border: solid; margin-bottom: 1%; border-radius: 5px; background-color: #ff8181;">
+                                <div class="row" style="margin-top: 4px;">
+                                    <div class="col-md-4">
+                                        Cliente: <b>{{v.cliente | uppercase}}</b>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <button style="float: right; margin-left: 7px;" class="no-print btn btn-primary"
+                                            (click)="jfContrato(i)">Contrato</button>
+                                        <button style="float: right; margin-left: 7px;" class="no-print btn btn-info"
+                                            (click)="detailsVendaJF(i)">Detalhes</button>
+                                        <button style="float: right; margin-left: 7px; color: white;"
+                                            class="no-print btn btn-success" *ngIf="role == 'admin'"
+                                            (click)="cancelaEstorno(i)">Cancel. Estorno</button>
+                                        <!-- <button style="float: right;" class="no-print btn btn-dark" *ngIf="role == 'admin'"
+                                (click)="editVenda(i)">Editar Venda</button> -->
+
+                                        <!-- <button style="float: right;" class="no-print btn btn-success">Nova venda</button> -->
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="v.isnotfiador==0">
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Paciente: {{v.cpfpaciente}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            Possui fiador? <b>NÃO</b>
+                                        </div>
+                                        <!-- <div class="col-md-3">
+                            </div> -->
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="v.isnotfiador==1">
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Paciente: {{v.cpfpaciente}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            Possui fiador? <b>SIM</b>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Fiador: {{v.cpffiador}}
+                                        </div>
+                                        <div class="col-md-8">
+                                            Fiador: <b>{{v.fiador | uppercase}}</b>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Financiador: {{v.financiador | uppercase}}
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        Cadastrado em: {{v.createdat | date:'dd/MM/yyyy'}} às {{v.createdat |
+                                        date:'HH:mm'}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Valor Total: {{v.valortotal | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor atual: {{v.valoratual | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor estornado: {{v.valorestorno | currency}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Valor tabelado: {{v.valortabela | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor avaliação: {{v.valoravaliacao | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor comercial: {{v.valorcomercial | currency}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Valor financiado: {{v.valorfinanciado | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor entrada: {{v.valorentrada | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <ng-container *ngIf="v.desconto > 0">
+                                            Desconto: {{v.desconto}}%
+                                        </ng-container>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Quantidade de parcelas: {{v.parcela}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor das parcelas: {{v.valorparcela | currency}}
+                                    </div>
+
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Doc Proposta Financeira: {{v.id}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        Doc Odontocompany: {{v.docodc}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 4px; margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Usuário: {{v.createdby}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        Unidade: {{v.unidade | uppercase}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" *ngIf="v.stats=='estorno parcial'"
+                                style="border: solid; margin-bottom: 1%; border-radius: 5px; background-color: #ffdd81;">
+                                <div class="row" style="margin-top: 4px;">
+                                    <div class="col-md-4">
+                                        Cliente: <b>{{v.cliente | uppercase}}</b>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <button style="float: right; margin-left: 7px;" class="no-print btn btn-primary"
+                                            (click)="jfContrato(i)">Contrato</button>
+                                        <button style="float: right; margin-left: 7px;" class="no-print btn btn-info"
+                                            (click)="detailsVendaJF(i)">Detalhes</button>
+                                        <button style="float: right; margin-left: 7px; color: white;"
+                                            class="no-print btn btn-success" *ngIf="role == 'admin'"
+                                            (click)="cancelaEstorno(i)">Cancel. Estorno</button>
+                                        <button
+                                            style="float: right; margin-left: 7px; font-size: 12px;height: 38px;padding: 0px 5px;width: 78px;;"
+                                            class="no-print btn btn-danger"
+                                            *ngIf="(role=='gerente' && user.unidade == v.unidade && v.waitestornostatus == 1)"
+                                            (click)="estornaVenda(i)">Estorno Solicitado</button>
+                                        <button style="float: right; margin-left: 7px; width: 78px;;"
+                                            class="no-print btn btn-danger"
+                                            *ngIf="(role=='gerente' && user.unidade == v.unidade && v.waitestornostatus == 0)"
+                                            (click)="estornaVenda(i)">Estorno</button>
+                                        <!-- <button style="float: right;" class="no-print btn btn-dark" *ngIf="role == 'admin'"
+                                (click)="editVenda(i)">Editar Venda</button> -->
+
+                                        <!-- <button style="float: right;" class="no-print btn btn-success">Nova venda</button> -->
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="v.isnotfiador==0">
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Paciente: {{v.cpfpaciente}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            Possui fiador? <b>NÃO</b>
+                                        </div>
+                                        <!-- <div class="col-md-3">
+                            </div> -->
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="v.isnotfiador==1">
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Paciente: {{v.cpfpaciente}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            Possui fiador? <b>SIM</b>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 2px;">
+                                        <div class="col-md-4">
+                                            CPF Fiador: {{v.cpffiador}}
+                                        </div>
+                                        <div class="col-md-8">
+                                            Fiador: <b>{{v.fiador | uppercase}}</b>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Financiador: {{v.financiador | uppercase}}
+                                    </div>
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        Cadastrado em: {{v.createdat | date:'dd/MM/yyyy'}} às {{v.createdat |
+                                        date:'HH:mm'}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Valor Total: {{v.valortotal | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor atual: {{v.valoratual | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor estornado: {{v.valorestorno | currency}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Valor tabelado: {{v.valortabela | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor avaliação: {{v.valoravaliacao | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor comercial: {{v.valorcomercial | currency}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Valor financiado: {{v.valorfinanciado | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor entrada: {{v.valorentrada | currency}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <ng-container *ngIf="v.desconto > 0">
+                                            Desconto: {{v.desconto}}%
+                                        </ng-container>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Quantidade de parcelas: {{v.parcela}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Valor das parcelas: {{v.valorparcela | currency}}
+                                    </div>
+
+                                </div>
+                                <div class="row" style="margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Doc Proposta Financeira: {{v.id}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        Doc Odontocompany: {{v.docodc}}
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 4px; margin-top: 2px;">
+                                    <div class="col-md-4">
+                                        Usuário: {{v.createdby}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        Unidade: {{v.unidade | uppercase}}
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+
+
+                </ng-container>
+                <ng-container *ngIf="showcomp==1 && compindex == i">
+                    <button style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                        class="no-print btn btn-primary" (click)="printComprovante()">Imprimir</button>
+                    <button style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                        class="no-print btn btn-success" (click)="showComprovante(0, i)">Voltar</button>
+                    <div id="printcomprovante">
+                        <div class="comprovante">
+                            RECIBO DE CADASTRO DE VENDA<br />
+                            Usuário:<br />
+                            <b>{{v.createdby | uppercase}}</b><br />
+                            <!-- Funcionário:<br />
+                    <b>{{user.nome | uppercase}}</b><br /> -->
+                            Unidade:<br />
+                            <b>{{v.unidade | uppercase}}</b><br />
+                            Data - <b>{{v.createdat | date: 'dd/MM/yyyy - HH:mm'}}</b> <br />
+                            *************************<br />
+                            Nome: <br />
+                            <b>{{v.cliente | uppercase}}</b><br />
+                            CPF Paciente: <br />
+                            <b>{{v.cpfpaciente}}</b><br />
+                            <ng-container *ngIf="v.isnotfiador==0">
+                                Possui fiador? <b>NÃO</b><br />
+                            </ng-container>
+                            <ng-container *ngIf="v.isnotfiador==1">
+                                Possui fiador? <b>SIM</b><br />
+                                Fiador: <br />
+                                <b>{{v.fiador | uppercase}}</b><br />
+                                CPF Fiador: <br />
+                                <b>{{v.cpffiador}}</b><br />
+                            </ng-container>
+                            Financiador:<br />
+                            <b>{{v.financiador | uppercase}}</b><br />
+                            Doc Proposta Financeira:<br />
+                            <b>{{v.docfinanceiro}}</b><br />
+                            Doc ODC:<br />
+                            <b>{{v.docodc}}</b><br />
+                            Valor total:<br />
+                            <b>{{v.valortotal | currency}}</b> <br />
+                            Parcelas:<br />
+                            <b>{{v.parcela}}</b> <br />
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+
+            <div style="margin-top: 3%;">&nbsp;</div>
+        </mat-tab>
+    </ng-container>
+    <ng-container *ngIf="role == 'admin'">
+        <mat-tab label="Ordens de serviços de laboratórios externos">
+            <form [formGroup]="buscaProteseExForm" style="padding-left: 3%;">
+                <div class="row no-print" style="margin-top: 2%;">
+                    <div class="col-md-6">
+                        <label style="margin-bottom: 0px;">
+                            Buscar pelo nº da ordem de serviço
+                        </label>
+                        <input formControlName="typesearch" style="position: absolute;bottom: 4px;margin-left: 1%;"
+                            type="checkbox" id="checksearch">
+                    </div>
+                </div>
+                <ng-container *ngIf="buscaProteseExForm.controls['typesearch'].value == true">
+                    <div class="row" style="padding-top: 2%; width: 50%;">
+                        <div class="col-md-6">
+                            Nº da ordem de serviço:
+                            <input class="form-control" formControlName="nos" type="text" placeholder="Apenas números"
+                                mask="000000000000000000000000000">
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="buscaProteseExForm.controls['typesearch'].value == false">
+                    <div class="row no-print" style="padding-top: 2%; width: 50%;">
+                        <div class="col-md-6">
+                            De:
+                            <input class="form-control" formControlName="dtinicio" type="date" min="1800-12-31"
+                                max="2999-12-31" placeholder="DD/MM/AAAA">
+                        </div>
+                        <div class="col-md-6">
+                            Até:
+                            <input class="form-control" formControlName="dtfim" type="date" min="1800-12-31"
+                                max="2999-12-31" placeholder="DD/MM/AAAA">
+                        </div>
+                    </div>
+                    <!-- <div class="row no-print" style="padding-top: 1%; width: 50%;">
+                        <div class="col-md-6">
+                            Entre:
+                            <input class="form-control" formControlName="valinicio" type="text" currencyMask
+                                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                        </div>
+                        <div class="col-md-6">
+                            e
+                            <input class="form-control" formControlName="valfim" type="text" currencyMask
+                                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                        </div>
+                    </div> -->
+                    <div class="row no-print" style="padding-top: 1%; width: 100%;">
+                        <div class="col-md-3">
+                            CPF:
+                            <input class="form-control" formControlName="cpf" type="text" mask="000.000.000-99"
+                                placeholder="Apenas números">
+                        </div>
+                        <!-- <div class="col-md-3">
+                            Nº da ordem de serviço:
+                            <input class="form-control" formControlName="nos" type="text" placeholder="Apenas números">
+                        </div> -->
+                        <div class="col-md-3">
+                            <a>Unidade:</a>
+                            <select class="form-control" id="inputunidade" formControlName="unidade" required>
+                                <option value="todas" selected>Todas</option>
+                                <option value="ODC Nova Iguaçu I (Centro)">ODC Nova Iguaçu I
+                                    (Centro)
+                                </option>
+                                <option value="ODC Nova Iguaçu II (Centro)">ODC Nova Iguaçu II
+                                    (Centro)
+                                </option>
+                                <option value="ODC Nova Iguaçu III (Centro)">ODC Nova Iguaçu III
+                                    (Centro)
+                                </option>
+                                <option value="ODC Belford Roxo (Centro)">ODC Belford Roxo
+                                    (Centro)
+                                </option>
+                                <option value="ODC São João de Meriti (Centro)">ODC São João de
+                                    Meriti
+                                    (Centro)</option>
+                                <option value="ODC Vilar dos Teles (Centro)">ODC Vilar dos Teles
+                                    (Centro)</option>
+                                <!-- <option value="Partmed">Partmed</option> -->
+                                <!-- <option value="Partmed">Partmed</option>
+                                            <option value="Pramelhor">Pramelhor</option> -->
+                                <!-- <option value="Outro local">Outro local</option> -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row no-print" style="padding-top: 1%; width: 100%;">
+                        <div class="col-md-3">
+                            Laboratório:
+                            <select class="form-control" (change)="inputLab()" formControlName="laboratorio"
+                                type="text">
+                                <option value="todos">TODOS</option>
+                                <ng-container *ngFor="let f of laboratorios; let i = index">
+                                    <option value="{{f.nome}}">{{f.nome}}</option>
+                                </ng-container>
+                                <option value="outro">OUTRO</option>
+                            </select>
+                        </div>
+                        <ng-container *ngIf="showlabinput == 1 ">
+                            <div class="col-md-3">
+                                Digite o nome do laboratório
+                                <input class="form-control" formControlName="labinput" type="text">
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+
+                <button class="no-print btn btn-primary"
+                    style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;" (click)="getOs()">Buscar</button>
+                <!-- <button class="no-print btn btn-primary" style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                            (click)="download()">Download?</button> -->
+            </form>
+
+            <div>
+                <ng-container *ngFor="let v of ordemlist; let i = index">
+                    <div class="col-md-12"
+                        style="border: solid; margin-bottom: 1%; border-radius: 5px; background-color: #7de1ff;">
+                        <div class="row" style="margin-top: 4px;">
+                            <div class="col-md-4">
+                                Ordem de serviço nº: <b>{{v.id}}</b>
+                            </div>
+                            <div class="col-md-8">
+                                <button style="float: right; margin-left: 7px;" class="no-print btn btn-info"
+                                    (click)="detailsOs(i)">Detalhes</button>
+                                <!-- <button style="float: right;" class="no-print btn btn-success"
+                                    *ngIf="role == 'admin' || role == 'responsavel tecnico'" (click)="updateOs(i)">Entregas e recebimentos</button> -->
+                                <!-- <button style="float: right;" class="no-print btn btn-dark"
+                                    *ngIf="role == 'admin'" (click)="dummyFunction(i)">Editar Ordem de Serviço</button> -->
+
+                                <!-- <button style="float: right;" class="no-print btn btn-success">Nova venda</button> -->
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 2px;">
+                            <div class="col-md-8">
+                                Paciente: {{v.paciente | uppercase}}
+                            </div>
+                            <div class="col-md-4">
+                                CPF: {{v.cpf | mask:'000.000.000-00'}}
+                            </div>
+
+                        </div>
+                        <div class="row" style="margin-top: 2px;">
+                            <div class="col-md-4">
+                                DOC ODC: {{v.documento}}
+                            </div>
+                            <div class="col-md-4">
+                                Valor contratado: {{v.valor_contratado | currency}}
+                            </div>
+                            <div class="col-md-4">
+                                Custo dos materiais: {{v.custo_materiais | currency}}
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 2px;">
+                            <div class="col-md-6">
+                                Laboratório: {{v.laboratorio | uppercase}}
+                            </div>
+                            <div class="col-md-6">
+                                Unidade: {{v.unidade | uppercase}}
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 4px; margin-top: 2px;">
+                            <div class="col-md-6">
+                                Cadastrado por: {{v.createdby | uppercase}}
+                            </div>
+                            <div class="col-md-6">
+                                Cadastrado em: {{v.createdat | date:'dd/MM/yyyy'}} às {{v.createdat | date:'HH:mm'}}
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </mat-tab>
+    </ng-container>
+</mat-tab-group>

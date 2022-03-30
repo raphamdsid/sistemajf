@@ -1,0 +1,75 @@
+// .navbar {
+//     min-height: 150px;
+//     color:#FFF;
+//     font-size: 30px;
+//     text-align: center;
+//     justify-content: center;
+//     border-bottom: 1px white solid;
+// }
+
+// .layoutmenu {
+//     height: 100%;
+//     background-color: red;
+//     position: absolute;
+// }
+::ng-deep {
+    @media print {
+        display: none;
+    }
+}
+@media print {
+    // mat-sidenav-container {
+    //     display: none;
+    // }
+    // mat-sidenav {
+    //     display: none;
+    // }
+    // mat-toolbar {
+    //     display: none;
+    // }
+    // .container {
+    //     display: none;
+    // }
+}
+::ng-deep mat-sidenav-container {
+    background-color: transparent !important;
+}
+mat-toolbar {
+    background-color: rgba(216, 215, 215, 0.801);
+    color: black;
+}
+
+mat-sidenav {
+    margin: 16px;
+    width: 200px;
+    border-right: none;
+    background-color: rgba(216, 215, 215, 0.801);
+    // background-color: rgba(85, 85, 85, 0.438);
+    color: rgb(0, 0, 0);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: left;
+}
+
+.content {
+    height: calc(100vh - 98px);
+    // border-radius: 10px;
+    // margin: 16px;
+    // margin-left: 32px;
+
+    // // display: flex;
+    // // justify-content: center;
+    // // align-items: center;
+    // background-color: white;
+    // // font-size: 2rem;
+    color: black;
+}
+
+mat-sidenav-container {
+    height: calc(100vh - 65px);
+}
+::ng-deep mat-toolbar {
+    //  background-color: transparent !important;
+    background: rgba(255, 255, 255, 0.801);
+    color: black;
+}

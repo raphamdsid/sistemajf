@@ -1,0 +1,42 @@
+<div class="loader" *ngIf="sloader == 1"></div>
+        <div class="no-print title">
+            CONFIGURAÇÕES
+        </div>
+
+        <mat-tab-group [(selectedIndex)]="tabindex">
+            <mat-tab label="Alterar senha">
+                <form [formGroup]="resetpwdForm" autocomplete="off">
+                    <div class="row" style="margin-bottom: 7px;">
+                        <div class="col-md-6">
+                            Senha atual:
+                            <input formControlName="oldpwd"
+                                onkeypress='return (event.charCode > 96 && event.charCode < 123) || (event.charCode > 64 && event.charCode < 91) || (event.charCode >= 48 && event.charCode <= 57) || event.charCode <= 31'
+                                (keydown.space)="$event.preventDefault()" class="form-control" type="password" required>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 7px;">
+                        <div class="col-md-6">
+                            Nova senha:
+                            <input formControlName="newpwd"
+                                onkeypress='return (event.charCode > 96 && event.charCode < 123) || (event.charCode > 64 && event.charCode < 91) || (event.charCode >= 48 && event.charCode <= 57) || event.charCode <= 31'
+                                (keydown.space)="$event.preventDefault()" class="form-control" type="password" required>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 7px;">
+                        <div class="col-md-6">
+                            Repita a nova senha:
+                            <input formControlName="newpwdconfirm"
+                                onkeypress='return (event.charCode > 96 && event.charCode < 123) || (event.charCode > 64 && event.charCode < 91) || (event.charCode >= 48 && event.charCode <= 57) || event.charCode <= 31'
+                                (keydown.space)="$event.preventDefault()" class="form-control" type="password" required>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 7px;">
+                        <div class="col-md-6">
+                            <button class="btn btn-primary" (keydown.space)="$event.preventDefault()"
+                                (click)="resetPassword()">Alterar senha </button>
+                        </div>
+                    </div>
+                </form>
+            </mat-tab>
+        </mat-tab-group>
+  

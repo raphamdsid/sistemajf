@@ -1,0 +1,63 @@
+@media print {
+}
+.rowdados {
+    border-bottom: solid 2px;
+    border-left: solid 2px;
+    border-right: solid 2px;
+}
+p {
+    font-size: x-large;
+}
+.row {
+    width: 100%;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.vendcol {
+    padding: 0px;
+    padding-left: 1px;
+}
+.vendrow {
+    // outline: auto;
+    border-right: solid 1px;
+    border-left: solid 1px;
+    border-bottom: solid 1px;
+}
+.lbor {
+    border-left: 1px solid;
+}
+
+#destitle {
+    // border: solid 2px;
+    justify-content: center;
+    text-align: center;
+    font-size: large;
+    // text-decoration: underline;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 40px;
+}
+.rbor {
+    border-right: solid 2px;
+}
+.col {
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.block {
+    display: block;
+}
+.justtxt {
+    text-align: justify;
+    text-justify: inter-word;
+}
+.mt20 {
+    margin-top: 20px;
+}
+
+.md8{
+    width: 67%
+}

@@ -1,0 +1,42 @@
+<div class="no-print sidemenu">
+    <div class="menuuser row">
+        <ng-container *ngIf="role != 'admin'">
+            <a style=" color: black;"><label class="userlbltxt" style="font-weight: bold; color: black;">USUÁRIO</label> <br /> <label class="userlbltxt">{{
+                    user.nome | uppercase}}</label> <br />
+                <label class="userlbltxt" style="font-weight: bold;">UNIDADE</label> <br /> <label class="userlbltxt">{{
+                    user.unidade |
+                    uppercase}}</label> <br />
+            </a>
+        </ng-container>
+        <ng-container *ngIf="role == 'admin'">
+            <a style=" color: black;"><label class="userlbltxt" style="font-weight: bold; color: black;">USUÁRIO</label> <br /> <label class="userlbltxt" style=" color: black;">{{
+                    user.nome | uppercase}}</label> <br />
+                <label class="userlbltxt" style="font-weight: bold;  color: black;">ADMINISTRADOR</label>
+            </a>
+        </ng-container>
+    </div>
+    <div class="menurow row" (click)="menuNavigate('venda')" *ngIf="role != 'admin'">
+        VENDA PADRÃO
+    </div>
+    <div class="menurow row" (click)="menuNavigate('jf')" *ngIf="role != 'admin'">
+        VENDA BANCO J&F
+    </div>
+    <div class="menurow row" (click)="menuNavigate('consulta')">
+        CONSULTA
+    </div>
+    <div class="menurow row" (click)="menuNavigate('relatorios')">
+        RELATÓRIOS
+    </div>
+    <div class="menurow row" (click)="menuNavigate('config')">
+        CONFIGURAÇÕES
+    </div>
+    <div class="menurow row" *ngIf="role == 'admin' || role=='gerente'" (click)="menuNavigate('admin')">
+        <b>ADMIN</b>
+    </div>
+    <div class="logoff row" (click)="logout()">
+        <a style="font-weight: bold;">
+            SAIR
+        </a>
+    </div>
+
+</div>

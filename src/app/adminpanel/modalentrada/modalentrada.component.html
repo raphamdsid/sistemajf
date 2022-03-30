@@ -1,0 +1,44 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<ng-container *ngIf="data.operacao == 'insert'">
+    <h1 mat-dialog-title style="text-align: center;">Nova Entrada</h1>
+    <div>
+        <form [formGroup]="newEntForm" autocomplete="off">
+            <div class="row" style=" justify-content: center; margin-top: 4%;">
+                <div class="col-md-5">
+                    Nome:
+                    <input type="text" class="form-control" formControlName="nome" (focusout)="fixString()">
+                </div>
+            </div>
+            <div class="row" style="margin-top: 5%; justify-content: center;">
+                <div class="col-md-4">
+                    <button class="btn btn-primary" style="width:48%; margin-right: 4%;"
+                        (click)="newEntrada()">Adicionar</button>
+                    <button class="btn btn-danger" style="width:48%;" (click)="onNoClick()">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-container>
+<ng-container *ngIf="data.operacao == 'delete'">
+    <h1 mat-dialog-title style="text-align: center;">Excluir Entrada</h1>
+    <div>
+        <form [formGroup]="delEntForm" autocomplete="off">
+            <div class="row" style="margin-top: 4%">
+                <div class="col-md-12" style="font-size: xx-large; text-align: center;">
+                    Confirme a exclusão da entrada
+                    <!-- <input type="text" class="form-control" formControlName="nome"> -->
+                </div>
+            </div>
+            <div class="row" style="margin-top: 5%;margin-top: 5%;text-align: center;display: inherit;">
+                <b style="font-size: xx-large;">{{data.nome | uppercase}}</b>
+            </div>
+            <div class="row" style="margin-top: 5%; justify-content: center;">
+                <div class="col-md-4">
+                    <button class="btn btn-primary" style="width:48%; margin-right: 4%;"
+                        (click)="deleteEntrada()">Confirmar</button>
+                    <button class="btn btn-danger" style="width:48%;" (click)="onNoClick()">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-container>

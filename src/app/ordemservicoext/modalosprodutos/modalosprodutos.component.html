@@ -1,0 +1,118 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<h1 mat-dialog-title style="text-align: center;">Adicionar ou remover produtos</h1>
+<div>
+    <form [formGroup]="newProdForm" autocomplete="off">
+        <div class="row" style=" justify-content: center; margin-top: 4%;">
+            <ng-container *ngIf="newProdForm.controls['produto'].value.length==0">
+                <div class="col-md-6 searcharea">
+                    Produto
+                    <input class="form-control" formControlName="buscaproduto" tabindex="7" type="text"
+                        placeholder="Busque e selecione um produto" (keyup)="buscaProduto()">
+                    <div class="searchresult">
+                        <ng-container *ngIf="objbuscap.length > 0 && newProdForm.value.buscaproduto !='' ">
+                            <div *ngFor="let c of objbuscap; let ci=index" (click)="addProduto(c, ci)" class="center"
+                                style=" border-style: groove; border-width: 1px; margin-bottom: 2px;">
+                                {{c.nome | uppercase}}
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+            </ng-container>
+            <ng-container *ngIf="newProdForm.controls['produto'].value.length > 0">
+                <div class="col-md-6">
+                    Produto
+                    <input class="form-control" formControlName="produto" tabindex="7" type="text" readonly>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-success" style="position: absolute; bottom: 0; left: 0;"
+                        (click)="changeProd()">Mudar</button>
+                </div>
+            </ng-container>
+            <!-- <div class="col-md-6">
+                Produto:
+                <select class="form-control" (change)="setValor()" formControlName="produto" type="text" tabindex="21">
+                    <ng-container *ngFor="let f of data.produtos; let fi = index">
+                        <option value="{{fi}}">{{f.nome}}</option>
+                    </ng-container>
+                </select>
+            </div> -->
+            <div class="col-md-2">
+                Valor:
+                <input class="form-control" formControlName="valor" readonly type="text" currencyMask
+                    [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+            </div>
+            <div class="col-md-1">
+                Quantidade:
+                <input class="form-control" onfocus="this.select()" (keyup)="fixQtd()" style="text-align: end;"
+                    onkeypress='return (event.charCode >= 48 && event.charCode <= 57)' formControlName="qtd" type="text"
+                    tabindex="23">
+            </div>
+        </div>
+        <div class="row" style="justify-content: center; margin-top: 1%;">
+            <div class="col-md-10">
+                Observação: (opcional)
+                <textarea class="form-control" formControlName="obs" style="resize: none; height: 100px;">
+
+                </textarea>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 2%; justify-content: center;">
+            <div class="row" style="width: 400px; justify-content: space-around;">
+                <button class="btn btn-primary" style="width: 100px;"
+                    *ngIf="newProdForm.valid == true"
+                    (click)="newProduto()">Adicionar</button>
+                <button class="btn btn-danger" style="width: 100px;" (click)="onNoClick()">Fechar</button>
+            </div>
+        </div>
+    </form>
+    <ng-container *ngIf="produtos.length > 0">
+        <div style="margin-top: 2%; margin-bottom: 2%;">
+            <div class="row" style="justify-content: center; margin-bottom: 1%;">
+                <div class="col-md-11" style="padding:0">
+                    Total: {{total | currency}}
+                </div>
+            </div>
+            <div class="row" style="justify-content: center;">
+                <div class="col-md-5"
+                    style="padding:7px;border-left:solid;border-top:solid;border-right: solid 1px;border-bottom:solid">
+                    <b>PRODUTO</b>
+                </div>
+                <div class="col-md-3" style="padding:7px;border-top:solid;border-bottom:solid;border-right: solid 1px;">
+                    <b>VALOR</b>
+                </div>
+                <div class="col-md-2" style="padding:7px;border-top:solid;border-bottom:solid;border-right: solid;">
+                    <b>QTD</b>
+                </div>
+                <div class="col-md-1">
+                </div>
+            </div>
+            <ng-container *ngFor="let e of produtos; let ie = index">
+                <div class="row" style="justify-content: center;">
+                    <div class="col-md-5"
+                        style="padding:7px;border-left:solid;border-bottom:solid 1px;border-right: solid 1px ;">
+                        {{e.nome | uppercase}}
+                    </div>
+                    <div class="col-md-3" style="padding:7px;border-right: solid 1px ;border-bottom:solid 1px;">
+                        {{e.valor | currency}}
+                    </div>
+                    <div class="col-md-2" style="padding:7px;border-right: solid;border-bottom:solid 1px;">
+                        {{e.qtd}}
+                    </div>
+                    <div class="col-md-1">
+                        <img class="delbtn" src='assets/images/delete.png' (click)="deleteProduto(ie)">
+                    </div>
+                </div>
+                <div class="row" style="justify-content: center;">
+                    <div class="col-md-10"
+                        style="border-left:solid;border-bottom:solid;border-right: solid; padding: 7px">
+                        <b>OBS:</b> {{e.obs | uppercase}}
+                    </div>
+                    <div class="col-md-1">
+
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+</div>

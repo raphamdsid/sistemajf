@@ -1,0 +1,92 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<h1 mat-dialog-title style="text-align: center;">Editar Produto</h1>
+<ng-container *ngIf="operacao == 1">
+    <div>
+        <form [formGroup]="newProdForm" autocomplete="off">
+            <div class="row" style="margin-bottom: 1%;">
+                <div class="col-md-3">
+                    <b>Codigo: </b>
+                    <input type="text" class="form-control" formControlName="produto" readonly>
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-6">
+                    <b>Produto: </b>
+                    <input type="text" class="form-control" formControlName="nome">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <b>Valor: </b>
+                    <input type="text" class="form-control" formControlName="valor" currencyMask
+                    [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-4">
+                    <b>Grupo: </b>
+                    <select type="text" class="form-control" formControlName="grupo">
+                        <option value="CLINICO">CLINICO</option>
+                        <option value="PROTESE">PROTESE</option>
+                        <option value="ORTODONTIA">ORTODONTIA</option>
+                        <option value="ENDODONTIA">ENDODONTIA</option>
+                        <option value="CIRURGIA">CIRURGIA</option>
+                        <option value="HARMONIZAÇÃO">HARMONIZAÇÃO</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row" style="margin-top: 5%; justify-content: center;">
+        <div class="col-md-4">
+            <button class="btn btn-primary" style="width:48%; margin-right: 4%;"
+                (click)="nextStep()">Prosseguir</button>
+            <button class="btn btn-danger" style="width:48%;" (click)="onNoClick()">Cancelar</button>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="operacao == 2">
+    <p style="text-align: center; font-size: large; font-weight: bold;">DADOS ALTERADOS</p>
+    <div class="row descrow" style="margin-bottom: 4%;">
+        <div class="col-md-6" style="background-color: rgb(255, 157, 157);border-right: solid;">
+            <div class="row desc" style="border-bottom: solid 2px;">
+                <a style="text-align: center; font-weight: bold;">ORIGINAL</a>
+            </div>
+            <div class="row desc">
+                CODIGO: {{data.produto}}
+            </div>
+            <div class="row desc">
+                PRODUTO: {{data.nome | uppercase}}
+            </div>
+            <div class="row desc">
+                VALOR: {{data.valor | currency}}
+            </div>
+            <div class="row desc">
+                GRUPO: {{data.grupo}}
+            </div>
+        </div>
+        <div class="col-md-6" style="background-color: rgb(157, 255, 178);">
+            <div class="row desc" style="border-bottom: solid 2px;">
+                <a style="text-align: center; font-weight: bold;">APÓS ALTERAÇÃO</a>
+            </div>
+            <div class="row desc">
+                CODIGO: {{newProdForm.controls['produto'].value}}
+            </div>
+            <div class="row desc">
+                PRODUTO: {{newProdForm.controls['nome'].value | uppercase}}
+            </div>
+            <div class="row desc">
+                VALOR: {{newProdForm.controls['valor'].value | currency}}
+            </div>
+            <div class="row desc">
+                GRUPO: {{newProdForm.controls['grupo'].value}}
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 5%; justify-content: center;">
+        <div class="col-md-4">
+            <button class="btn btn-primary" style="width:48%; margin-right: 4%;" (click)="saveProd()">Confirmar</button>
+            <button class="btn btn-danger" style="width:48%;" (click)="previousStep()">Retornar</button>
+        </div>
+    </div>
+</ng-container>

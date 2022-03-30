@@ -1,0 +1,28 @@
+<!-- <div class="loader" *ngIf="sloader == 1"></div> -->
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<h1 mat-dialog-title style="text-align: center;">Adicionar procedimento emergencial</h1>
+<div>
+    <form [formGroup]="prodEmgForm" autocomplete="off">
+        <div class="row">
+            <div class="col-md-4">
+                Valor:
+                <input type="text" class="form-control" formControlName="valor" currencyMask onfocus="this.select()"
+                    [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                Descrição
+                <textarea class="form-control" formControlName="descricao" style="height: 100%">
+                </textarea>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5%; justify-content: center;">
+            <div class="col-md-4">
+                <button class="btn btn-primary" style="width:48%; margin-right: 4%;"
+                    (click)="saveProd()">Adicionar</button>
+                <button class="btn btn-danger" style="width:48%;" (click)="onNoClick()">Cancelar</button>
+            </div>
+        </div>
+    </form>
+</div>

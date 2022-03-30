@@ -1,0 +1,179 @@
+<header>
+</header>
+
+<div class="loader" *ngIf="sloader == 1"></div>
+<div class="no-print title">
+    CONSULTA
+</div>
+<form [formGroup]="buscaForm" style="padding-left: 3%;">
+    <div class="row no-print" style="margin-top: 2%;">
+        <div class="col-md-6">
+            <label style="margin-bottom: 0px;">
+                Buscar pelo nº da ordem de serviço
+            </label>
+            <input formControlName="typesearch" style="position: absolute;bottom: 4px;margin-left: 1%;" type="checkbox"
+                id="checksearch">
+        </div>
+    </div>
+    <ng-container *ngIf="buscaForm.controls['typesearch'].value == true">
+        <div class="row" style="padding-top: 2%; width: 50%;">
+            <div class="col-md-6">
+                Nº da ordem de serviço:
+                <input class="form-control" formControlName="nos" type="text" placeholder="Apenas números"
+                    mask="000000000000000000000000000">
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="buscaForm.controls['typesearch'].value == false">
+        <div class="row no-print" style="padding-top: 2%; width: 50%;">
+            <div class="col-md-6">
+                De:
+                <input class="form-control" formControlName="dtinicio" type="date" min="1800-12-31" max="2999-12-31"
+                    placeholder="DD/MM/AAAA">
+            </div>
+            <div class="col-md-6">
+                Até:
+                <input class="form-control" formControlName="dtfim" type="date" min="1800-12-31" max="2999-12-31"
+                    placeholder="DD/MM/AAAA">
+            </div>
+        </div>
+        <!-- <div class="row no-print" style="padding-top: 1%; width: 50%;">
+            <div class="col-md-6">
+                Entre:
+                <input class="form-control" formControlName="valinicio" type="text" currencyMask
+                    [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+            </div>
+            <div class="col-md-6">
+                e
+                <input class="form-control" formControlName="valfim" type="text" currencyMask
+                    [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+            </div>
+        </div> -->
+        <div class="row no-print" style="padding-top: 1%; width: 100%;">
+            <div class="col-md-3">
+                CPF:
+                <input class="form-control" formControlName="cpf" type="text" mask="000.000.000-99"
+                    placeholder="Apenas números">
+            </div>
+            <!-- <div class="col-md-3">
+                Nº da ordem de serviço:
+                <input class="form-control" formControlName="nos" type="text" placeholder="Apenas números">
+            </div> -->
+            <div class="col-md-3">
+                <a>Unidade:</a>
+                <select class="form-control" id="inputunidade" formControlName="unidade" required>
+                    <option value="todas" selected>Todas</option>
+                    <option value="ODC Nova Iguaçu I (Centro)">ODC Nova Iguaçu I
+                        (Centro)
+                    </option>
+                    <option value="ODC Nova Iguaçu II (Centro)">ODC Nova Iguaçu II
+                        (Centro)
+                    </option>
+                    <option value="ODC Nova Iguaçu III (Centro)">ODC Nova Iguaçu III
+                        (Centro)
+                    </option>
+                    <option value="ODC Nova Iguaçu IV (Centro)">ODC Nova Iguaçu IV
+                        (Centro)
+                    </option>
+                    <option value="ODC Belford Roxo (Centro)">ODC Belford Roxo
+                        (Centro)
+                    </option>
+                    <option value="ODC São João de Meriti (Centro)">ODC São João de
+                        Meriti
+                        (Centro)</option>
+                    <option value="ODC Vilar dos Teles (Centro)">ODC Vilar dos Teles
+                        (Centro)</option>
+                    <option value="ODC Pavuna (Centro)">ODC Pavuna
+                        (Centro)</option>
+                    <option value="Partmed">Partmed</option>
+                    <!-- <option value="Partmed">Partmed</option> -->
+                    <!-- <option value="Partmed">Partmed</option>
+                                <option value="Pramelhor">Pramelhor</option> -->
+                    <!-- <option value="Outro local">Outro local</option> -->
+                </select>
+            </div>
+        </div>
+        <div class="row no-print" style="padding-top: 1%; width: 100%;">
+            <div class="col-md-3">
+                Laboratório:
+                <select class="form-control" (change)="inputLab()" formControlName="laboratorio" type="text">
+                    <option value="todos">TODOS</option>
+                    <ng-container *ngFor="let f of laboratorios; let i = index">
+                        <option value="{{f.nome}}">{{f.nome}}</option>
+                    </ng-container>
+                    <option value="outro">OUTRO</option>
+                </select>
+            </div>
+            <ng-container *ngIf="showlabinput == 1 ">
+                <div class="col-md-3">
+                    Digite o nome do laboratório
+                    <input class="form-control" formControlName="labinput" type="text">
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+
+    <button class="no-print btn btn-primary" style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+        (click)="getOs()">Buscar</button>
+    <!-- <button class="no-print btn btn-primary" style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                (click)="download()">Download?</button> -->
+</form>
+
+<div>
+    <ng-container *ngFor="let v of ordemlist; let i = index">
+        <div class="col-md-12" style="border: solid; margin-bottom: 1%; border-radius: 5px; background-color: #7de1ff;">
+            <div class="row" style="margin-top: 4px;">
+                <div class="col-md-4">
+                    Ordem de serviço nº: <b>{{v.id}}</b>
+                </div>
+                <div class="col-md-8">
+                    <button style="float: right; margin-left: 7px;" class="no-print btn btn-info"
+                        (click)="detailsOs(i)">Detalhes</button>
+                    <button style="float: right;" class="no-print btn btn-success"
+                        *ngIf="(role == 'admin' || role == 'responsavel tecnico' || role == 'ASB') && (v.unidade == user.unidade)" (click)="updateOs(i)">Entregas e
+                        recebimentos</button>
+                    <button style="float: right;" class="no-print btn btn-dark" *ngIf="role == 'admin'"
+                        (click)="dummyFunction(i)">Editar Ordem de Serviço</button>
+
+                    <!-- <button style="float: right;" class="no-print btn btn-success">Nova venda</button> -->
+                </div>
+            </div>
+            <div class="row" style="margin-top: 2px;">
+                <div class="col-md-8">
+                    Paciente: {{v.paciente | uppercase}}
+                </div>
+                <div class="col-md-4">
+                    CPF: {{v.cpf | mask:'000.000.000-00'}}
+                </div>
+
+            </div>
+            <div class="row" style="margin-top: 2px;">
+                <div class="col-md-4">
+                    DOC ODC: {{v.documento}}
+                </div>
+                <div class="col-md-4">
+                    Valor contratado: {{v.valor_contratado | currency}}
+                </div>
+                <div class="col-md-4">
+                    Custo dos materiais: {{v.custo_materiais | currency}}
+                </div>
+            </div>
+            <div class="row" style="margin-top: 2px;">
+                <div class="col-md-6">
+                    Laboratório: {{v.laboratorio | uppercase}}
+                </div>
+                <div class="col-md-6">
+                    Unidade: {{v.unidade | uppercase}}
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 4px; margin-top: 2px;">
+                <div class="col-md-6">
+                    Cadastrado por: {{v.createdby | uppercase}}
+                </div>
+                <div class="col-md-6">
+                    Cadastrado em: {{v.createdat | date:'dd/MM/yyyy'}} às {{v.createdat | date:'HH:mm'}}
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

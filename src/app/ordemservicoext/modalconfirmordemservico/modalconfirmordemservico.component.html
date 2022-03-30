@@ -1,0 +1,78 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<h1 mat-dialog-title style="text-align: center;">Confirme os dados da ordem de serviço</h1>
+<div class="row" style="border: solid; margin-bottom: 1%;">
+    <div class="col-md-12">
+        <div class="row" style="background-color: #007bff7a;">
+            <div class="col-md-12 cols" style="text-align: center;">
+                <b>DADOS DA ORDEM DE SERVIÇO</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 cols" style="border-top: solid;">
+                <b>Paciente:</b> {{data.ordem.paciente | uppercase}}
+            </div>
+            <div class="col-md-4 cols" style="border-top: solid; border-left: solid;">
+                <b>CPF Paciente:</b> {{data.ordem.cpf}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 cols" style="border-top: solid;">
+                <b>Documento:</b> {{data.ordem.documento}}
+            </div>
+            <div class="col-md-4 cols" style="border-top: solid; border-left: solid;">
+                <b>Valor contratado:</b> {{data.ordem.valor_contratado | currency}}
+            </div>
+            <div class="col-md-4 cols" style="border-top: solid; border-left: solid;">
+                <b>Custo dos materiais:</b> {{data.ordem.custo_materiais | currency}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div style="border:solid; margin-bottom: 1%;"> -->
+<div class="row" style="justify-content: space-around; margin-bottom: 3%; margin-top: 2%;">
+    <div class="col-md-12" style="border-top: solid;" *ngIf="data.ordem.produtos.length > 0">
+        <div class="row"
+            style="justify-content: center; border-bottom: solid;border-left: solid; border-right: solid; background-color: lightblue;">
+            <b>SERVIÇOS</b>
+        </div>
+        <div class="row" style="background-color: #80808085; border-bottom: solid;">
+            <div class="col-md-9 cols" style="border-left: solid;">
+                <b>Nome</b>
+            </div>
+            <div class="center col-md-2 cols" style="border-left: solid 1px;">
+                <b>Valor</b>
+            </div>
+            <div class="center col-md-1 cols" style="border-left: solid 1px; border-right: solid;">
+                <b>QTD</b>
+            </div>
+        </div>
+        <ng-container *ngFor="let e of data.ordem.produtos; let ei = index">
+            <div class="row">
+                <div class="col-md-9 cols" style="border-bottom: solid 1px; border-left: solid;">
+                    {{e.nome | uppercase}}
+                </div>
+                <div class="center col-md-2 cols" style="border-bottom: solid 1px; border-left: solid 1px;">
+                    {{e.valor | currency}}
+                </div>
+                <div class="center col-md-1 cols"
+                    style="border-bottom: solid 1px; border-left: solid 1px; border-right: solid;">
+                    {{e.qtd}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 cols" style="border-bottom: solid; border-left:solid; border-right:solid;">
+                    OBS: {{e.obs | uppercase}}
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<!-- </div> -->
+
+<div class="row" style="margin-top: 2%; margin-bottom: 3%; justify-content: center;">
+    <div class="col-md-4">
+        <button class="btn btn-primary" style="width:48%; margin-right: 4%;" (click)="sendData()">Confirmar</button>
+        <button class="btn btn-danger" style="width:48%;" (click)="onNoClick()">Cancelar</button>
+    </div>
+</div>

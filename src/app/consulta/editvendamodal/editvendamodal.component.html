@@ -1,0 +1,118 @@
+<!-- <mat-dialog-actions align="center"> -->
+<p style="text-align: center; font-size: large; font-weight: bold;">EDITAR VENDA</p>
+<form [formGroup]="editForm" autocomplete="off">
+    <div class="row">
+        <div class="col-md-8">
+            Paciente:
+            <input class="form-control" type="text" formControlName="cliente" tabindex="1">
+        </div>
+        <ng-container *ngIf="editForm.value.isnotfiador==0">
+            <div class="col-md-4">
+                CPF Paciente:
+                <input class="form-control" formControlName="cpfpaciente" type="text" mask="000.000.000-99"
+                    (focusout)="cpfValid(1)" #pacientecpf placeholder="Apenas números" tabindex="3">
+            </div>
+        </ng-container>
+        <ng-container *ngIf="editForm.value.isnotfiador==1">
+            <div class="col-md-4">
+                CPF Paciente:
+                <input class="form-control" formControlName="cpfpaciente" type="text" mask="000.000.000-99" #pacientecpf
+                    placeholder="Apenas números" tabindex="3">
+            </div>
+        </ng-container>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            Possui fiador?
+            <select class="form-control" formControlName="isnotfiador" type="text" tabindex="2"
+                (change)="resetFiador()">
+                <option value="1">SIM</option>
+                <option value="0">NÃO</option>
+            </select>
+        </div>
+    </div>
+    <ng-container *ngIf="editForm.value.isnotfiador==1">
+        <div class="row">
+            <div class="col-md-8">
+                Fiador:
+                <input class="form-control" type="text" formControlName="fiador" tabindex="4">
+            </div>
+
+            <div class="col-md-4">
+                CPF Fiador:
+                <input class="form-control" formControlName="cpffiador" type="text" mask="000.000.000-99"
+                    (focusout)="cpfValid(2)" #fiadorcpf placeholder="Apenas números" tabindex="5">
+            </div>
+        </div>
+    </ng-container>
+    <div class="row">
+        <div class="col-md-6">
+            Financiador:
+            <select class="form-control" formControlName="financiador" type="text" tabindex="2">
+                <ng-container *ngFor="let f of data.financiadores; let fi = index">
+                    <option value="{{f.nome}}">{{f.nome | uppercase}}</option>
+                </ng-container>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            Doc. financeiro:
+            <input class="form-control" type="text" onkeypress='return (event.charCode != 59)'
+                formControlName="docfinanceiro" tabindex="6">
+        </div>
+        <div class="col-md-3">
+            Doc. ODC:
+            <input class="form-control" onkeypress='return (event.charCode != 59)' type="text" formControlName="docodc"
+                tabindex="7">
+        </div>
+        <div class="col-md-3">
+            Data:
+            <input class="form-control" onkeypress='return (event.charCode != 59)' type="date"
+                formControlName="createdatdate" tabindex="8">
+        </div>
+        <div class="col-md-3">
+            Hora:
+            <input class="form-control" onkeypress='return (event.charCode != 59)' type="time"
+                formControlName="createdathour" tabindex="9">
+        </div>
+
+        <!-- <div class="col-md-2">
+            Parcelas:
+            <input class="form-control" formControlName="parcela"
+                onkeypress='return (event.charCode >= 48 && event.charCode <= 57)' (input)="fixParcela()" type="number"
+                min="1" max="99" tabindex="8">
+        </div> -->
+    </div>
+    <!-- ***** DESABILITADO ***** -->
+    <!-- <div class="row">
+                Unidade:
+                <select class="form-control" id="inputunidade" formControlName="unidade" tabindex="7">
+                    <option value="ODC Nova Iguaçu I (Centro)" selected>ODC Nova Iguaçu I
+                        (Centro)
+                    </option>
+                    <option value="ODC Nova Iguaçu II (Centro)">ODC Nova Iguaçu II
+                        (Centro)
+                    </option>
+                    <option value="ODC Belford Roxo (Centro)">ODC Belford Roxo
+                        (Centro)
+                    </option>
+                    <option value="ODC São João de Meriti (Centro)">ODC São João de
+                        Meriti
+                        (Centro)</option>
+                    <option value="ODC Vilar dos Teles (Centro)">ODC Vilar dos Teles
+                        (Centro)</option>
+                    <option value="Partmed">Partmed</option> -->
+    <!-- <option value="Pramelhor">Pramelhor</option> -->
+    <!-- <option value="Outro local">Outro local</option> -->
+    <!-- </select>
+            </div> -->
+    <!-- ***** DESABILITADO ***** -->
+    <button class="btn btn-primary" style="margin-right: 7px;" (click)="sendData()"><a>Prosseguir</a></button>
+    <button class="btn btn-danger" mat-dialog-close><a>Cancelar</a></button>
+</form>
+
+<!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Sim</button>
+   -->
+
+<!-- </mat-dialog-actions> -->

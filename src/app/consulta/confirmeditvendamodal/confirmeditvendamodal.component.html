@@ -1,0 +1,117 @@
+<p style="text-align: center; font-size: large; font-weight: bold;">DADOS ALTERADOS</p>
+<div class="row descrow" style="margin-bottom: 4%;">
+    <div class="col-md-6" style="background-color: rgb(255, 157, 157);border-right: solid;">
+        <div class="row desc" style="border-bottom: solid 2px;">
+            <a style="text-align: center; font-weight: bold;">ORIGINAL</a>
+        </div>
+        <div class="row desc">
+            CLIENTE: {{data.oldentry.cliente | uppercase}}
+        </div>
+        <div class="row desc">
+            CPF PACIENTE: {{data.oldentry.cpfpaciente}}
+        </div>
+        <ng-container *ngIf="data.oldentry.isnotfiador == 0">
+            <div class="row desc">
+                POSSUI FIADOR: NÃO
+            </div>
+            <div class="row desc" style="height: 20px;">
+            
+            </div>
+            <div class="row desc" style="height: 20px;">
+            
+            </div>
+        </ng-container>
+        <ng-container *ngIf="data.oldentry.isnotfiador == 1">
+            <div class="row desc">
+                POSSUI FIADOR: SIM
+            </div>
+            <div class="row desc">
+                FIADOR: {{data.oldentry.fiador | uppercase}}
+            </div>
+            <div class="row desc">
+                CPF FIADOR: {{data.oldentry.cpffiador}}
+            </div>
+        </ng-container>
+        <div class="row desc">
+            FINANCIADOR: {{data.oldentry.financiador | uppercase}}
+        </div>
+        <div class="row desc">
+            DOC FINANCEIRO: {{data.oldentry.docfinanceiro}}
+        </div>
+        <div class="row desc">
+            DOC ODC: {{data.oldentry.docodc}}
+        </div>
+        <div class="row desc">
+            DATA: {{data.oldentry.createdatdate | date:'dd/MM/yyyy'}}
+        </div>
+        <div class="row desc">
+            HORA: {{data.oldentry.createdathour}}
+        </div>
+        <!-- <div class="row desc">
+            PARCELAS: {{data.oldentry.parcela}}
+        </div> -->
+    </div>
+    <div class="col-md-6" style="background-color: rgb(157, 255, 178);">
+        <div class="row desc" style="border-bottom: solid 2px;">
+            <a style="text-align: center; font-weight: bold;">APÓS ALTERAÇÃO</a>
+        </div>
+        <div class="row desc">
+            CLIENTE: {{data.newentry.cliente | uppercase}}
+        </div>
+        <div class="row desc">
+            CPF PACIENTE: {{data.newentry.cpfpaciente}}
+        </div>
+        <ng-container *ngIf="data.newentry.isnotfiador == 0">
+            <div class="row desc">
+                POSSUI FIADOR: NÃO
+            </div>
+            <div class="row desc" style="height: 20px;">
+            
+            </div>
+            <div class="row desc" style="height: 20px;">
+            
+            </div>
+        </ng-container>
+        <ng-container *ngIf="data.newentry.isnotfiador == 1">
+            <div class="row desc">
+                POSSUI FIADOR: SIM
+            </div>
+            <div class="row desc">
+                FIADOR: {{data.newentry.fiador | uppercase}}
+            </div>
+            <div class="row desc">
+                CPF FIADOR: {{data.newentry.cpffiador}}
+            </div>
+        </ng-container>
+        <div class="row desc">
+            FINANCIADOR: {{data.newentry.financiador | uppercase}}
+        </div>
+        <div class="row desc">
+            DOC FINANCEIRO: {{data.newentry.docfinanceiro}}
+        </div>
+        <div class="row desc">
+            DOC ODC: {{data.newentry.docodc}}
+        </div>
+        <div class="row desc">
+            DATA: {{data.newentry.createdatdate | date:'dd/MM/yyyy'}}
+        </div>
+        <div class="row desc">
+            HORA: {{data.newentry.createdathour}}
+        </div>
+        <!-- <div class="row desc">
+            PARCELAS: {{data.newentry.parcela}}
+        </div> -->
+    </div>
+</div>
+<form [formGroup]="pwdForm" autocomplete="off">
+    <div class="row"  style="text-align: center; font-weight: bold; justify-content: center;">
+        <a>INSIRA SUA SENHA PARA CONFIRMAR A ALTERAÇÃO</a>
+    </div>
+    <div class="row justify-content-center" style="margin-bottom: 2%; margin-top: 1%;">
+        <input type="password" class="form-control" formControlName="pwd" style="width: 30%;">
+    </div>
+    <div class="row justify-content-center">
+        <button class="btn btn-success" style="margin-right: 7px;" (click)="sendData()"><a>Confirmar</a></button>
+        <button class="btn btn-danger" mat-dialog-close><a>Cancelar</a></button>
+    </div>
+</form>

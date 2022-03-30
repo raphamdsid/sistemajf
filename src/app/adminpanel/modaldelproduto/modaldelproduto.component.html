@@ -1,0 +1,29 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<h1 mat-dialog-title style="text-align: center;">Excluir Produto</h1>
+<div>
+    <div class="row" style="justify-content: center; ">
+        <div class="col-md-12"
+            style="border-top: solid; padding-top: 5px; border-bottom: solid; border-right: solid; border-left: solid; padding-bottom: 5px;">
+            <b>Produto: </b>{{data.nome | uppercase}}
+        </div>
+    </div>
+    <div class="row" style="justify-content: center;">
+        <div class="col-md-4"
+            style="border-left: solid; padding-top: 5px; border-bottom: solid; border-right: solid; padding-bottom: 5px;">
+            <b>Codigo: </b>{{data.produto}}
+        </div>
+        <div class="col-md-4" style="padding-top: 5px; border-bottom: solid; border-right: solid; padding-bottom: 5px;">
+            <b>Valor: </b>{{data.valor | currency}}
+        </div>
+
+        <div class="col-md-4" style="padding-top: 5px; border-bottom: solid; border-right: solid; padding-bottom: 5px;">
+            <b>Grupo: </b>{{data.grupo | uppercase}}
+        </div>
+    </div>
+    <div class="row" style="margin-top: 5%; justify-content: center;">
+        <div class="col-md-4">
+            <button class="btn btn-primary" style="width:48%; margin-right: 4%;" (click)="delProd()">Confirmar</button>
+            <button class="btn btn-danger" style="width:48%;" (click)="onNoClick()">Cancelar</button>
+        </div>
+    </div>
+</div>

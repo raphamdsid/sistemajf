@@ -1,0 +1,160 @@
+-- drop database jfctrldb;
+create database if not exists jfctrldb;
+use jfctrldb;
+
+-- CRIAÇÃO DA TABELA USUÁRIOS
+create table IF NOT EXISTS usuario (
+username varchar (35) not null primary key,
+pwd varchar (11),
+tipo varchar(20),
+nome varchar (95),
+cpf varchar (20),
+stats enum('ativo', 'inativo') default 'ativo',
+unidade varchar(64),
+createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+updatedat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL
+);
+-- insert into usuario set username='raphamds', pwd='071090', tipo='admin', nome='Raphael Maia', cpf='13322182703', stats='ativo', unidade = 'ODC Nova Iguaçu 1';
+
+-- CRIAÇÃO DA TABELA DE PRODUTOS DA UNIDADE NOVA IGUAÇU 1
+create table IF NOT EXISTS prodni1 (
+produto varchar(10) not null primary key,
+nome varchar(125),
+valor float,
+grupo varchar(65)
+);
+
+-- CRIAÇÃO DA TABELA DE FINANCIADORES
+create table IF NOT EXISTS financiador (
+id int not null auto_increment primary key,
+nome varchar(125) not null,
+createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+updatedat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL
+);
+
+-- CRIAÇÃO DA TABELA DE ENTRADA
+create table IF NOT EXISTS entrada (
+id int not null auto_increment primary key,
+nome varchar(125) not null unique,
+createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+insert into entrada set nome="CRÉDITO NA CLÍNICA";
+
+
+-- CRIAÇÃO DA TABELA DE ENTRADA_VENDA
+create table IF NOT EXISTS entrada_venda (
+id bigint not null auto_increment primary key,
+vendaid bigint not null,
+cododc varchar(10),
+nome varchar(125) not null,
+valor float,
+createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+-- CRIAÇÃO DA TABELA DE PRODUTO_VENDA
+create table IF NOT EXISTS produto_venda (
+id bigint not null auto_increment primary key,
+vendaid bigint not null,
+produto varchar(20) not null,
+grupo varchar(30) not null,
+nome varchar(150) not null,
+valor float not null
+);
+
+
+-- CRIAÇÃO DA TABELA DE VENDAS
+CREATE TABLE IF NOT EXISTS venda (
+    id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    cliente VARCHAR(105),
+    cpfpaciente VARCHAR(20),
+    cpffiador VARCHAR(20),
+    docfinanceiro VARCHAR(20),
+    docodc VARCHAR(20),
+    parcela int default 1,
+    valortotal FLOAT default 0,
+    valoratual FLOAT default 0,
+    valorestorno FLOAT default 0,
+    isnotfiador BOOLEAN,
+    financiador VARCHAR(65),
+    createdby VARCHAR(65),
+    unidade VARCHAR(64),
+    createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- CRIAÇÃO DA TABELA AUDITORIA
+CREATE TABLE IF NOT EXISTS auditoria (
+    id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    usuario VARCHAR(35) NOT NULL,
+    objeto varchar(32) NOT NULL,
+    operacao varchar(64) NOT NULL,
+    descricao text,
+    createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- CRIAÇÃO DA TABELA DE JUROS E TAXAS ADICIONAIS
+CREATE TABLE IF NOT EXISTS jurostaxas (
+    id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    juros2a4 FLOAT NOT NULL DEFAULT 0,
+    juros5a8 FLOAT NOT NULL DEFAULT 0,
+    juros9a12 FLOAT NOT NULL DEFAULT 0,
+    juros13a16 FLOAT NOT NULL DEFAULT 0,
+    juros17a20 FLOAT NOT NULL DEFAULT 0,
+    juros21a24 FLOAT NOT NULL DEFAULT 0,
+    jurosboleto FLOAT NOT NULL DEFAULT 0,
+    juroscheque FLOAT NOT NULL DEFAULT 0,
+    taxaadicional FLOAT NOT NULL DEFAULT 0,
+    createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updatedat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    lastupdatedby VARCHAR(35)
+);
+
+-- CRIAÇÃO DA TABELA DE BANCOS CADASTRADOS
+CREATE TABLE IF NOT EXISTS bancos (
+    id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    codigo varchar(10) NOT NULL,
+    nome varchar(100) NOT NULL,
+    createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- CRIAÇÃO DA TABELA DE SOLICITAÇÕES DE ESTORNO ESPECIAIS
+CREATE TABLE IF NOT EXISTS exestornos (
+    id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    stats varchar(10) default 'ativo' not null,
+    nome VARCHAR(80) NOT NULL,
+    cpfcnpj VARCHAR(20) NOT NULL,
+    email VARCHAR(80),
+    tel VARCHAR(20) NOT NULL,
+    docodc VARCHAR(30) NOT NULL,
+    fpagcompra VARCHAR(30) NOT NULL,
+    valorcompra FLOAT NOT NULL,
+    valorestorno FLOAT NOT NULL,
+    tipo VARCHAR(30) NOT NULL,
+    motivo VARCHAR(300) NOT NULL,
+    tipopix VARCHAR(30),
+    chavepix VARCHAR(50),
+    banco VARCHAR(60),
+    codbanco VARCHAR(60),
+    agencia VARCHAR(60),
+    conta VARCHAR(60),
+    tipoconta VARCHAR(60),
+    unidade VARCHAR(60),
+    createdby VARCHAR(60),
+    createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+-- CRIAÇÃO DA TABELA DE ESTORNOS REALIZADOS
+CREATE TABLE IF NOT EXISTS estornos (
+    id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    gerente VARCHAR(60) NOT NULL,
+	unidade VARCHAR(60) NOT NULL,
+	valorcompra FLOAT NOT NULL,
+	valorsolicitado FLOAT NOT NULL,
+	valorestorno FLOAT NOT NULL,
+	docodc VARCHAR(30) NOT NULL,
+	situacao VARCHAR(30) NOT NULL,
+	motivo  VARCHAR(300),
+	solicitante VARCHAR(60) NOT NULL,
+	cpfcnpj VARCHAR(20) NOT NULL,
+	responsavel VARCHAR(60) NOT NULL,
+    createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

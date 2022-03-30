@@ -1,0 +1,46 @@
+<div class="no-print title">
+    DOCUMENTOS
+</div>
+<div style="padding:2%">
+    <!-- <div class="spaced row">
+        <div class="col-md-2" style="justify-content: center;">
+            <div class="center row">
+                <img class="clickimg" (click)="openDoc('termodedistrado.docx')" src='assets/images/wordicon.png'>
+            </div>
+            <div class="center row">
+                <a class="clickable" (click)="openDoc('termodedistrado.docx')">Termo de Distrado</a>
+            </div>
+        </div>
+        <div class="col-md-2" style="justify-content: center;">
+            <div class="center row">
+                <img class="clickimg" (click)="openDoc('termodedistrado.pdf')" src='assets/images/pdficon.png'>
+            </div>
+            <div class="center row">
+                <a class="clickable" (click)="openDoc('termodedistrado.pdf')">Termo de Distrado</a>
+            </div>
+        </div>
+    </div> -->
+    <div class="spaced row">
+        <ng-container *ngFor="let d of doclist; let di = index">
+            <div class="spaced col-md-2" style="justify-content: center;">
+                <ng-container *ngIf="d.tipo == 'word'">
+                    <div class="center row">
+                        <img class="clickimg" (click)="openDoc(d.nome)" src='assets/images/wordicon.png'>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="d.tipo == 'pdf'">
+                    <div class="center row">
+                        <img class="clickimg" (click)="openDoc(d.nome)" src='assets/images/pdficon.png'>
+                    </div>
+                </ng-container>
+                <div class="center row">
+                    <a class="clickable" (click)="openDoc(d.nome)">{{d.nome}}</a>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<!-- <div class="visible center row">
+        <qrcode class="visible" [qrdata]="'http://sistema.grupojf.com.br'" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+    </div> -->
+<!-- </div> -->

@@ -1,0 +1,47 @@
+[
+    {
+        "val": "ODC Nova Iguaçu I (Centro)",
+        "nome": "ODC Nova Iguaçu I",
+        "ativo": 1
+    },
+    {
+        "val": "ODC Nova Iguaçu II (Centro)",
+        "nome": "ODC Nova Iguaçu II",
+        "ativo": 1
+    },
+    {
+        "val": "ODC Nova Iguaçu III (Centro)",
+        "nome": "ODC Nova Iguaçu III",
+        "ativo": 1
+    },
+    {
+        "val": "ODC Nova Iguaçu IV (Centro)",
+        "nome": "ODC Nova Iguaçu IV",
+        "ativo": 1
+    },
+    {
+        "val": "ODC Belford Roxo (Centro)",
+        "nome": "ODC Belford Roxo",
+        "ativo": 1
+    },
+    {
+        "val": "ODC São João de Meriti (Centro)",
+        "nome": "ODC São João de Meriti",
+        "ativo": 1
+    },
+    {
+        "val": "ODC Vilar dos Teles (Centro)",
+        "nome": "ODC Vilar dos Teles",
+        "ativo": 1
+    },
+    {
+        "val": "ODC Pavuna (Centro)",
+        "nome": "ODC Pavuna",
+        "ativo": 0
+    },
+    {
+        "val": "Partmed",
+        "nome": "Partmed",
+        "ativo": 1
+    }
+]

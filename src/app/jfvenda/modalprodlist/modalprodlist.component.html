@@ -1,0 +1,33 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<h1 mat-dialog-title>{{data.modaltxt}}</h1>
+<!-- <p style="font-size: larger;font-weight: bolder;">{{data.modaltxt}}</p> -->
+<!-- <div *ngFor="let p of data.produtos; let i = index">
+    <div class="row">
+        <div class="col-md-2">
+            {{p.produto}}
+        </div>
+        <div class="col-md-8">
+            {{p.nome}}
+        </div>
+        <div class="col-md-2">
+            {{p.grupo}}
+        </div>
+    </div> -->
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">CÓDIGO</th>
+            <th scope="col">NOME DO PRODUTO</th>
+            <th scope="col">GRUPO</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let p of data.produtos; let i = index;">
+            <th scope="row">{{p.produto}}</th>
+            <td>{{p.nome | uppercase}}</td>
+            <td>{{p.grupo | uppercase}}</td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,1066 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ControlContainer, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogActions } from '@angular/material/dialog';
+import jspdf, { jsPDF, jsPDFOptions } from 'jspdf';
+import { ConsultaService } from '../services/consulta.service';
+import { formatDate, TitleCasePipe, DatePipe, formatCurrency } from '@angular/common';
+import * as html2canvas from 'html2canvas';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { HttpClient } from '@angular/common/http';
+
+
+import { AuthService } from '../auth/auth.service';
+import jwt_decode from "jwt-decode";
+
+import { Router } from '@angular/router';
+import { validate } from 'gerador-validador-cpf';
+import { ModaljfComponent } from './modaljf/modaljf.component';
+import { ModalprodlistComponent } from './modalprodlist/modalprodlist.component';
+import { ToolsService } from '../services/tools.service';
+import { ModalconfirmdescontoComponent } from './modalconfirmdesconto/modalconfirmdesconto.component';
+import { ModalbComponent } from '../financeiro/modalb/modalb.component';
+import { ModalemergencialComponent } from './modalemergencial/modalemergencial.component';
+import { ModalentradaComponent } from './modalentrada/modalentrada.component';
+
+@Component({
+  selector: 'app-jfvenda',
+  templateUrl: './jfvenda.component.html',
+  styleUrls: ['./jfvenda.component.scss']
+})
+export class JfvendaComponent implements OnInit {
+
+  selectedOption: string = '';
+  printedOption: string = '';
+  plano: string = '';
+  valorparcela: number = 0;
+  adesao: number = 0;
+  priparcela: number = 0;
+  descontos: number = 1;
+  desconto: number = 100;
+  parcelcontrol: number = 0;
+  gerentectrl: number = 0;
+  valordesconto: number = 0;
+  pdfshow: number = 0;
+  tipocontrato: number = 0;
+  nomeplano: string = '';
+  finbaenable: number = 0;
+  finbbenable: number = 0;
+  dep1: any = '';
+  dep2: any = '';
+  dep3: any = '';
+  dep4: any = '';
+  finobj: any = null;
+  formobj: any = null;
+  buscaclientecpf: String = '';
+  objbusca: any = [];
+  objbuscav: any = [];
+  deletefin: number = 0;
+  pwd: any;
+  datavencimento = new Date();
+  forma_pagamento: number[] = [];
+  valor_pago: Number = 0;
+  options = [
+    { name: "option1", value: 1 },
+    { name: "option2", value: 2 }
+  ]
+
+  qtdparcelas: number = 0;
+
+
+
+  hidedescontos: number = 1;
+  depbtnenable: number = 0;
+  depbtnincenable: number = 0;
+  parcela: number = 1;
+  valortot: number = 0;
+  depNome: string = '';
+  depCpf: string = '';
+  depRg: string = '';
+  depOrg: string = '';
+  depNasc: any = '';
+  depGen: string = '';
+  dependentesx: any[] = [];
+  testpage: string = '';
+  titNome: string = '';
+  tNome: string = '';
+  tabindex: number = 0;
+  valorf: Number = 0;
+  valorft: Number = 0;
+  valorparcelaf: any = 0;
+  showcarne: Number = 0;
+  enabletitb: number = 1;
+  public validtit: number = 0;
+  public showdeplist: number = 0;
+  public depForm = new FormGroup({
+    depnome: new FormControl(''),
+    depcpf: new FormControl(''),
+    deprg: new FormControl(''),
+    deporgao: new FormControl(''),
+    depnasc: new FormControl(''),
+    depgen: new FormControl(''),
+  });
+  dependentes: any = [];
+  profileForm: any;
+  objvenda: any;
+  finForm: any;
+  pagForm: any;
+  tcontrato: number = 0;
+  enabletitinc: number = 0;
+  opag: any;
+  showcartao: number = 0;
+  objcliente: any = [];
+  objvendedor: any = [];
+  objbuscac: any = [];
+  avista: number = 0;
+  deps: any = [];
+  depcount: Number = 0;
+  pagamento: any;
+  objpagamento: any;
+  pagar: Number = 0;
+  parcel: Number = 0;
+  objupdatepag: any;
+  objcomprovante: any;
+  showcomprovante: number = 0;
+  dtvenci = new Date();
+  objpaga: any;
+  atraso: number = 0;
+  contaatraso: number = 0;
+  juros: number = 0;
+  role: any;
+  user: any;
+  venda: any;
+  valor_parcela: any;
+  valparcela: any;
+  unidade: any;
+  blckbtnpag: number = 0;
+  showcancellabel: number = 0;
+  showcancelbtn: number = 0;
+  vendaForm: any;
+  vendalayout: number = 1;
+  total: number = 0;
+  objbuscap: any = [];
+  teste: number = 0;
+  @ViewChild('pacientecpf', { static: false }) pacicpf: any;
+  @ViewChild('fiadorcpf', { static: false }) fiadcpf: any;
+  objprint: any;
+  today: Date = new (Date);
+  userForm: FormGroup;
+  produtos: any = [];
+  discount: number = 0;
+  taxas: any;
+  arraycjuros: any;
+  arraysjuros: any;
+  prodemg = 0;
+  entradas: any = [];
+  fentradas: any = [];
+  totalentrada: any = 0;
+  constructor(private router: Router, private auth: AuthService, public datepipe: DatePipe, private formBuilder: FormBuilder, public dialog: MatDialog, private tools: ToolsService, private service: ConsultaService) {
+    this.userForm = this.formBuilder.group({
+
+    });
+
+  }
+
+  ngOnInit(): void {
+    this.auth.isAuth();
+    this.getSessionItem();
+    let role = this.auth.getRole();
+    console.log(role);
+    if (role == 'admin') {
+      this.router.navigate(['/home']);
+    }
+    let testdate = new Date();
+    this.today = testdate;
+    let myDate = formatDate(new Date(), 'yyyy-MM-dd : HH:mm', 'en');
+    console.log(myDate);
+    this.service.getEntradas().subscribe(f => {
+      console.log(f)
+      this.entradas = f;
+    });
+    this.vendaForm = new FormGroup({
+      cliente: new FormControl('', Validators.required),
+      cpfpaciente: new FormControl('', Validators.required),
+      cpffiador: new FormControl('', Validators.required),
+      valoravaliacao: new FormControl(0, Validators.required),
+      valorcomercial: new FormControl(0, Validators.required),
+      //produto: new FormControl('', Validators.required),
+      buscaproduto: new FormControl(''),
+      desconto: new FormControl(0, Validators.required),
+      valorentrada: new FormControl(0),
+      valorfinanciado: new FormControl(0, Validators.required),
+      fpagentrada: new FormControl('Crédito na clínica', Validators.required),
+      fpagparcela: new FormControl('boleto', Validators.required),
+      parcelamento: new FormControl('sjuros', Validators.required),
+      qtdparcelas: new FormControl(2, Validators.required),
+      isnotfiador: new FormControl(false),
+
+    });
+    this.setTaxas();
+    // alert("COMPONENTE EM DESENVOLVIMENTO");
+
+
+
+    //this.adesao='';
+    //this.finForm.value.finnparcelas = 1;
+    //this.priparcela = this.valorparcela;
+
+    //  this.tNome='';
+    // this.titNome='';
+
+
+  }
+  selectAll(input: any) {
+    input.target.select();
+  }
+
+  setTaxas() {
+    this.service.getTaxas().subscribe(t => {
+      //console.log(t.Valores[0]);
+      let temptaxas = t.Valores[0];
+      let tjuros2a4 = temptaxas.juros2a4;
+      let tjuros5a8 = temptaxas.juros5a8;
+      let tjuros9a12 = temptaxas.juros9a12;
+      let tjuros13a16 = temptaxas.juros13a16;
+      let tjuros17a20 = temptaxas.juros17a20;
+      let tjuros21a24 = temptaxas.juros21a24;
+      let tjurosboleto = temptaxas.jurosboleto;
+      let tjuroscheque = temptaxas.juroscheque;
+      let ttaxaadicional = temptaxas.taxaadicional;
+      // let tjuros2a4 = (temptaxas.juros2a4 / 100).toFixed(4);
+      // let tjuros5a8 = (temptaxas.juros5a8 / 100).toFixed(4);
+      // let tjuros9a12 = (temptaxas.juros9a12 / 100).toFixed(4);
+      // let tjuros13a16 = (temptaxas.juros13a16 / 100).toFixed(4);
+      // let tjuros17a20 = (temptaxas.juros17a20 / 100).toFixed(4);
+      // let tjuros21a24 = (temptaxas.juros21a24 / 100).toFixed(4);
+      // let tjurosboleto = (temptaxas.jurosboleto / 100).toFixed(4);
+      // let tjuroscheque = (temptaxas.juroscheque / 100).toFixed(4);
+      // let ttaxaadicional = temptaxas.taxaadicional;
+      let objtemp = {
+        juros2a4: tjuros2a4,
+        juros5a8: tjuros5a8,
+        juros9a12: tjuros9a12,
+        juros13a16: tjuros13a16,
+        juros17a20: tjuros17a20,
+        juros21a24: tjuros21a24,
+        jurosboleto: tjurosboleto,
+        juroscheque: tjuroscheque,
+        taxaadicional: ttaxaadicional
+      }
+      this.taxas = objtemp;
+      console.log(this.taxas);
+    });
+
+  }
+  resetQtdParc() {
+    this.vendaForm.controls["qtdparcelas"].setValue(2);
+  }
+  calculateDesconto() {
+    let valor = this.vendaForm.controls["desconto"].value;
+    let val;
+    let prodval = this.sumProdVal();
+    let maxpercent;
+    let alloweddiscount;
+    let modaltxt;
+    if (prodval >= 10000) {
+      maxpercent = 8;
+    }
+    else {
+      maxpercent = 5;
+    }
+    if (this.produtos[0] == undefined) {
+      this.vendaForm.controls["desconto"].setValue(0);
+    }
+    else {
+      if (this.vendaForm.controls["desconto"].value > 0) {
+        if ((valor + this.discount) > maxpercent) {
+          alloweddiscount = (maxpercent - this.discount)
+          alloweddiscount = this.tools.decimalFix(alloweddiscount);
+          if (alloweddiscount < 0) {
+            // alert("Desconto não permitido para esta venda");
+            modaltxt = 'Desconto não permitido para esta venda'
+          }
+          else {
+            // alert("Desconto máximo permitido para esta venda é de " + alloweddiscount + "%");
+            modaltxt = "Desconto máximo para esta venda é de " + maxpercent + "%, desconto permitido vai até " + alloweddiscount + "%"
+          }
+          const dialogRefa = this.dialog.open(ModalconfirmdescontoComponent, {
+            data: {
+              modaltxt: modaltxt
+            },
+            panelClass: 'modalcheckdiscount'
+          });
+          dialogRefa.afterClosed().subscribe(result => {
+            if (result) {
+              let modaltxtb = 'Confirme sua senha aplicar o desconto'
+              const dialogRefb = this.dialog.open(ModalbComponent, {
+                data: {
+                  modaltxt: modaltxtb
+                },
+                panelClass: 'modalcheckdiscount'
+              });
+              dialogRefb.afterClosed().subscribe(resultb => {
+                if (resultb) {
+                  const username = this.auth.getUser();
+                  this.service.getUser(username).subscribe(u => {
+                    let user = u;
+                    if (resultb == user.pwd) {
+                      console.log('Success');
+                      val = (Number(this.vendaForm.controls["desconto"].value) * Number(this.vendaForm.controls["valoravaliacao"].value) / 100)
+                      val = Number(this.vendaForm.controls["valoravaliacao"].value) - val;
+                      this.vendaForm.controls["valorcomercial"].setValue(val);
+                      this.setTotFin();
+                    }
+                    else {
+                      this.vendaForm.controls["desconto"].setValue(0);
+                      this.vendaForm.controls["valorcomercial"].setValue(this.vendaForm.controls["valoravaliacao"].value);
+                      this.setTotFin();
+                    }
+                  })
+                } else {
+                  this.vendaForm.controls["desconto"].setValue(0);
+                  this.vendaForm.controls["valorcomercial"].setValue(this.vendaForm.controls["valoravaliacao"].value);
+                  this.setTotFin();
+                }
+              });
+            }
+            else {
+              this.vendaForm.controls["desconto"].setValue(0);
+              this.vendaForm.controls["valorcomercial"].setValue(this.vendaForm.controls["valoravaliacao"].value);
+              this.setTotFin();
+            }
+          })
+          //  this.vendaForm.controls["desconto"].setValue(0);
+        }
+        else {
+          if (this.vendaForm.controls["desconto"].value > 0) {
+            val = (Number(this.vendaForm.controls["desconto"].value) * Number(this.vendaForm.controls["valoravaliacao"].value) / 100)
+            val = Number(this.vendaForm.controls["valoravaliacao"].value) - val;
+            this.vendaForm.controls["valorcomercial"].setValue(val);
+          }
+          if (this.vendaForm.controls["desconto"].value == 0) {
+            this.vendaForm.controls["valorcomercial"].setValue(this.vendaForm.controls["valoravaliacao"].value);
+          }
+          this.setTotFin();
+        }
+      }
+      if (this.vendaForm.controls["desconto"].value == 0) {
+        this.vendaForm.controls["valorcomercial"].setValue(this.vendaForm.controls["valoravaliacao"].value);
+      }
+      this.setTotFin();
+    }
+  }
+  calcDesconto() {
+    if (this.produtos[0] == undefined) {
+      this.vendaForm.controls["desconto"].setValue(0);
+    }
+    this.calcMaxDiscount(this.vendaForm.controls["desconto"].value);
+    if (this.vendaForm.controls["desconto"].value > 0) {
+      let val = (Number(this.vendaForm.controls["desconto"].value) * Number(this.vendaForm.controls["valoravaliacao"].value) / 100)
+      val = Number(this.vendaForm.controls["valoravaliacao"].value) - val;
+      this.vendaForm.controls["valorcomercial"].setValue(val);
+    }
+    if (this.vendaForm.controls["desconto"].value == 0) {
+      this.vendaForm.controls["valorcomercial"].setValue(this.vendaForm.controls["valoravaliacao"].value);
+    }
+    this.setTotFin();
+    console.log(this.vendaForm.controls["desconto"].value);
+  }
+  calcMaxDiscount(val: any) {
+    let prodval = this.sumProdVal();
+    let maxpercent;
+    let alloweddiscount;
+    let modaltxt;
+    if (prodval >= 10000) {
+      maxpercent = 8;
+    }
+    else {
+      maxpercent = 5;
+    }
+    if (this.vendaForm.controls["desconto"].value > 0) {
+      if ((val + this.discount) > maxpercent) {
+        alloweddiscount = (maxpercent - this.discount)
+        alloweddiscount = this.tools.decimalFix(alloweddiscount);
+        if (alloweddiscount < 0) {
+          // alert("Desconto não permitido para esta venda");
+          modaltxt = 'Desconto não permitido para esta venda'
+        }
+        else {
+          // alert("Desconto máximo permitido para esta venda é de " + alloweddiscount + "%");
+          modaltxt = "Desconto máximo para esta venda é de " + maxpercent + "%, desconto permitido vai até " + alloweddiscount + "%"
+        }
+        const dialogRefa = this.dialog.open(ModalconfirmdescontoComponent, {
+          data: {
+            modaltxt: modaltxt
+          },
+          panelClass: 'modalcheckdiscount'
+        });
+        dialogRefa.afterClosed().subscribe(result => {
+          if (result) {
+            let modaltxtb = 'Confirme sua senha aplicar o desconto'
+            const dialogRefb = this.dialog.open(ModalbComponent, {
+              data: {
+                modaltxt: modaltxtb
+              }
+            });
+            dialogRefb.afterClosed().subscribe(resultb => {
+              if (resultb) {
+                const username = this.auth.getUser();
+                this.service.getUser(username).subscribe(u => {
+                  let user = u;
+                  if (resultb == user.pwd) {
+                    console.log('Success');
+                  }
+                  else {
+                    this.vendaForm.controls["desconto"].setValue(0);
+                  }
+                })
+              } else {
+                this.vendaForm.controls["desconto"].setValue(0);
+              }
+            });
+          }
+          else {
+            this.vendaForm.controls["desconto"].setValue(0);
+          }
+        })
+        //  this.vendaForm.controls["desconto"].setValue(0);
+      }
+    }
+    console.log(alloweddiscount);
+    console.log(maxpercent);
+
+  }
+  calcFin() {
+
+  }
+  jurosCompostos(calcbase: any, qtdparc: any) {
+    let jurosparc: number = 0;
+    if (qtdparc >= 2 && qtdparc <= 4) {
+      jurosparc = Number((this.taxas.juros2a4 / 100).toFixed(4));
+    }
+    if (qtdparc >= 5 && qtdparc <= 8) {
+      jurosparc = Number((this.taxas.juros5a8 / 100).toFixed(4));
+    }
+    if (qtdparc >= 9 && qtdparc <= 12) {
+      jurosparc = Number((this.taxas.juros9a12 / 100).toFixed(4));
+    }
+    if (qtdparc >= 13 && qtdparc <= 16) {
+      jurosparc = Number((this.taxas.juros13a16 / 100).toFixed(4));
+    }
+    if (qtdparc >= 17 && qtdparc <= 20) {
+      jurosparc = Number((this.taxas.juros17a20 / 100).toFixed(4));
+    }
+    if (qtdparc >= 21 && qtdparc <= 24) {
+      jurosparc = Number((this.taxas.juros21a24 / 100).toFixed(4));
+    }
+    let calc1 = 1 + jurosparc;
+    let calc2 = Math.pow(calc1, qtdparc);
+    let result = calcbase * calc2;
+    return result;
+
+  }
+  jurosParcelaNoFix(qtdparc: any) {
+    let jurosparc: number = 0;
+    if (qtdparc >= 2 && qtdparc <= 4) {
+      jurosparc = Number((this.taxas.juros2a4 / 100));
+    }
+    if (qtdparc >= 5 && qtdparc <= 8) {
+      jurosparc = Number((this.taxas.juros5a8 / 100));
+    }
+    if (qtdparc >= 9 && qtdparc <= 12) {
+      jurosparc = Number((this.taxas.juros9a12 / 100));
+    }
+    if (qtdparc >= 13 && qtdparc <= 16) {
+      jurosparc = Number((this.taxas.juros13a16 / 100));
+    }
+    if (qtdparc >= 17 && qtdparc <= 20) {
+      jurosparc = Number((this.taxas.juros17a20 / 100));
+    }
+    if (qtdparc >= 21 && qtdparc <= 24) {
+      jurosparc = Number((this.taxas.juros21a24 / 100));
+    }
+
+    return jurosparc;
+
+  }
+  jurosParcela(qtdparc: any) {
+    let jurosparc: number = 0;
+    if (qtdparc >= 2 && qtdparc <= 4) {
+      jurosparc = Number((this.taxas.juros2a4 / 100).toFixed(4));
+    }
+    if (qtdparc >= 5 && qtdparc <= 8) {
+      jurosparc = Number((this.taxas.juros5a8 / 100).toFixed(4));
+    }
+    if (qtdparc >= 9 && qtdparc <= 12) {
+      jurosparc = Number((this.taxas.juros9a12 / 100).toFixed(4));
+    }
+    if (qtdparc >= 13 && qtdparc <= 16) {
+      jurosparc = Number((this.taxas.juros13a16 / 100).toFixed(4));
+    }
+    if (qtdparc >= 17 && qtdparc <= 20) {
+      jurosparc = Number((this.taxas.juros17a20 / 100).toFixed(4));
+    }
+    if (qtdparc >= 21 && qtdparc <= 24) {
+      jurosparc = Number((this.taxas.juros21a24 / 100).toFixed(4));
+    }
+
+    return jurosparc;
+
+  }
+  calc() {
+    if (this.vendaForm.controls["parcelamento"].value == 'sjuros') {
+      this.calc6();
+    }
+    if (this.vendaForm.controls["parcelamento"].value == 'cjuros') {
+      this.calc24();
+    }
+
+    //this.calc24();
+
+  }
+  calculateParcela(totfinanciado: number, juroscategoria: number, qtdparcelas: number, jurosparcela: number, taxaadicional: number) {
+    let valparcelaf = (((totfinanciado + ((totfinanciado * juroscategoria) * qtdparcelas) / 24) * (1 + jurosparcela) ** qtdparcelas) / qtdparcelas) + taxaadicional;
+    //let valparcela = Number(valparcelaf.toFixed(2));
+    let valparcela = Number(valparcelaf);
+    return valparcela;
+  }
+  calc24Test() {
+    let totfinanciado = this.vendaForm.controls["valorfinanciado"].value;
+    let qtdparcelas = this.vendaForm.controls["qtdparcelas"].value;
+    let juroscategoria;
+    if (this.vendaForm.controls["fpagparcela"].value == 'boleto') {
+      juroscategoria = ((totfinanciado * this.taxas.jurosboleto) / 100).toFixed(2);
+    }
+    if (this.vendaForm.controls["fpagparcela"].value == 'cheque') {
+      juroscategoria = ((totfinanciado * this.taxas.juroscheque) / 100).toFixed(2);
+    }
+    console.log(juroscategoria);
+    juroscategoria = (Number(juroscategoria).toFixed(4))
+    let calcbase = totfinanciado + ((Number(juroscategoria) * 7) / 24)
+    calcbase = Number(calcbase.toFixed(2))
+    let valcomjuros = this.jurosCompostos(calcbase, qtdparcelas);
+    let valparcela = (Number(valcomjuros) / Number(qtdparcelas)) + Number(this.taxas.taxaadicional);
+    valparcela = Number((valparcela).toFixed(2));
+    let valtotal = Number(valparcela) * Number(qtdparcelas);
+    let valshow = formatCurrency(valtotal, 'pt-BR', 'R$');
+    let valpshow = formatCurrency(valparcela, 'pt-BR', 'R$');
+    alert("Valor total a ser pago: " + valshow + " em " + qtdparcelas + "x de " + valpshow + "");
+    console.log(valshow);
+    console.log(valpshow);
+  }
+  calc24() {
+    let totfinanciado = Number(this.vendaForm.controls["valorfinanciado"].value);
+    let qtdparcelas = Number(this.vendaForm.controls["qtdparcelas"].value);
+    let juroscategoria: number = 0;
+    if (this.vendaForm.controls["fpagparcela"].value == 'boleto') {
+      let fjuroscategoria = ((this.taxas.jurosboleto) / 100);
+      juroscategoria = Number(fjuroscategoria);
+    }
+    if (this.vendaForm.controls["fpagparcela"].value == 'cheque') {
+      let fjuroscategoria = ((this.taxas.juroscheque) / 100);
+      juroscategoria = Number(fjuroscategoria);
+    }
+    let jurosparcela: number = 0;
+    if (this.vendaForm.controls["parcelamento"].value == 'sjuros') {
+      jurosparcela = 0;
+    }
+    if (this.vendaForm.controls["parcelamento"].value == 'cjuros') {
+      jurosparcela = Number(this.jurosParcelaNoFix(qtdparcelas));
+    }
+    let taxaadicional = Number(this.taxas.taxaadicional);
+    //=(((totfinanciado+((totfinanciado*juroscategoria)*qtdparcelas)/24)*(1+jurosparcela)^qtdparcelas)/qtdparcelas)+taxaadicional
+    // let valparcelaf = (((totfinanciado + ((totfinanciado * juroscategoria) * qtdparcelas) / 24) * (1 + jurosparcela) ** qtdparcelas) / qtdparcelas) + taxaadicional;
+    let valparcela = this.calculateParcela(totfinanciado, juroscategoria, qtdparcelas, jurosparcela, taxaadicional);
+    let valtotal = valparcela * qtdparcelas;
+    console.log(totfinanciado);
+    console.log(juroscategoria);
+    console.log(jurosparcela);
+    console.log(taxaadicional);
+    console.log(valparcela);
+    console.log(valtotal);
+    console.log(this.tools.decimalFix(valparcela));
+    console.log(this.tools.decimalFix(valtotal));
+    valparcela = this.tools.decimalFix(valparcela);
+    valtotal = this.tools.decimalFix(valtotal);
+    let valshow = formatCurrency(valtotal, 'pt-BR', 'R$');
+    let valpshow = formatCurrency(valparcela, 'pt-BR', 'R$');
+    alert("Valor total a ser pago: " + valshow + " em " + qtdparcelas + "x de " + valpshow + "");
+    console.log(valshow);
+    console.log(valpshow);
+  }
+  objparcelamento() {
+    let totfinanciado = Number(this.vendaForm.controls["valorfinanciado"].value);
+    let arraycjuros = [];
+    let arraysjuros = [];
+    let juroscategoria: number = 0;
+    if (this.vendaForm.controls["fpagparcela"].value == 'boleto') {
+      let fjuroscategoria = ((this.taxas.jurosboleto) / 100);
+      juroscategoria = Number(fjuroscategoria);
+    }
+    if (this.vendaForm.controls["fpagparcela"].value == 'cheque') {
+      let fjuroscategoria = ((this.taxas.juroscheque) / 100);
+      juroscategoria = Number(fjuroscategoria);
+    }
+    //let qtdparcelas:number;
+    for (let qtdparcelas = 7; qtdparcelas <= 24; qtdparcelas++) {
+      let jurosparcela = Number(this.jurosParcelaNoFix(qtdparcelas));
+      let taxaadicional = Number(this.taxas.taxaadicional);
+      //=(((totfinanciado+((totfinanciado*juroscategoria)*qtdparcelas)/24)*(1+jurosparcela)^qtdparcelas)/qtdparcelas)+taxaadicional
+      // let valparcelaf = (((totfinanciado + ((totfinanciado * juroscategoria) * qtdparcelas) / 24) * (1 + jurosparcela) ** qtdparcelas) / qtdparcelas) + taxaadicional;
+      let valparcela = this.calculateParcela(totfinanciado, juroscategoria, qtdparcelas, jurosparcela, taxaadicional);
+      let valtotal = valparcela * qtdparcelas;
+      valparcela = this.tools.decimalFix(valparcela);
+      valtotal = this.tools.decimalFix(valtotal);
+      let valshow = formatCurrency(valtotal, 'pt-BR', 'R$');
+      let valpshow = formatCurrency(valparcela, 'pt-BR', 'R$');
+      let desc = "" + qtdparcelas + "x de " + valpshow + "";
+      let obj = {
+        valparcela: valparcela,
+        valtotal: valtotal,
+        desc: desc,
+        qtdparcelas: qtdparcelas
+      }
+      arraycjuros.push(obj);
+      //    alert("Valor total a ser pago: " + valshow + " em " + qtdparcelas + "x de " + valpshow + "");
+    }
+    for (let qtdparcelas = 1; qtdparcelas <= 6; qtdparcelas++) {
+      let valparcela = totfinanciado / qtdparcelas;
+      let valtotal = valparcela * qtdparcelas;
+      valparcela = this.tools.decimalFix(valparcela);
+      valtotal = this.tools.decimalFix(valtotal);
+      let valshow = formatCurrency(valtotal, 'pt-BR', 'R$');
+      let valpshow = formatCurrency(valparcela, 'pt-BR', 'R$');
+      let desc = "" + qtdparcelas + "x de " + valpshow + "";
+      let obj = {
+        valparcela: valparcela,
+        valtotal: valtotal,
+        desc: desc,
+        qtdparcelas: qtdparcelas
+      }
+      arraysjuros.push(obj);
+      //    alert("Valor total a ser pago: " + valshow + " em " + qtdparcelas + "x de " + valpshow + "");
+    }
+    console.log(arraysjuros);
+    console.log(arraycjuros);
+    this.arraycjuros = arraycjuros;
+    this.arraysjuros = arraysjuros;
+  }
+  calc6Old() {
+    let totfinanciado = this.vendaForm.controls["valorfinanciado"].value;
+    let qtdparcelas = this.vendaForm.controls["qtdparcelas"].value;
+    let juroscategoria: number = 0;
+    if (this.vendaForm.controls["fpagparcela"].value == 'boleto') {
+      let fjuroscategoria = ((this.taxas.jurosboleto) / 100);
+      juroscategoria = Number(fjuroscategoria);
+    }
+    if (this.vendaForm.controls["fpagparcela"].value == 'cheque') {
+      let fjuroscategoria = ((this.taxas.juroscheque) / 100);
+      juroscategoria = Number(fjuroscategoria);
+    }
+    let calcbase = totfinanciado + (totfinanciado * juroscategoria);
+    // calcbase = Number(calcbase.toFixed(2))
+    let valsemjuros = calcbase;
+    let valparcela = (Number(valsemjuros) / Number(qtdparcelas)) + Number(this.taxas.taxaadicional);
+    //  valparcela = Number((valparcela).toFixed(2));
+    let valtotal = Number(valparcela) * Number(qtdparcelas);
+    let valshow = formatCurrency(valtotal, 'pt-BR', 'R$');
+    let valpshow = formatCurrency(valparcela, 'pt-BR', 'R$');
+    alert("Valor total a ser pago: " + valshow + " em " + qtdparcelas + "x de " + valpshow + "");
+    console.log(valshow);
+    console.log(valpshow);
+  }
+  calc6() {
+    let totfinanciado = this.vendaForm.controls["valorfinanciado"].value;
+    let qtdparcelas = this.vendaForm.controls["qtdparcelas"].value;
+    let valparcela = (Number(totfinanciado) / Number(qtdparcelas));
+    //  valparcela = Number((valparcela).toFixed(2));
+    let valtotal = Number(valparcela) * Number(qtdparcelas);
+    valparcela = this.tools.decimalFix(valparcela);
+    valtotal = this.tools.decimalFix(valtotal);
+    console.log(valparcela);
+    console.log(valtotal);
+    let valshow = formatCurrency(valtotal, 'pt-BR', 'R$');
+    let valpshow = formatCurrency(valparcela, 'pt-BR', 'R$');
+    alert("Valor total a ser pago: " + valshow + " em " + qtdparcelas + "x de " + valpshow + "");
+    console.log(valshow);
+    console.log(valpshow);
+  }
+
+  fixPercentage() {
+    console.log(this.vendaForm.controls["desconto"].value);
+    if (this.vendaForm.controls["desconto"].value > 100) {
+      this.vendaForm.controls["desconto"].setValue(100);
+    }
+    if (this.vendaForm.controls["desconto"].value < 0) {
+      this.vendaForm.controls["desconto"].setValue(0);
+    }
+    console.log(this.vendaForm.controls["desconto"].value);
+  }
+  inputAvaliacao() {
+    //this.vendaForm.controls["desconto"].reset();
+    //this.vendaForm.controls["valorcomercial"].setValue(0);
+    this.vendaForm.controls["valorcomercial"].setValue(this.vendaForm.controls["valoravaliacao"].value);
+    let tot = ((this.total - this.vendaForm.controls["valoravaliacao"].value) / this.total) * 100;
+    console.log(tot);
+    //this.calcDesconto();
+    this.fixValues();
+    this.setTotFin();
+    this.calcPercent();
+    this.objparcelamento();
+  }
+  // hasChequeCtrl(){
+  //   console.log(this.vendaForm.controls["hascheque"].value);
+  //   if(this.vendaForm.controls["hascheque"].value == "s"){
+  //     this.vendaForm.addControl("fpagentrada", new FormControl('Crédito na clínica', Validators.required));
+  //     console.log('Control added')
+  //   }
+  //   if(this.vendaForm.controls["hascheque"].value == "n"){
+  //     if (this.vendaForm.controls["fpagentrada"]){
+  //       this.vendaForm.removeControl("fpagentrada");
+  //       console.log('Control removed')
+  //     }
+
+  //   }
+  // }
+
+  setEntrada() {
+    this.fixValues();
+    this.setTotFin();
+  }
+  setTotFin() {
+    let vcomercial = this.vendaForm.controls["valorcomercial"].value;
+    let vfinanciado = vcomercial - this.vendaForm.controls["valorentrada"].value;
+    if (vfinanciado < 0) {
+      this.vendaForm.controls["valorfinanciado"].setValue(0);
+    }
+    else {
+      this.vendaForm.controls["valorfinanciado"].setValue(vfinanciado);
+    }
+    console.log(this.vendaForm.controls["valorcomercial"].value);
+    console.log(this.vendaForm.controls["valorentrada"].value);
+    this.objparcelamento();
+  }
+  fixValues() {
+    let vcom = this.vendaForm.controls["valorcomercial"].value;
+    let vent = this.vendaForm.controls["valorentrada"].value;
+    if (vcom < vent) {
+      this.vendaForm.controls["valorentrada"].setValue(vcom);
+    }
+  }
+  testForm() {
+    console.log(this.vendaForm.valid);
+    if (this.vendaForm.valid) {
+      alert("Its valid");
+    }
+    else {
+      alert("Its invalid");
+    }
+  }
+
+  showContent() {
+    alert("Working!");
+  }
+  menuNavigate(path: any) {
+    if (path == 'venda') {
+      this.router.navigate(['/financeiro']);
+    }
+    if (path == 'consulta') {
+      this.router.navigate(['/consulta']);
+    }
+    if (path == 'jf') {
+      this.router.navigate(['/jfvenda']);
+    }
+
+  }
+  calcPercent() {
+    if (this.produtos[0] != undefined) {
+      console.log(this.produtos);
+      let vala = this.vendaForm.controls["valorcomercial"].value;
+      let sum: number = this.sumProdVal();
+      let valb = Number(sum);
+      let perc = (Number(vala / valb));
+      // let value = this.tools.decimalFix(100 - Number(perc));
+      console.log(vala);
+      console.log(valb);
+      console.log(perc);
+      let value = 0;
+      perc = 1 - perc;
+      value = perc * 100;
+      value = this.tools.decimalFix(value);
+      //  this.vendaForm.controls["desconto"].setValue(value);
+      this.discount = value;
+
+      console.log(value);
+      //let result = value + "%";
+      //console.log(result);
+
+    }
+  }
+
+  sumProdVal() {
+    if (this.produtos[0] != undefined) {
+      let sum: number = 0;
+      for (let i = 0; i < this.produtos.length; i++) {
+        sum = this.tools.decimalFix(Number(sum) + Number(this.produtos[i].valor));
+      }
+      return sum;
+    }
+    else return 0;
+  }
+
+  logout() {
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("login");
+    sessionStorage.removeItem("role");
+    this.router.navigate(['/login']);
+  }
+  cpfValid(tipo: any) {
+    // validate(cpf);
+    const pcpf = this.vendaForm.controls["cpfpaciente"].value;
+    const fcpf = this.vendaForm.controls["cpffiador"].value;
+    if (tipo == 1) {
+      if (fcpf != null && fcpf != '' && !validate(fcpf)) {
+        this.vendaForm.controls["cpffiador"].setValue(null);
+        this.fiadcpf.nativeElement.focus();
+        alert("CPF inválido")
+      }
+      this.vendaForm.controls["cpfpaciente"].setValue(this.vendaForm.controls["cpffiador"].value);
+
+    }
+    if (tipo == 2) {
+      if (fcpf != null && fcpf != '' && !validate(fcpf)) {
+        this.vendaForm.controls["cpffiador"].setValue(null);
+        this.fiadcpf.nativeElement.focus();
+        alert("CPF do fiador inválido")
+      }
+    }
+  }
+  getUnidadeTable(unidade: any) {
+    let result = ''
+    if (unidade == 'ODC Nova Iguaçu I (Centro)') {
+      result = 'prodni1'
+    }
+    if (unidade == 'ODC Nova Iguaçu II (Centro)') {
+      result = 'prodni2'
+    }
+    if (unidade == 'ODC Nova Iguaçu III (Centro)') {
+      result = 'prodni3'
+    }
+    if (unidade == 'ODC Belford Roxo (Centro)') {
+      result = 'prodbel'
+    }
+    if (unidade == 'ODC São João de Meriti (Centro)') {
+      result = 'prodsjm'
+    }
+    if (unidade == 'ODC Vilar dos Teles (Centro)') {
+      result = 'prodvilar'
+    }
+    return result;
+  }
+  buscaProduto() {
+    if (this.vendaForm.controls["buscaproduto"].value.length >= 3) {
+      let unidade = this.getUnidadeTable(this.user.unidade);
+
+      // if (this.user.unidade == 'Partmed'){
+      //   unidade = 'prodni1'
+      // }
+      let search = {
+        unidade: unidade,
+        busca: this.vendaForm.controls["buscaproduto"].value
+      }
+      this.service.searchProdutos(search).subscribe(c => {
+        console.log(c);
+        if (c.Produtos.length > 0) {
+          this.objbuscap = c.Produtos;
+          console.log(this.objbuscap);
+        }
+        else {
+          this.objbuscap = [];
+        }
+      },
+        (error) => {
+          this.objbuscap = [];
+        });
+    }
+    if (this.vendaForm.controls["buscaproduto"].value.length < 3) {
+      this.objbuscap = [];
+    }
+  }
+  addProduto(produto: any, index: any) {
+    //this.produtos.tipo = 'tbl';
+    this.produtos.push(this.objbuscap[index]);
+    console.log(this.produtos);
+    this.objbuscap = [];
+    this.vendaForm.controls["buscaproduto"].setValue('');
+    this.vendaForm.controls["desconto"].setValue(0);
+    this.inputAvaliacao();
+    this.calcPercent();
+    // this.calcDesconto();
+  }
+  excluiProduto(index: any) {
+    if (this.produtos[index].produto == 'EMG') {
+      this.prodemg = 0;
+    }
+    this.produtos.splice(index, 1);
+    console.log(this.produtos);
+    //    console.log(this.produtos[0]);
+    this.vendaForm.controls["desconto"].setValue(0);
+    //console.log(this.produtos[0].valor);
+    this.inputAvaliacao();
+    this.calcPercent();
+    if (this.produtos[0] == undefined) {
+      this.discount = 0;
+    }
+
+  }
+  showProdList() {
+    let unidade = this.getUnidadeTable(this.user.unidade);
+    let obj = {
+      unidade: unidade
+    };
+    this.service.getProdutosByUnidade(obj).subscribe(u => {
+      console.log(u);
+      let produtos = u.Produtos;
+      let modaltxt = "Listagem de Produtos da Unidade " + this.user.unidade;
+      const dialogRef = this.dialog.open(ModalprodlistComponent, {
+        data: {
+          produtos: produtos,
+          modaltxt: modaltxt
+        },
+        panelClass: 'modalprodlist'
+      });
+
+    })
+  }
+  showEntrada() {
+    const dialogRef = this.dialog.open(ModalentradaComponent, {
+      data: {
+        entradas: this.entradas,
+        fentradas: this.fentradas,
+        totalentrada: this.totalentrada
+      },
+      panelClass: 'newprodutomodal'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      this.fentradas = result.entradas;
+      this.totalentrada = result.totalentrada;
+    });
+  }
+  procEmergencialModal() {
+    const dialogRef = this.dialog.open(ModalemergencialComponent, {
+      data: {
+
+      },
+      panelClass: 'newprodutomodal'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if (result) {
+        this.produtos.push(result);
+        console.log(this.produtos);
+        this.objbuscap = [];
+        this.vendaForm.controls["buscaproduto"].setValue('');
+        this.vendaForm.controls["desconto"].setValue(0);
+        this.inputAvaliacao();
+        this.calcPercent();
+        this.prodemg = 1;
+      }
+    })
+  }
+  clearFormVenda() {
+    this.vendaForm.reset();
+    this.vendaForm.controls["isnotfiador"].setValue(false);
+  }
+  resetFiador() {
+    this.vendaForm.controls["cpffiador"].setValue(null);
+    this.vendaForm.controls["cpfpaciente"].setValue(null);
+  }
+
+  newVenda() {
+    this.vendalayout = 1;
+  }
+
+  getSessionItem() {
+    //let temp: any = sessionStorage.getItem('login');
+    //this.user = JSON.parse(temp);
+    let token: any = sessionStorage.getItem('token');
+    let checktoken = JSON.parse(JSON.stringify(jwt_decode(token)));
+    this.role = checktoken.tipo;
+    this.user = {
+      nome: checktoken.nome,
+      username: checktoken.username,
+      unidade: checktoken.unidade
+    }
+    this.unidade = checktoken.unidade;
+    console.log(this.role);
+    console.log(this.user);
+    console.log(this.user.nome);
+    console.log(token);
+
+  }
+
+  saveVenda() {
+    if (this.vendaForm.valid) {
+      // let text = "Confirma os dados abaixo?"
+      // let paciente = this.vendaForm.controls["cliente"].value;
+      // let cpfp = this.vendaForm.controls["cpfpaciente"].value;
+      // let cpff = this.vendaForm.controls["cpffiador"].value;
+      // let docf = this.vendaForm.controls["docfinanceiro"].value;
+      // let doco = this.vendaForm.controls["docodc"].value;
+      // let valortotal = this.vendaForm.controls["valortotal"].value;
+      // let financiador = this.vendaForm.controls["tipo"].value;
+      let myDate = new Date();
+
+      const dialogRef = this.dialog.open(ModaljfComponent, {
+        // panelClass: 'modalA',
+        data: {
+          text: "Confirma os dados abaixo?",
+          paciente: this.vendaForm.controls["cliente"].value,
+          cpfp: this.vendaForm.controls["cpfpaciente"].value,
+          cpff: this.vendaForm.controls["cpffiador"].value,
+          docf: this.vendaForm.controls["docfinanceiro"].value,
+          doco: this.vendaForm.controls["docodc"].value,
+          valortotal: this.vendaForm.controls["valortotal"].value,
+          financiador: this.vendaForm.controls["financiador"].value,
+          isnotfiador: this.vendaForm.controls["isnotfiador"].value,
+
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if (result) {
+          let obj = {
+            cliente: this.vendaForm.controls["cliente"].value,
+            cpfpaciente: this.vendaForm.controls["cpfpaciente"].value,
+            cpffiador: this.vendaForm.controls["cpffiador"].value,
+            docfinanceiro: this.vendaForm.controls["docfinanceiro"].value,
+            docodc: this.vendaForm.controls["docodc"].value,
+            valortotal: this.vendaForm.controls["valortotal"].value,
+            isnotfiador: this.vendaForm.controls["isnotfiador"].value,
+            financiador: this.vendaForm.controls["financiador"].value,
+            createdat: myDate
+          }
+          this.objprint = obj;
+          console.log(obj);
+          alert("Venda cadastrada com sucesso!");
+          this.vendalayout = 2;
+          this.vendaForm.reset();
+          this.vendaForm.controls["isnotfiador"].setValue(false);
+        }
+      });
+    }
+    else {
+      alert("Preencha todos os campos");
+    }
+  }
+}
+
+
+
+
+
+
+
+

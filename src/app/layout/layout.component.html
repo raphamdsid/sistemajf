@@ -1,0 +1,138 @@
+<mat-toolbar class="no-print mat-elevation-z8">
+  <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+    <mat-icon *ngIf="!sidenav.opened">
+      menu
+    </mat-icon>
+    <mat-icon *ngIf="sidenav.opened">
+      close
+    </mat-icon>
+  </button>
+  {{user.nome | uppercase}} - {{unidade | uppercase}}
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav="matSidenav" class="no-print mat-elevation-z8">
+
+    <!-- <img class="avatar mat-elevation-z8" src="https://source.unsplash.com/c_GmwfHBDzk/200x200" /> -->
+
+    <!-- <h4 class="name">John Smith</h4>
+      <p class="designation">Software Engineer</p> -->
+    <!-- 
+    <mat-divider></mat-divider> -->
+    <!-- <div class="menurow row" (click)="menuNavigate('venda')" *ngIf="role != 'admin'">
+        VENDA PADRÃO
+    </div>
+    <div class="menurow row" (click)="menuNavigate('jf')" *ngIf="role != 'admin'">
+        VENDA BANCO J&F
+    </div>
+    <div class="menurow row" (click)="menuNavigate('consulta')">
+        CONSULTA
+    </div>
+    <div class="menurow row" (click)="menuNavigate('relatorios')">
+        RELATÓRIOS
+    </div>
+    <div class="menurow row" (click)="menuNavigate('config')">
+        CONFIGURAÇÕES
+    </div>
+    <div class="menurow row" *ngIf="role == 'admin' || role=='gerente'" (click)="menuNavigate('admin')">
+        <b>ADMIN</b>
+    </div>
+    <div class="logoff row" (click)="logout()">
+        <a style="font-weight: bold;">
+            SAIR
+        </a>
+    </div> -->
+    <button mat-button class="menu-button" [routerLink]="home" (click)="sidenav.toggle()">
+      <mat-icon>home</mat-icon>
+      <span>Página inicial</span>
+    </button>
+    <button *ngIf="unidade == 'Partmed' || role == 'admin'" style="padding-right: 0px;" mat-button class="menu-button" [routerLink]="home" (click)="goToUrl()">
+      <mat-icon>video_label</mat-icon>
+      <span>Partmed Essencial</span>
+    </button>
+    <!-- VENDAS -->
+    <ng-container *ngIf="role == 'comercial' || role == 'gerente' || role == 'admin'">
+      <button *ngIf="role == 'comercial' || role == 'gerente'" mat-button class="menu-button" [routerLink]="venda"
+        (click)="sidenav.toggle()">
+        <mat-icon>credit_card</mat-icon>
+        <span>Venda padrão</span>
+      </button>
+      <button *ngIf="role == 'comercial' || role == 'gerente'" mat-button class="menu-button" [routerLink]="jf"
+        (click)="sidenav.toggle()">
+        <mat-icon>attach_money</mat-icon>
+        <span>Venda Banco JF</span>
+      </button>
+      <button *ngIf="role == 'comercial' || role == 'gerente' || role == 'admin'" mat-button class="menu-button"
+        [routerLink]="consulta" (click)="sidenav.toggle()">
+        <mat-icon>search</mat-icon>
+        <span>Consulta</span>
+      </button>
+      <button *ngIf="role == 'comercial' || role == 'gerente' || role == 'admin'" mat-button class="menu-button"
+        [routerLink]="relatorios" (click)="sidenav.toggle()">
+        <mat-icon>list_alt</mat-icon>
+        <span>Relatórios</span>
+      </button>
+      <button mat-button class="menu-button" [routerLink]="config" (click)="sidenav.toggle()">
+        <mat-icon>settings</mat-icon>
+        <span>Configurações</span>
+      </button>
+      <ng-container *ngIf="role == 'admin' || role == 'gerente'">
+        <button mat-button class="menu-button" [routerLink]="comunicados" (click)="sidenav.toggle()">
+          <mat-icon>announcement</mat-icon>
+          <span>Comunicados</span>
+        </button>
+      </ng-container>
+      <button *ngIf="role == 'admin' || role=='gerente'" mat-button class="menu-button" [routerLink]="admin"
+        (click)="sidenav.toggle()">
+        <mat-icon>person</mat-icon>
+        <span>Admin</span>
+      </button>
+      <button *ngIf="role == 'gerente' || role == 'comercial'" mat-button class="menu-button" [routerLink]=""
+        (click)="openHelp();">
+        <mat-icon>help</mat-icon>
+        <span>Manual</span>
+      </button>
+      <button *ngIf="role == 'gerente'" mat-button class="menu-button" [routerLink]="docs" (click)="sidenav.toggle()">
+        <mat-icon>description</mat-icon>
+        <span>Documentos</span>
+      </button>
+    </ng-container>
+    <!-- /VENDAS -->
+
+    <!-- PROTESE -->
+    <ng-container *ngIf="role == 'responsavel tecnico' || role == 'ASB' || role == 'protetico'">
+      <button *ngIf="role == 'responsavel tecnico' || role == 'ASB'" style="line-height: 1;text-align: inherit;"
+        mat-button class="menu-button" [routerLink]="ordemservicolabext" (click)="sidenav.toggle()">
+        <div style="display: inline-block;">
+          <mat-icon>description</mat-icon>
+        </div>
+        <div style="display: inline-block;">Ordem de serviço<br>laboratório externo</div>
+      </button>
+      <button *ngIf="role == 'responsavel tecnico' || role == 'ASB'" mat-button class="menu-button"
+        [routerLink]="consultaprotese" (click)="sidenav.toggle()">
+        <mat-icon>search</mat-icon>
+        <span>Consulta</span>
+      </button>
+      <button *ngIf="role == 'responsavel tecnico' || role == 'ASB'" mat-button class="menu-button"
+        [routerLink]="relatorioprotese" (click)="sidenav.toggle()">
+        <mat-icon>list_alt</mat-icon>
+        <span>Relatórios</span>
+      </button>
+      <button mat-button class="menu-button" [routerLink]="config" (click)="sidenav.toggle()">
+        <mat-icon>settings</mat-icon>
+        <span>Configurações</span>
+      </button>
+    </ng-container>
+    <!-- /PROTESE -->
+    <button mat-button class="menu-button" (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      <span>Sair</span>
+    </button>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="content mat-elevation-z0">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+<!-- <router-outlet></router-outlet> -->

@@ -1,0 +1,61 @@
+alter table venda
+ADD column fiador varchar(105) after cliente,
+ADD COLUMN desconto float,
+ADD COLUMN valoravaliacao float, 
+ADD COLUMN valorcomercial float,
+ADD column valorfinanciado float,
+ADD column valorentrada float,
+ADD column valortabela float,
+ADD column valorparcela float,
+ADD column formapagparcela varchar(30),
+ADD column tipoparcelamento varchar(30),
+ADD column waitestornostatus tinyint default 0,
+ADD column waitestornovalor float default 0,
+ADD column waitestornofpag varchar(40),
+ADD column waitestornotxt text,
+ADD column waitestornouser text,
+ADD column waitestornodate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+ADD column liberadoatd char(1);
+
+
+-- CRIAÇÃO DA TABELA DE SOLICITAÇÕES DE ESTORNO ESPECIAIS
+CREATE TABLE IF NOT EXISTS exestornos (
+    id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    stats varchar(10) default 'ativo' not null,
+    nome VARCHAR(80) NOT NULL,
+    cpfcnpj VARCHAR(20) NOT NULL,
+    email VARCHAR(80),
+    tel VARCHAR(20) NOT NULL,
+    docodc VARCHAR(30) NOT NULL,
+    fpagcompra VARCHAR(30) NOT NULL,
+    valorcompra FLOAT NOT NULL,
+    valorestorno FLOAT NOT NULL,
+    tipo VARCHAR(30) NOT NULL,
+    motivo VARCHAR(300) NOT NULL,
+    tipopix VARCHAR(30),
+    chavepix VARCHAR(50),
+    banco VARCHAR(60),
+    codbanco VARCHAR(60),
+    agencia VARCHAR(60),
+    conta VARCHAR(60),
+    tipoconta VARCHAR(60),
+    unidade VARCHAR(60),
+    createdby VARCHAR(60),
+    createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+-- CRIAÇÃO DA TABELA DE ESTORNOS REALIZADOS
+CREATE TABLE IF NOT EXISTS estornos (
+    id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    gerente VARCHAR(60) NOT NULL,
+	unidade VARCHAR(60) NOT NULL,
+	valorcompra FLOAT NOT NULL,
+	valorsolicitado FLOAT NOT NULL,
+	valorestorno FLOAT NOT NULL,
+	docodc VARCHAR(30) NOT NULL,
+	situacao VARCHAR(30) NOT NULL,
+	motivo  VARCHAR(300),
+	solicitante VARCHAR(60) NOT NULL,
+	cpfcnpj VARCHAR(20) NOT NULL,
+	responsavel VARCHAR(60) NOT NULL,
+    createdat TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

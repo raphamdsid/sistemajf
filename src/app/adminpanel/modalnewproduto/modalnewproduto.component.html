@@ -1,0 +1,74 @@
+<div class="loader" *ngIf="sloader == 1"></div>
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<h1 mat-dialog-title style="text-align: center;">Cadastrar produto em ODC {{data.unidadetxt}}</h1>
+<div *ngIf="operacao == 1">
+    <form [formGroup]="newProdForm" autocomplete="off">
+        <div class="row" style="margin-bottom: 1%;">
+            <div class="col-md-3">
+                <b>Codigo: </b>
+                <input type="text" class="form-control" formControlName="produto" onpaste="return false" (focusout)="fixProdutoStr()" 
+                    onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'>
+            </div>
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-6">
+                <b>Produto: </b>
+                <input type="text" class="form-control" formControlName="nome">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <b>Valor: </b>
+                <input type="text" class="form-control" formControlName="valor" currencyMask
+                    [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+            </div>
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-4">
+                <b>Grupo: </b>
+                <select type="text" class="form-control" formControlName="grupo">
+                    <option value="CLINICO">CLINICO</option>
+                    <option value="PROTESE">PROTESE</option>
+                    <option value="ORTODONTIA">ORTODONTIA</option>
+                    <option value="ENDODONTIA">ENDODONTIA</option>
+                    <option value="CIRURGIA">CIRURGIA</option>
+                    <option value="HARMONIZAÇÃO">HARMONIZAÇÃO</option>
+                </select>
+            </div>
+        </div>
+    </form>
+    <div class="row" style="margin-top: 5%; justify-content: center;">
+        <div class="col-md-4">
+            <button class="btn btn-primary" style="width:48%; margin-right: 4%;"
+                (click)="nextStep()">Prosseguir</button>
+            <button class="btn btn-danger" style="width:48%;" (click)="onNoClick()">Cancelar</button>
+        </div>
+    </div>
+</div>
+<div *ngIf="operacao == 2">
+    <div class="row" style="justify-content: center; ">
+        <div class="col-md-12"
+            style="border-top: solid; padding-top: 5px; border-bottom: solid; border-right: solid; border-left: solid; padding-bottom: 5px;">
+            <b>Produto: </b>{{newProdForm.controls['nome'].value | uppercase}}
+        </div>
+    </div>
+    <div class="row" style="justify-content: center;">
+        <div class="col-md-4"
+            style="border-left: solid; padding-top: 5px; border-bottom: solid; border-right: solid; padding-bottom: 5px;">
+            <b>Codigo: </b>{{newProdForm.controls['produto'].value}}
+        </div>
+        <div class="col-md-4" style="padding-top: 5px; border-bottom: solid; border-right: solid; padding-bottom: 5px;">
+            <b>Valor: </b>{{newProdForm.controls['valor'].value | currency}}
+        </div>
+
+        <div class="col-md-4" style="padding-top: 5px; border-bottom: solid; border-right: solid; padding-bottom: 5px;">
+            <b>Grupo: </b>{{newProdForm.controls['grupo'].value | uppercase}}
+        </div>
+    </div>
+    <div class="row" style="margin-top: 5%; justify-content: center;">
+        <div class="col-md-4">
+            <button class="btn btn-primary" style="width:48%; margin-right: 4%;" (click)="saveProd()">Confirmar</button>
+            <button class="btn btn-danger" style="width:48%;" (click)="previousStep()">Retornar</button>
+        </div>
+    </div>
+</div>

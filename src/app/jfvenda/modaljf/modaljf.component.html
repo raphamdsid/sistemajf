@@ -1,0 +1,196 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<h1 mat-dialog-title style="text-align: center;">Confirme os dados da venda</h1>
+<div style="border: solid; margin-bottom: 1%;">
+    <div class="col-md-12">
+        <div class="row" style="background-color: #007bff7a;">
+            <div class="col-md-12 cols" style="text-align: center;">
+                <b>DADOS DO PACIENTE</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 cols" style="border-top: solid;">
+                <b>Paciente:</b> {{data.paciente | uppercase}}
+            </div>
+            <div class="col-md-4 cols" style="border-top: solid; border-left: solid;">
+                <b>CPF Paciente:</b> {{data.cpfp | uppercase}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 cols" style="border-top: solid;">
+                <b>Documento:</b> {{data.docvenda}}
+            </div>
+            <ng-container *ngIf="data.isnotfiador == false">
+                <div class="col-md-6 cols" style="border-top: solid; border-left: solid;">Possui Fiador: NÃO</div>
+            </ng-container>
+            <ng-container *ngIf="data.isnotfiador == true">
+                <div class="col-md-6 cols" style="border-top: solid; border-left: solid;">Possui Fiador: SIM</div>
+            </ng-container>
+        </div>
+        <ng-container *ngIf="data.isnotfiador == true">
+            <div class="row">
+                <div class="col-md-8 cols" style="border-top: solid;">
+                    <b>Fiador:</b> {{data.fiador | uppercase}}
+                </div>
+                <div class="col-md-4 cols" style="border-top: solid; border-left: solid;">
+                    <b>CPF Fiador:</b> {{data.cpff}}
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<div style="border: solid; margin-bottom: 1%;">
+    <div class="col-md-12">
+        <div class="row" style="background-color: #007bff7a;">
+            <div class="col-md-12 cols" style="text-align: center;">
+                <b>VALORES</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 cols" style="border-top: solid;">
+                <b>Valor avaliação:</b> {{data.valoravaliacao | currency}}
+            </div>
+            <div class="col-md-4 cols" style="border-top: solid; border-left: solid;" *ngIf="data.desconto > 0">
+                <b>Desconto:</b> {{data.desconto}}%
+            </div>
+            <div class="col-md-4 cols" style="border-top: solid;" *ngIf="data.desconto == 0"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 cols" style="border-top: solid;">
+                <b>Valor entrada:</b> {{data.valentrada | currency}}
+            </div>
+            <div class="col-md-4 cols" style="border-top: solid; border-left: solid;">
+                <b>Valor financiado:</b> {{data.valorfinanciado | currency}}
+            </div>
+            <div class="col-md-4 cols" style="border-top: solid; border-left: solid;">
+                <b>Valor total:</b> {{data.valortotaljf | currency}}
+            </div>
+        </div>
+    </div>
+</div>
+<ng-container *ngIf="data.fpagparcela.length == 0">
+    <div style="border: solid; margin-bottom: 1%;">
+        <div class="col-md-12">
+            <div class="row" style="background-color: #007bff7a;">
+                <div class="col-md-12 cols" style="text-align: center;">
+                    <b>PARCELAMENTO</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 cols" style="border-top: solid;">
+                    NÃO HÁ PARCELAMENTO
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="data.fpagparcela.length > 0">
+    <div style="border: solid; margin-bottom: 1%;">
+        <div class="col-md-12">
+            <div class="row" style="background-color: #007bff7a;">
+                <div class="col-md-12 cols" style="text-align: center;">
+                    <b>PARCELAMENTO</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 cols" style="border-top: solid;">
+                    <b>Forma de pagamento da Parcela:</b> {{data.fpagparcela}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 cols" style="border-top: solid;">
+                    <b>Tipo de parcelamento:</b> {{data.parcelamento}}
+                </div>
+                <div class="col-md-4 cols" style="border-top: solid; border-left: solid;">
+                    <b>Quantidade de parcelas:</b> {{data.qtdparcelas}}
+                </div>
+                <div class="col-md-4 cols" style="border-top: solid; border-left: solid;">
+                    <b>Valor da parcela:</b> {{data.valorparcela | currency}}
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- <div style="border:solid; margin-bottom: 1%;"> -->
+<div class="row" style="justify-content: space-around; margin-bottom: 3%; margin-top: 2%;">
+    <div class="col-md-6" style="border-top: solid; max-width: 49%;">
+        <div class="row"
+            style="justify-content: center; border-bottom: solid; border-right: solid; border-left: solid; background-color: #18f534d9;">
+            <b>PRODUTOS</b>
+        </div>
+        <div class="row" style="background-color: #80808085; border-bottom: solid;">
+            <div class="col-md-3 cols" style="border-left: solid;">
+                <b>Código</b>
+            </div>
+            <div class="col-md-9 cols" style="border-left: solid; border-right: solid;">
+                <b>Nome</b>
+            </div>
+        </div>
+        <ng-container *ngFor="let p of data.produtos; let pi = index">
+            <div class="row">
+                <div class="col-md-3 cols" style="border-bottom: solid; border-left: solid;">
+                    {{p.produto}}
+                </div>
+                <div class="col-md-9 cols" style="border-bottom: solid; border-left: solid; border-right: solid;">
+                    {{p.nome | uppercase}}
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="col-md-6" style="border-top: solid; max-width: 49%;" *ngIf="data.entradas.length > 0">
+        <div class="row"
+            style="justify-content: center; border-bottom: solid;border-left: solid; border-right: solid; background-color: #6a5acded;">
+            <b>ENTRADAS</b>
+        </div>
+        <div class="row" style="background-color: #80808085; border-bottom: solid;">
+            <div class="col-md-6 cols" style="border-left: solid;">
+                <b>Tipo entrada</b>
+            </div>
+            <div class="col-md-3 cols" style="border-left: solid;">
+                <b>Valor</b>
+            </div>
+            <div class="col-md-3 cols" style="border-left: solid; border-right: solid;">
+                <b>DOC</b>
+            </div>
+        </div>
+        <ng-container *ngFor="let e of data.entradas; let ei = index">
+            <div class="row">
+                <div class="col-md-6 cols" style="border-bottom: solid; border-left: solid;">
+                    {{e.nome | uppercase}}
+                </div>
+                <div class="col-md-3 cols" style="border-bottom: solid; border-left: solid;">
+                    {{e.valor | currency}}
+                </div>
+                <div class="col-md-3 cols" style="border-bottom: solid; border-left: solid; border-right: solid;">
+                    {{e.cododc}}
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<!-- </div> -->
+
+<ng-container *ngIf="data.warning.code == 0">
+    <form [formGroup]="confirmForm" autocomplete="off" style="border:solid;padding: 15px;">
+        <div class="row" style="justify-content: center;text-align: center;">
+            <a style="color: red; font-weight: bold;">{{data.warning.msg}}</a>
+        </div>
+        <div class="row" style="justify-content: center; align-items: center;text-align: center;">
+            Declaro que o cliente foi informado da impossibilidade de iniciar o tratamento
+            <input type="checkbox" style="margin-left: 5px;" formControlName="check">
+        </div>
+    </form>
+</ng-container>
+<ng-container *ngIf="data.warning.code == 1">
+    <form style="border:solid;padding: 15px;">
+        <div class="row" style="justify-content: center;text-align: center;">
+            <a *ngIf="data.warning.code == 1" style="color: blue; font-weight: bold;">{{data.warning.msg}}</a>
+        </div>
+    </form>
+</ng-container>
+<div class="row" style="margin-top: 2%; margin-bottom: 3%; justify-content: center;">
+    <div class="col-md-4">
+        <button class="btn btn-primary" style="width:48%; margin-right: 4%;" (click)="confirmVenda()">Confirmar</button>
+        <button class="btn btn-danger" style="width:48%;" (click)="onNoClick()">Cancelar</button>
+    </div>
+</div>
