@@ -1,0 +1,217 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<ng-container *ngIf="operacao == 0">
+    <h1 mat-dialog-title style="text-align: center; margin: 0px 0 8px;"><a>Detalhes da Solicitação</a></h1>
+    <div class="row" style="height: 69%; max-height: 69%; border: solid 2px;">
+        <div class="col-md-4" style="height: 100%; max-height: 100%;">
+            <h1 mat-dialog-title style="text-align: center; margin-bottom: 0px; max-height: 15%;height: 15%;"><a>Dados
+                    do Estorno</a></h1>
+            <div class="col-md-12" style="overflow-y: auto; height: 85%; max-height: 85%;">
+                <form [formGroup]="confirmEstornoForm" autocomplete="off">
+                    <div class="row" style="margin-bottom: 3%;">
+                        <div class="col-md-12">
+                            Solicitante: <b>{{data.obj.createdby | uppercase}}</b>
+                            <!-- <input class="form-control" type="text" readonly value="{{data.obj.valorestorno}}"> -->
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 3%;">
+                        <div class="col-md-12">
+                            Valor de estorno solicitado: <b>{{data.obj.valorestorno | currency}}</b>
+                            <!-- <input class="form-control" type="text" readonly value="{{data.obj.valorestorno}}"> -->
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 3%;">
+                        <div class="col-md-8">
+                            Valor a ser estornado:
+                            <input onfocus="this.select()" (keypress)="fixValue()" class="form-control"
+                                formControlName="valor" tabindex="1" type="text" currencyMask
+                                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                        </div>
+                    </div>
+                    <div class="row" style="text-align: justify; margin-bottom: 3%;">
+                        <div class="col-md-12">
+                            Motivo:<br>
+                            <a>{{data.obj.motivo | uppercase}}</a>
+                            <!-- <textarea class="form-control" readonly value="{{data.obj.valorestorno}}"
+                                style="resize:none; overflow-y: auto;"> -->
+
+                            <!-- </textarea> -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-8" style="height: 100%; max-height: 100%; border-left: solid;">
+            <h1 mat-dialog-title style="text-align: center; margin-bottom: 0px; max-height: 15%;height: 15%;"><a>Dados
+                    da Venda</a></h1>
+            <div class="col-md-12" style="overflow-y: auto;height: 85%; max-height: 85%;">
+                <div style="margin-bottom: 2%; border:solid 1px">
+                    <div class="nomargsides row" style="border-bottom: 1px solid;">
+                        <div class="padcol rb col-md-8">
+                            Nome / Razão Social: <b>{{data.obj.nome | uppercase}}</b>
+                        </div>
+                        <div class="padcol col-md-4">
+                            CPF / CNPJ:
+                            <ng-container *ngIf="data.obj.cpfcnpj.length == 11"><b>{{data.obj.cpfcnpj | mask:
+                                    '000.000.000-00'}}</b>
+                            </ng-container>
+                            <ng-container *ngIf="data.obj.cpfcnpj.length == 14"><b>{{data.obj.cpfcnpj | mask:
+                                    '00.000.000/0000-00'}}</b>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="nomargsides row" style="border-bottom: 1px solid;">
+                        <div class="padcol rb col-md-8">
+                            Email: <b>{{data.obj.email | uppercase}}</b>
+                        </div>
+                        <div class="padcol col-md-4">
+                            Tel: <b>{{data.obj.tel | mask: '(00) 000000000'}}</b>
+                        </div>
+                    </div>
+                    <div class="nomargsides row" style="border-bottom: 1px solid;">
+                        <div class="padcol col-md-12">
+                            Forma de Pagamento da Compra: <b>{{data.obj.fpagcompra | uppercase}}</b>
+                        </div>
+                    </div>
+                    <div class="nomargsides row" style="border-bottom: 1px solid;">
+                        <div class="padcol rb col-md-6">
+                            Valor da Compra: <b>{{data.obj.valorcompra | currency}}</b>
+                        </div>
+                        <div class="padcol col-md-6">
+                            Valor do Estorno: <b>{{data.obj.valorestorno | currency}}</b>
+                        </div>
+                    </div>
+                    <div class="nomargsides row" style="border-bottom: 1px solid;">
+                        <div class="padcol col-md-12">
+                            Unidade: <b>{{data.obj.unidade | uppercase}}</b>
+                        </div>
+                    </div>
+                    <div class="nomargsides row">
+                        <div class="padcol rb col-md-6">
+                            DOC ODC: <b>{{data.obj.docodc}}</b>
+                        </div>
+                        <div class="padcol col-md-6">
+                            Forma de Estorno: <b>{{data.obj.tipo | uppercase}}</b>
+                        </div>
+                    </div>
+                </div>
+                <div class="dadosbank" *ngIf="data.obj.tipo == 'PIX' || data.obj.tipo == 'TRANSFERÊNCIA BANCÁRIA'">
+                    <div class="pad5 nomargsides row" style="justify-content: center; border-bottom: solid 1px;">
+                        <a style="font-size: large; font-weight: bold;">DADOS BANCÁRIOS PARA REEMBOLSO</a>
+                    </div>
+                    <ng-container *ngIf="data.obj.tipo == 'PIX'">
+                        <div class="nomargsides row" style="border-bottom: 1px solid;">
+                            <div class="pad5 col-md-6" style="text-align: center;border-right: solid 1px;">
+                                Tipo de Chave Pix: <b>{{data.obj.tipopix | uppercase}}</b>
+                            </div>
+                            <div class="pad5 col-md-6" style="text-align: center;">
+                                Chave Pix: <b>{{data.obj.chavepix}}</b>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="data.obj.tipo == 'TRANSFERÊNCIA BANCÁRIA'">
+                        <div class="nomargsides row" style="border-bottom: 1px solid;">
+                            <div class="pad5 col-md-6" style="text-align: center; border-right: 1px solid;">
+                                Banco: <b>{{data.obj.banco | uppercase}}</b>
+                            </div>
+                            <div class="pad5 col-md-6" style="text-align: center;">
+                                Tipo de conta: <b>{{data.obj.tipoconta | uppercase}}</b>
+                            </div>
+                        </div>
+                        <div class="pad5 nomargsides row" style="justify-content: center;border-bottom: 1px solid;">
+                            <div class="col-md-2">
+                                Cod. Banco:
+                                <input class="form-control" type="text" value="{{data.obj.codbanco}}" readonly>
+                            </div>
+                            <div class="col-md-3">
+                                Agência:
+                                <input class="form-control" type="text" value="{{data.obj.agencia}}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                Conta:
+                                <input class="form-control" type="text" value="{{data.obj.agencia}}" readonly>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+                <!-- <div class="pad5" style="border:solid 1px">
+                    Motivo: <br />
+                    {{data.obj.motivo | uppercase}}
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="row" style="justify-content: center; margin-top: 2%;">
+        <div class="col-md-4" style="display: contents;">
+            <button style="margin-left:2%;margin-right:2%;" class="btn btn-primary"
+                (click)="confirmEstorno()">Confirmar</button>
+            <button style="margin-left:2%;margin-right:2%;" class="btn btn-secondary"
+                (click)="rejectEstorno()">Rejeitar</button>
+            <button style="margin-right:2%;margin-left:2%;" class="btn btn-danger"
+                (click)="onNoClick()">Cancelar</button>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="operacao == 1">
+    <h1 mat-dialog-title style="text-align: center;"><a>Confirmar Estorno</a></h1>
+    <div class="row" style="margin-top: 2%;">
+        <div class="col-md-6"
+            style="border-top: solid 2px; border-left: solid 2px; border-bottom: solid 2px; border-right: solid 1px;">
+            <div class="row" style="justify-content: center; font-weight: bold; font-size: xxx-large;padding: 15px;">
+                Valor solicitado
+            </div>
+            <div class="row" style="justify-content: center; font-weight: bold; font-size: xxx-large;padding: 15px;">
+                {{data.obj.valorestorno | currency}}
+            </div>
+        </div>
+        <div class="col-md-6"
+            style="border-top: solid 2px; border-left: solid 1px; border-bottom: solid 2px; border-right: solid 2px;">
+            <div class="row" style="justify-content: center; font-weight: bold; font-size: xxx-large;padding: 15px;">
+                Valor do estorno
+            </div>
+            <div class="row" style="justify-content: center; font-weight: bold; font-size: xxx-large;padding: 15px;">
+                {{valor | currency}}
+            </div>
+        </div>
+    </div>
+    <form [formGroup]="pwdForm" autocomplete="off" style="margin-top: 2%">
+        <ng-container *ngIf="valor < data.obj.valorestorno">
+            <div style="margin-bottom: 2%;">
+                Motivo:
+                <textarea class="form-control" formControlName="motivo"
+                    style="height: 90px;resize:none; text-transform: uppercase;"></textarea>
+            </div>
+        </ng-container>
+        <div class="row" style="text-align: center; justify-content: center; font-weight: bold;">
+            <a>INSIRA SUA SENHA PARA CONFIRMAR O ESTORNO</a>
+        </div>
+        <div class="row justify-content-center" style="margin-bottom: 2%; margin-top: 1%;">
+            <input type="password" class="form-control" formControlName="pwd" style="width: 30%;">
+        </div>
+        <div class="row justify-content-center">
+            <button class="btn btn-success" style="margin-right: 7px;"
+                (click)="sendDataConfirm()"><a>Confirmar</a></button>
+            <button class="btn btn-danger" (click)="returnPage()"><a>Retornar</a></button>
+        </div>
+    </form>
+</ng-container>
+<ng-container *ngIf="operacao == 2">
+    <h1 mat-dialog-title style="text-align: center;"><a>Rejeitar Estorno</a></h1>
+    <form [formGroup]="pwdForm" style="margin-top: 2%;" autocomplete="off">
+        <div style="margin-bottom: 2%;">
+            Motivo:
+            <textarea class="form-control" formControlName="motivo"
+                style="height: 90px;resize:none; text-transform: uppercase;"></textarea>
+        </div>
+        <div class="row" style="text-align: center; justify-content: center; font-weight: bold;">
+            <a>INSIRA SUA SENHA PARA REJEITAR O ESTORNO</a>
+        </div>
+        <div class="row justify-content-center" style="margin-bottom: 2%; margin-top: 1%;">
+            <input type="password" class="form-control" formControlName="pwd" style="width: 30%;">
+        </div>
+        <div class="row justify-content-center">
+            <button class="btn btn-success" style="margin-right: 7px;"
+                (click)="sendDataReject()"><a>Confirmar</a></button>
+            <button class="btn btn-danger" (click)="returnPage()"><a>Retornar</a></button>
+        </div>
+    </form>
+</ng-container>

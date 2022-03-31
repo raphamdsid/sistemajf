@@ -1,0 +1,494 @@
+.loader {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-image: url(/assets/images/loader.gif);
+  background-repeat: no-repeat;
+  background-size: 50%;
+  background-attachment: fixed;
+  background-position: center;
+  background-color: white;
+  // background: url(http://sistema.grupojf.com.br/assets/images/loader.gif)
+  //             50% 50% no-repeat rgb(249,249,249);
+  opacity: 0.5;
+}
+
+.estiloCustom {
+  color: #f00;
+}
+
+::ng-deep {
+  .mat-tab-label {
+    color: #000;
+  }
+  .newprodutomodal {
+    width: 100%;
+    height: 100%;
+
+    .mat-dialog-container {
+      // text-align: center;
+      border: solid;
+      border-radius: 15px;
+      background-color: rgb(255, 255, 255);
+      width: 80%;
+      height: 70%;
+      color: #000;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      margin-left: -40%;
+      margin-top: -20%;
+    }
+  }
+  .modalprodlist {
+    //  width: 100%;
+    //  height: 100%;
+
+    .mat-dialog-container {
+      text-align: center;
+      border: solid;
+      //border-radius: 15px;
+      background-color: rgb(255, 255, 255);
+      width: 80%;
+      height: 70%;
+      color: #000;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      margin-left: -40%;
+      margin-top: -20%;
+    }
+  }
+  .modalprintreq {
+    .mat-dialog-container {
+      @media print {
+        visibility: visible !important;
+        /**Remove scrollbar for printing.**/
+        overflow: visible !important;
+        
+        // border: solid;
+        //border-radius: 15px;
+        background-color: rgb(255, 255, 255);
+        // width: 100%;
+        // height: 100%;
+  
+        color: #000;
+        border: none;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        // position: relative;
+        width: 100%;
+        height: 100%;
+        margin-left: 0px;
+        margin-top: 0px;
+        line-height: 1.5;
+        // size: 7in 9.25in;
+        font-size: 20px;
+        // margin: 27mm 16mm 27mm 16mm;
+        #site{
+          font-size: 27px;
+        }
+        .title {
+          font-size: 40px;
+          font-weight: bold;
+          text-decoration: underline;
+          line-height: 4;
+        }
+      }
+      text-align: justify;
+      border: solid;
+      //border-radius: 15px;
+      background-color: rgb(255, 255, 255);
+      width: 94%;
+      height: 77%;
+      color: #000;
+      position: fixed;
+      left: 22%;
+      top: 33%;
+      margin-left: -20%;
+      margin-top: -15%;
+    }
+  }
+  .modalcheckdiscount {
+    //  width: 100%;
+    //  height: 100%;
+
+    .mat-dialog-container {
+      text-align: center;
+      border: solid;
+      //border-radius: 15px;
+      background-color: rgb(255, 255, 255);
+      width: 40%;
+      height: 40%;
+      color: #000;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      margin-left: -20%;
+      margin-top: -15%;
+    }
+  }
+}
+
+@media print {
+  #printarea {
+    font-size: 60px;
+    height: 600px;
+    line-height: 1;
+  }
+}
+@media print {
+  #printcomprovante {
+    font-size: 55px;
+    // height: auto;
+    line-height: 1.1;
+  }
+}
+
+.menu {
+  min-height: 60px;
+  color: #fff;
+  font-size: 25px;
+  text-align: left;
+  display: flex;
+  padding: 0 40px;
+  width: 100%;
+  align-content: center;
+  flex-direction: row;
+  justify-content: space-between;
+
+  border-bottom: 1px white solid;
+}
+// a {
+//   color: black;
+//   text-decoration: none;
+// }
+
+.img-fluid {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.menuuser {
+  padding-top: 5%;
+  padding-bottom: 5%;
+  padding-left: 10%;
+  padding-bottom: 3%;
+  color: black;
+  font-size: 15px;
+  border-bottom: solid black 2px;
+  font-size: 12px;
+}
+
+.menurow {
+  padding-top: 5%;
+  padding-bottom: 5%;
+  padding-left: 10%;
+  padding-bottom: 3%;
+  color: black;
+  font-size: 15px;
+  border-bottom: solid black 2px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.userlbltxt {
+  margin-bottom: 0;
+}
+.menurow:hover {
+  background-color: rgba(85, 85, 85, 0.438);
+}
+.sidemenu {
+  background-color: rgba(216, 215, 215, 0.801);
+  border-right: black solid 4px;
+  //position: absolute;
+  height: 100%;
+}
+
+.logoff {
+  border-top: solid black 2px;
+  border-bottom: solid black 2px;
+  text-align: center;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  margin-top: 40%;
+  bottom: 3%;
+  padding-left: 10%;
+  cursor: pointer;
+}
+.logoff:hover {
+  background-color: rgba(216, 72, 72, 0.562);
+}
+.btn-logoff {
+  background: none;
+  border: none;
+}
+
+.form-control {
+  text-transform: uppercase;
+}
+.bankImg {
+  position: absolute;
+  height: 140px;
+  width: 230px;
+  margin-top: 0;
+}
+.title {
+  height: 60px;
+  width: 100%;
+  background-color: rgba(216, 215, 215, 0.801);
+  border-bottom: solid black 2px;
+  border-top: solid black 2px;
+  border-right: solid black 2px;
+  vertical-align: middle;
+  align-content: center;
+  text-align: center;
+  justify-content: center;
+  font-size: 25px;
+  font-weight: bold;
+  // margin-left: -15px;
+  padding-top: 15px;
+}
+.searcharea {
+  position: relative;
+}
+.searchresult {
+  position: absolute;
+  top: 60px;
+  width: 100%;
+  background-color: #fff;
+  z-index: 100;
+}
+.center {
+  margin: auto;
+  width: 100%;
+  border: 1px groove #96d2ee;
+  padding: 10px;
+  border-radius: 5px;
+}
+.center:hover {
+  background-color: rgba(10, 45, 245, 0.158);
+  cursor: pointer;
+  border: 2px solid rgb(10, 45, 245);
+}
+.centerlist {
+  margin-top: 2px;
+  width: 100%;
+  //height: 22px;
+  padding: 10px;
+  padding-top: 1px;
+}
+.prodlistbtn {
+  font-size: 10px;
+  padding: 0px;
+  width: 17px;
+  margin-top: -2px;
+}
+.centercode {
+  //margin: auto;
+  margin-top: auto;
+  margin-right: auto;
+  margin-bottom: auto;
+  //margin-left: 3px;
+  width: 50%;
+  //border-right: 1px solid;
+  padding: 2%;
+}
+.centertitlecode {
+  //margin: auto;
+  margin-top: auto;
+  margin-right: auto;
+  margin-bottom: auto;
+  //margin-left: 3px;
+  width: 50%;
+  //border-right: 1px solid;
+  padding: 0px;
+}
+.centerdesc {
+  // margin: auto;
+  width: 50%;
+  border-right: 1px solid;
+  border-left: 1px solid;
+  padding: 2%;
+}
+.delprod {
+  background-color: #df0024;
+  //background-image: url(/assets/images/delete.png);
+  cursor: pointer;
+  width: 50%;
+  text-align: center;
+  padding: 0px;
+  //margin-top:auto;
+}
+.dummydelprod {
+  background-color: rgb(255, 255, 255);
+  // cursor: pointer;
+  width: 50%;
+  text-align: center;
+  padding: 2px;
+  //margin-top:auto;
+}
+.delbtn {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  padding-top: 50%;
+  padding-bottom: 50%;
+  //height: 100%;
+  //background-color: red;
+}
+// .menucli {
+//   min-height: 60px;
+//   color: #fff;
+//   font-size: 25px;
+//   text-align: center;
+
+//   padding: 0 40px;
+//   width: 100%;
+//   align-content: center;
+
+//   border-bottom: 1px white solid;
+// }
+// .form-group {
+//   align-content: space-between;
+//   width: 100%;
+//   min-width: 100%;
+// }
+// .container {
+//   width: 100%;
+// }
+// div {
+//   margin-bottom: 7px;
+// }
+// a {
+//   color: white;
+//   text-decoration: none;
+// }
+
+// .titutitle {
+//   padding-left: 30px;
+//   padding-top: 15px;
+//   padding-right: 7px;
+//   font-size: large;
+//   font-weight: bold;
+// }
+
+// form {
+//   padding-top: 15px;
+//   padding-right: 30px;
+//   padding-bottom: 50px;
+//   padding-left: 30px;
+// }
+
+// .float-right {
+//   padding-bottom: 20px;
+//   padding-right: 30px;
+//   padding-left: 30px;
+// }
+
+// .float-left {
+//   padding-bottom: 20px;
+//   padding-right: 30px;
+//   padding-left: 30px;
+// }
+
+// .estiloCustom {
+//   color: #f00;
+// }
+
+// ::ng-deep {
+//   .mat-tab-label {
+//     color: #000;
+//   }
+
+//   .modalCadastroTitular {
+//     width: 60%;
+//     height: 30%;
+
+//     .mat-dialog-container {
+//       text-align: center;
+//       background-color: #fff;
+//       width: 250px;
+//       height: 200px;
+//       color: #000;
+//       position: absolute;
+//       left: 50%;
+//       top: 50%;
+//       margin-left: -150px;
+//       margin-top: -150px;
+//     }
+//   }
+// }
+
+// .disabledbutton {
+//   pointer-events: none;
+//   opacity: 0.4;
+// }
+// .disableddepbutton {
+//   pointer-events: none;
+//   opacity: 0.4;
+// }
+
+// .paidbuttons{
+//   width: 130px;
+// margin: 0 auto;
+// display: inline;
+// }
+
+// #halfrow {
+//   width: 50%;
+// }
+// #btnincluir {
+//   padding-left: 30px;
+// }
+// #parcela {
+//   width: 160px;
+// }
+// #listdep {
+//   text-transform: uppercase;
+// }
+// .hidegere {
+//   display: none;
+// }
+// .searcharea {
+//   position: relative;
+// }
+
+// .hidelement {
+//   display: none;
+// }
+
+// .searchresult {
+//   position: absolute;
+//   top: 45px;
+//   width: 100%;
+//   background-color: #fff;
+//   z-index: 100;
+// }
+
+// .center {
+//   margin: auto;
+//   width: 100%;
+//   border: 1px groove #96d2ee;
+//   padding: 10px;
+//   border-radius: 5px;
+// }
+// .centerlist {
+//   margin-top: 2px;
+//   width: 100%;
+//   height: 22px;
+//   padding: 10px;
+//   padding-top: 1px;
+// }
+// .center:hover {
+//   border: 2px solid rgb(10, 45, 245);
+// }

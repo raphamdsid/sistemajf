@@ -1,0 +1,268 @@
+.itemrow {
+    border-top: solid 2px;
+    // justify-content: center;
+    border-left: solid 2px;
+    border-right: solid 2px;
+}
+
+.center {
+    text-align: center;
+    margin: auto;
+}
+
+.estiloCustom {
+    color: #f00;
+}
+
+::ng-deep {
+    .mat-tab-label {
+        color: #000;
+    }
+    .modalestorno {
+        //  width: 100%;
+        //  height: 100%;
+
+        .mat-dialog-container {
+            text-align: center;
+            border: solid;
+            //border-radius: 15px;
+            background-color: rgb(255, 255, 255);
+            width: 70%;
+            height: 70%;
+            color: #000;
+            position: fixed;
+            left: 35%;
+            top: 35%;
+            margin-left: -20%;
+            margin-top: -15%;
+        }
+    }
+    .modalA {
+        width: 60%;
+        height: 30%;
+
+        .mat-dialog-container {
+            text-align: center;
+            background-color: #fff;
+            width: 250px;
+            height: 200px;
+            color: #000;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -150px;
+            margin-top: -150px;
+        }
+    }
+    .modaldetails {
+        //  width: 100%;
+        //  height: 100%;
+
+        .mat-dialog-container {
+            border: solid;
+            //border-radius: 15px;
+            background-color: rgb(255, 255, 255);
+            width: 85%;
+            height: 70%;
+            color: #000;
+            position: fixed;
+            left: 26%;
+            top: 35%;
+            margin-left: -20%;
+            margin-top: -15%;
+        }
+    }
+}
+.modaldetails {
+    //  width: 100%;
+    //  height: 100%;
+
+    .mat-dialog-container {
+        border: solid;
+        //border-radius: 15px;
+        background-color: rgb(255, 255, 255);
+        width: 85%;
+        height: 70%;
+        color: #000;
+        position: fixed;
+        left: 26%;
+        top: 35%;
+        margin-left: -20%;
+        margin-top: -15%;
+    }
+}
+//  @media print {
+//   #printarea{
+//       font-size: 60px;
+//       height: 600px;
+//       line-height: 1;
+//   }
+//  }
+@media print {
+    .comprovante {
+        visibility: visible !important;
+    }
+    #printcomprovante {
+        font-size: 50px;
+        // height: auto;
+        line-height: 1.1;
+    }
+}
+
+.menu {
+    min-height: 60px;
+    color: #fff;
+    font-size: 25px;
+    text-align: left;
+    display: flex;
+    padding: 0 40px;
+    width: 100%;
+    align-content: center;
+    flex-direction: row;
+    justify-content: space-between;
+
+    border-bottom: 1px white solid;
+}
+// a {
+//   color: black;
+//   text-decoration: none;
+// }
+
+.img-fluid {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.menuuser {
+    padding-top: 5%;
+    padding-bottom: 5%;
+    padding-left: 10%;
+    padding-bottom: 3%;
+    color: black;
+    font-size: 15px;
+    border-bottom: solid black 2px;
+    font-size: 12px;
+}
+
+.menurow {
+    padding-top: 5%;
+    padding-bottom: 5%;
+    padding-left: 10%;
+    padding-bottom: 3%;
+    color: black;
+    font-size: 15px;
+    border-bottom: solid black 2px;
+    font-size: 12px;
+    cursor: pointer;
+}
+.userlbltxt {
+    margin-bottom: 0;
+}
+.menurow:hover {
+    background-color: rgba(85, 85, 85, 0.438);
+}
+.sidemenu {
+    background-color: rgba(216, 215, 215, 0.801);
+    border-right: black solid 4px;
+    //position: absolute;
+    height: 100%;
+}
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+.logoff {
+    border-top: solid black 2px;
+    border-bottom: solid black 2px;
+    text-align: center;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    margin-top: 40%;
+    bottom: 3%;
+    padding-left: 10%;
+    cursor: pointer;
+}
+.logoff:hover {
+    background-color: rgba(216, 72, 72, 0.562);
+}
+.btn-logoff {
+    background: none;
+    border: none;
+}
+
+.form-control {
+    text-transform: uppercase;
+}
+.bankImg {
+    position: absolute;
+    height: 140px;
+    width: 230px;
+    margin-top: 0;
+}
+.title {
+    height: 60px;
+    width: 100%;
+    background-color: rgba(216, 215, 215, 0.801);
+    border-bottom: solid black 2px;
+    border-top: solid black 2px;
+    border-right: solid black 2px;
+    vertical-align: middle;
+    align-content: center;
+    text-align: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: bold;
+    //margin-left: -15px;
+    padding-top: 15px;
+}
+
+.loader {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background-image: url(/assets/images/loader.gif);
+    background-repeat: no-repeat;
+    background-size: 50%;
+    background-attachment: fixed;
+    background-position: center;
+    background-color: white;
+    // background: url(http://sistema.grupojf.com.br/assets/images/loader.gif)
+    //             50% 50% no-repeat rgb(249,249,249);
+    opacity: 0.5;
+}
+.searcharea {
+    position: relative;
+}
+.searchresult {
+    position: absolute;
+    top: 60px;
+    width: 100%;
+    background-color: #fff;
+    z-index: 100;
+}
+::ng-deep {
+    .newprodutomodal {
+        width: 100%;
+        height: 100%;
+
+        .mat-dialog-container {
+            // text-align: center;
+            border: solid;
+            border-radius: 15px;
+            background-color: rgb(255, 255, 255);
+            width: 80%;
+            height: 70%;
+            color: #000;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            margin-left: -40%;
+            margin-top: -20%;
+        }
+    }
+}

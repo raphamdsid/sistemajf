@@ -1,0 +1,103 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<h1 mat-dialog-title style="text-align: center;">Confirmar Solicitação de Estorno</h1>
+<div style="margin-bottom: 2%;">
+    <div style="margin-bottom: 2%; border:solid 1px">
+        <div class="nomargsides row" style="border-bottom: 1px solid;">
+            <div class="padcol rb col-md-8">
+                Nome / Razão Social: <b>{{data.obj.nome | uppercase}}</b>
+            </div>
+            <div class="padcol col-md-4">
+                CPF / CNPJ:
+                <ng-container *ngIf="data.obj.cpfcnpj.length == 11"><b>{{data.obj.cpfcnpj | mask: '000.000.000-00'}}</b>
+                </ng-container>
+                <ng-container *ngIf="data.obj.cpfcnpj.length == 14"><b>{{data.obj.cpfcnpj | mask:
+                        '00.000.000/0000-00'}}</b>
+                </ng-container>
+            </div>
+        </div>
+        <div class="nomargsides row" style="border-bottom: 1px solid;">
+            <div class="padcol rb col-md-8">
+                Email: <b>{{data.obj.email | uppercase}}</b>
+            </div>
+            <div class="padcol col-md-4">
+                Tel: <b>{{data.obj.tel | mask: '(00) 000000000'}}</b>
+            </div>
+        </div>
+        <div class="nomargsides row" style="border-bottom: 1px solid;">
+            <div class="padcol rb col-md-6">
+                Forma de Pagamento da Compra: <b>{{data.obj.fpagcompra | uppercase}}</b>
+            </div>
+        </div>
+        <div class="nomargsides row" style="border-bottom: 1px solid;">
+            <div class="padcol rb col-md-6">
+                Valor da Compra: <b>{{data.obj.valorcompra | currency}}</b>
+            </div>
+            <div class="padcol col-md-6">
+                Valor do Estorno: <b>{{data.obj.valorestorno | currency}}</b>
+            </div>
+        </div>
+        <div class="nomargsides row">
+            <div class="padcol rb col-md-6">
+                DOC ODC: <b>{{data.obj.docodc}}</b>
+            </div>
+            <div class="padcol col-md-6">
+                Forma de Estorno: <b>{{data.obj.tipo | uppercase}}</b>
+            </div>
+        </div>
+    </div>
+    <div class="dadosbank" *ngIf="data.obj.tipo == 'PIX' || data.obj.tipo == 'TRANSFERÊNCIA BANCÁRIA'">
+        <div class="pad5 nomargsides row" style="justify-content: center; border-bottom: solid 1px;">
+            <a style="font-size: large; font-weight: bold;">DADOS BANCÁRIOS PARA REEMBOLSO</a>
+        </div>
+        <ng-container *ngIf="data.obj.tipo == 'PIX'">
+            <div class="nomargsides row">
+                <div class="pad5 col-md-6" style="text-align: center;border-right: solid 1px;">
+                    Tipo de Chave Pix: <b>{{data.obj.tipopix | uppercase}}</b>
+                </div>
+                <div class="pad5 col-md-6" style="text-align: center;">
+                    Chave Pix: <b>{{data.obj.chavepix}}</b>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="data.obj.tipo == 'TRANSFERÊNCIA BANCÁRIA'">
+            <div class="nomargsides row" style="border-bottom: 1px solid;">
+                <div class="pad5 col-md-6" style="text-align: center; border-right: 1px solid;">
+                    Banco: <b>{{data.obj.banco | uppercase}}</b>
+                </div>
+                <div class="pad5 col-md-6" style="text-align: center;">
+                    Tipo de conta: <b>{{data.obj.tipoconta | uppercase}}</b>
+                </div>
+            </div>
+            <div class="pad5 nomargsides row" style="justify-content: center;">
+                <div class="col-md-2">
+                    Cod. Banco:
+                    <input class="form-control" type="text" value="{{data.obj.codbanco}}" readonly>
+                </div>
+                <div class="col-md-3">
+                    Agência:
+                    <input class="form-control" type="text" value="{{data.obj.agencia}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    Conta:
+                    <input class="form-control" type="text" value="{{data.obj.agencia}}" readonly>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="pad5" style="border:solid 1px">
+        Motivo: <br />
+        <b>{{data.obj.motivo | uppercase}}</b>
+    </div>
+</div>
+<form [formGroup]="pwdForm" autocomplete="off">
+    <div class="row" style="text-align: center; justify-content: center; font-weight: bold;">
+        <a>INSIRA SUA SENHA PARA CONFIRMAR A SOLICITAÇÃO</a>
+    </div>
+    <div class="row justify-content-center" style="margin-bottom: 2%; margin-top: 1%;">
+        <input type="password" class="form-control" formControlName="pwd" style="width: 30%;">
+    </div>
+    <div class="row justify-content-center">
+        <button class="btn btn-success" style="margin-right: 7px;" (click)="sendData()"><a>Confirmar</a></button>
+        <button class="btn btn-danger" (click)="onNoClick()"><a>Cancelar</a></button>
+    </div>
+</form>

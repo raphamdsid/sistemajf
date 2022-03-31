@@ -1,0 +1,313 @@
+<div class="loader" *ngIf="sloader == 1"></div>
+
+<div class="no-print title">
+    CADASTRAR VENDA - BANCO JF
+</div>
+<form [formGroup]="vendaForm" autocomplete="off" style="width: 100%; margin-top: 1%;">
+    <div class="row" style="margin-right: 0px; margin-left: 0px;">
+        <div class="row" style="margin-bottom: 10px;margin-left: 0px;width: 100%;">
+            <div class="col-md-6">
+                Nome do Paciente:
+                <input class="form-control" (focusout)="validNome('cliente')"
+                    onkeypress='return (event.charCode==32) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)'
+                    formControlName="cliente" type="text" tabindex="1">
+                <div class="row" style="margin-top: 2px;">
+                    <div class="col">
+                        <label class="form-check-label" style="margin-top: 2px;" for="flexCheckDefault">
+                            O paciente não é responsável financeiro
+                        </label>
+                        <input class="form-check-input" style="margin-top: 6px; margin-left: 7px;"
+                            (change)="resetFiador()" formControlName="isnotfiador" type="checkbox" value=""
+                            id="checkwhats" tabindex="2">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" *ngIf="vendaForm.value.isnotfiador==false">
+                CPF do Paciente:
+                <input class="form-control" formControlName="cpfpaciente" type="text" mask="000.000.000-99" tabindex="3"
+                    (focusout)="cpfValid(1)" #pacientecpf placeholder="Apenas números">
+            </div>
+            <div class="col-md-3" *ngIf="vendaForm.value.isnotfiador==true">
+                CPF do Paciente:
+                <input class="form-control" formControlName="cpfpaciente" type="text" mask="000.000.000-99" tabindex="3"
+                    #pacientecpf placeholder="Apenas números">
+            </div>
+            <div class="col-md-3">
+                DOC ODC:
+                <input class="form-control" onkeypress='return (event.charCode >= 47 && event.charCode <= 57)'
+                    placeholder="Multiplos contratos separados por /" formControlName="docvenda" type="text"
+                    tabindex="4">
+            </div>
+            <!-- <ng-container *ngIf="vendaForm.value.isnotfiador==false">
+            </ng-container> -->
+        </div>
+        <ng-container *ngIf="vendaForm.value.isnotfiador==true">
+            <div class="row" style="margin-bottom: 10px;width: 100%;margin-left: 0px;">
+                <div class="col-md-6">
+                    Nome do Fiador:
+                    <input class="form-control" (focusout)="validNome('fiador')"
+                        onkeypress='return (event.charCode==32) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)'
+                        formControlName="fiador" type="text" tabindex="5">
+                </div>
+                <div class="col-md-3">
+                    CPF do Fiador:
+                    <input class="form-control" formControlName="cpffiador" type="text" mask="000.000.000-99"
+                        tabindex="6" (focusout)="cpfValid(2)" #fiadorcpf placeholder="Apenas números">
+                </div>
+                <div class="col-md-3">
+
+                </div>
+            </div>
+        </ng-container>
+
+
+        <div class="col-md-9">
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-4 searcharea">
+                    Adicionar produto <a style="color: red;text-decoration: underline;cursor: pointer; font-size: 10px;"
+                        (click)="showProdList()">[?]</a>
+                    <!-- <button class="btn btn-primary" style="right:0;bottom:0;left:0;"
+                            (click)="showProdList()"><a style="font-size: 10px;">?</a></button> -->
+                    <input class="form-control" formControlName="buscaproduto" tabindex="7" type="text"
+                        placeholder="CÓDIGO OU DESCRIÇÃO" (keyup)="buscaProduto()">
+                    <div class="searchresult">
+                        <ng-container *ngIf="objbuscap.length > 0 && vendaForm.value.buscaproduto !='' ">
+                            <div *ngFor="let c of objbuscap; let ci=index" (click)="addProduto(c, ci)" class="center"
+                                style=" border-style: groove; border-width: 1px; margin-bottom: 2px;">
+                                COD: {{c.produto}} - {{c.nome | uppercase}}
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="col-md-1" style="align-self: self-end;">
+                    <button style="font-size: 12px;height: 38px; padding: 0px 13px;" (click)="procEmergencialModal()"
+                        *ngIf="prodemg == 0" class="btn btn-primary">Procedimento emergencial</button>
+                    <button
+                        style="font-size: 12px;height: 38px; padding: 0px 13px; background-color: gray; border-color: gray;"
+                        *ngIf="prodemg == 1" class="btn btn-primary">Procedimento emergencial</button>
+                </div>
+            </div>
+            <div class="row" *ngIf="produtos.length > 0">
+                <div class="col-md-3">
+                    R$ Avaliação <a *ngIf="discount > 0" style="color: red;">-{{discount}}%</a>
+                    <input onfocus="this.select()" class="form-control" formControlName="valoravaliacao" tabindex="8"
+                        type="text" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                        (focusout)="inputAvaliacao()">
+                </div>
+
+                <div class="col-md-2" style="align-self:self-end">
+                    <button class="btn btn-primary" *ngIf="showcontent == 1"
+                        style="font-size: 12px;height: 38px; padding: 0px 13px;" (click)="showEntrada()">Adicionar
+                        entrada</button>
+                </div>
+                <div class="col-md-3">
+                    <ng-container *ngIf="showcontent == 1">Desconto</ng-container>
+                    <input onfocus="this.select()" *ngIf="showcontent == 1" class="form-control"
+                        formControlName="desconto" tabindex="9" type="text"
+                        onkeypress='return (event.charCode >= 48 && event.charCode <= 57)' (focusout)="setDesconto()"
+                        (keyup)="fixPercentage()" currencyMask
+                        [options]="{ prefix: '', suffix: '%', thousands: '.', decimal: ',' }">
+                </div>
+
+                <div class="col-md-3">
+                    R$ no comercial
+                    <input class="form-control" formControlName="valorcomercial" type="text" currencyMask
+                        (change)="setTotFin()" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" readonly>
+                </div>
+                <!-- AQUI -->
+                <!-- <div class="col-md-1">
+                            <button class="btn btn-primary" style="position: absolute;right:0;bottom:0;left:0;"
+                                (click)="showProdList()">?</button>
+                        </div> -->
+                <!-- AQUI -->
+            </div>
+            <div class="row" *ngIf="produtos.length > 0" style="margin-top: 1%;">
+                <!-- <div class="col-md-3">
+                    Entrada
+                    <input onfocus="this.select()" class="form-control" formControlName="valorentrada" tabindex="8"
+                        type="text" (focusout)="setEntrada()" currencyMask
+                        [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                </div>
+                <div class="col-md-5" *ngIf="vendaForm.controls['valorentrada'].value > 0">
+                    Forma de pagamento da entrada
+                    <select class="form-control" formControlName="fpagentrada" tabindex="9" type="text">
+                        <option value="Crédito na clínica">CRÉDITO NA CLÍNICA</option>
+                        <option value="Brasilcard">BRASILCARD</option>
+                        <option value="Cartão de crédito">CARTÃO DE CRÉDITO</option>
+                        <option value="Cartão de débito">CARTÃO DE DÉBITO</option>
+                        <option value="Cheque a vista">CHEQUE A VISTA</option>
+                        <option value="Credz">CREDZ</option>
+                        <option value="Dep. Bancário/Pix">DEP BANCÁRIO/PIX</option>
+                        <option value="Dinheiro">DINHEIRO</option>
+                        <option value="Dr. Cash">DR. CASH</option>
+                        <option value="Financ. Santander">FINANC. SANTANDER</option>
+                        <option value="Santander Invisalign">SANTANDER INVISALIGN</option>
+                        <option value="PicPay">PICPAY</option>
+                        <option value="Vindi">VINDI</option>
+                    </select>
+                </div>
+                <div class="col-md-5" *ngIf="vendaForm.controls['valorentrada'].value == 0">
+                </div> -->
+                <ng-container *ngIf="vendaForm.controls['valorentrada'].value == 0">
+                    <div class="col-md-8"></div>
+                </ng-container>
+                <ng-container *ngIf="vendaForm.controls['valorentrada'].value > 0">
+                    <div class="col-md-5"></div>
+                    <div class="col-md-3">
+                        Total entrada <a style="color:red; font-style: italic;"
+                            *ngIf="percdesc < 40">({{percdesc}}%)</a> <a style="color:blue; font-style: italic;"
+                            *ngIf="percdesc >= 40">({{percdesc}}%)</a>
+                        <input class="form-control" formControlName="valorentrada" type="text" currencyMask
+                            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" readonly>
+                    </div>
+                </ng-container>
+                <div class="col-md-3">
+                    Total financiado
+                    <input class="form-control" formControlName="valorfinanciado" type="text" currencyMask
+                        [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" readonly>
+                </div>
+                <!-- AQUI -->
+
+                <!-- AQUI -->
+            </div>
+            <div class="row" *ngIf="tipoparcelamento.length > 0">
+
+                <!-- </div> -->
+                <div class="col-md-4"
+                    *ngIf="vendaForm.controls['valorcomercial'].value > 0 && vendaForm.controls['valorfinanciado'].value > 0">
+                    Forma de pagamento das parcelas
+                    <select class="form-control" formControlName="fpagparcela" tabindex="10"
+                        (change)="objparcelamento()" type="text">
+                        <option value="BOLETO">BOLETO</option>
+                        <option value="CHEQUE">CHEQUE</option>
+                    </select>
+                </div>
+                <div class="col-md-4"
+                    *ngIf="vendaForm.controls['valorcomercial'].value > 0 && vendaForm.controls['valorfinanciado'].value > 0">
+                    Tipo parcelamento
+                    <select class="form-control" formControlName="parcelamento" (change)="resetQtdParc()" tabindex="11"
+                        type="text">
+                        <ng-container *ngFor="let t of tipoparcelamento">
+                            <option value={{t.val}}>{{t.desc}}</option>
+                            <!-- <option value="CJUROS">ATÉ 24X</option> -->
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-md-4"
+                    *ngIf="vendaForm.controls['valorcomercial'].value > 0 && vendaForm.controls['valorfinanciado'].value > 0 && vendaForm.controls['parcelamento'].value == 'CJUROS'">
+                    Parcelamento
+                    <select class="form-control" tabindex="12" formControlName="qtdparcelas">
+                        <ng-container *ngFor="let p of arraycjuros; let i = index">
+                            <option *ngIf="p.valparcela > 0" value={{p.qtdparcelas}}>{{p.desc}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-md-4"
+                    *ngIf="vendaForm.controls['valorcomercial'].value > 0 && vendaForm.controls['valorfinanciado'].value > 0 && vendaForm.controls['parcelamento'].value == 'SJUROS'">
+                    Parcelamento
+                    <select class="form-control" tabindex="12" formControlName="qtdparcelas">
+                        <ng-container *ngFor="let s of arraysjuros; let e = index">
+                            <option *ngIf="s.valparcela > 0" value={{s.qtdparcelas}}>{{s.desc}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 1%;">
+                <!-- <div class="col-md-3"
+                    *ngIf="vendaForm.controls['valorcomercial'].value > 0 && vendaForm.controls['valorfinanciado'].value > 0 && vendaForm.controls['parcelamento'].value == 'sjuros'">
+                    Parcelas
+                    <select class="form-control" formControlName="qtdparcelas" tabindex="12" type="text">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                </div>
+                <div class="col-md-3"
+                    *ngIf="vendaForm.controls['valorcomercial'].value > 0 && vendaForm.controls['valorfinanciado'].value > 0 && vendaForm.controls['parcelamento'].value == 'cjuros'">
+                    Parcelas
+                    <select class="form-control" formControlName="qtdparcelas" tabindex="12" type="text">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+
+                    </select>
+                </div> -->
+                <div class="col-md-3"></div>
+            </div>
+            <!-- <div class="row" style="margin-bottom: 10px;">
+                        <div class="col">
+                            Doc Proposta Financeira:
+                            <input class="form-control" formControlName="docfinanceiro" type="text" tabindex="20">
+                        </div>
+                        <div class="col">
+                            Doc ODC:
+                            <input class="form-control" formControlName="docodc" type="text" tabindex="20">
+                        </div>
+                    </div> -->
+            <div class="row" style="margin-bottom: 10px;">
+                <button class="btn btn-primary" style="margin-left: 15px;margin-top: 5px;"
+                    (click)="saveVenda()">Gravar</button>
+                <!-- <button class="btn btn-danger" style="margin-left: 15px;margin-top: 5px;"
+                            (click)="clearFormVenda()">Limpar</button> -->
+            </div>
+        </div>
+        <div class="col-md-3" style="margin-top: 5%; padding-right: 3%;">
+            <!-- <p style="font-weight: bold;">PRODUTOS</p> -->
+            <!-- <button (click)="objparcelamento()">Calcular resultado:</button> -->
+            <div *ngFor="let d of produtos; let i = index; ">
+
+                <div class="row"
+                    style="border-right: solid 1px;border-left: solid 1px;border-top: solid 1px;border-bottom: solid 1px;"
+                    *ngIf="i == 0">
+                    <div class="col-md-1 centercode">
+                        <a style="font-weight: bold">COD</a>
+                    </div>
+                    <div class="col-md-9 centerdesc">
+                        <a style="font-weight: bold; ">PRODUTO</a>
+                    </div>
+                    <div class="col-md-1 dummydelprod">
+
+                    </div>
+                </div>
+                <div class="row"
+                    style="min-height:40px; border-right: solid 1px;border-left: solid 1px;border-bottom: solid 1px;">
+                    <div class="col-md-1 centercode">
+                        <a style="font-size: 11px;">{{d.produto}}</a>
+                    </div>
+                    <div class="col-md-9 centerdesc">
+                        <a style="font-size: 11px;">{{d.nome}}</a>
+                    </div>
+                    <!-- <div class="col-md-1">
+                                    <button class="prodlistbtn btn btn-danger">X</button>
+                                </div> -->
+                    <div class="delprod col-md-1" (click)="excluiProduto(i)">
+                        <img class="delbtn" src='assets/images/delete.png'>
+                        <!-- <a style="font-weight: bold; font-size: large;">X</a> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

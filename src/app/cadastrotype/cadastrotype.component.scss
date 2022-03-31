@@ -1,0 +1,24 @@
+.menucli {
+    min-height: 60px;
+    color:#FFF;
+    font-size: 25px;
+    text-align: left;
+    display: flex;
+    padding: 0 40px;
+    width: 100%;
+    align-content: center;
+    flex-direction: row;
+    justify-content: space-between;
+    
+    border-bottom: 1px white solid;
+}
+a {
+    color: white;
+    text-decoration: none;
+}
+.img-fluid {
+    display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  }

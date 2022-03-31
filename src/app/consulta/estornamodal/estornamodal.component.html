@@ -1,0 +1,14 @@
+<p>{{modaltxt}}</p>
+<mat-dialog-actions align="center">
+    <form [formGroup]="estornaForm" autocomplete="off">
+        <input type="text" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+            formControlName="valor" (keyup)="getPass()" matInput>
+        <br />
+        <button (click)="sendData()"><a>OK</a></button>
+        <button mat-dialog-close><a>Cancelar</a></button>
+    </form>
+
+    <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Sim</button>
+   -->
+
+</mat-dialog-actions>

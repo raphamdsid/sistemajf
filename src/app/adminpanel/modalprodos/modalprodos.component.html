@@ -1,0 +1,49 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<ng-container *ngIf="data.operacao == 'insert'">
+    <h1 mat-dialog-title style="text-align: center;">Novo Produto de Ordem de Serviço</h1>
+    <div>
+        <form [formGroup]="newProdosForm" autocomplete="off">
+            <div class="row" style=" justify-content: center; margin-top: 4%;">
+                <div class="col-md-10">
+                    Nome:
+                    <input type="text" class="form-control" formControlName="nome" (focusout)="fixString()">
+                </div>
+                <div class="col-md-2">
+                    Valor:
+                    <input class="form-control" onfocus="this.select()" formControlName="valor" type="text" currencyMask
+                        [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                </div>
+            </div>
+            <div class="row" style="margin-top: 5%; justify-content: center;">
+                <div class="col-md-4">
+                    <button class="btn btn-primary" style="width:48%; margin-right: 4%;"
+                        (click)="newProdos()">Adicionar</button>
+                    <button class="btn btn-danger" style="width:48%;" (click)="onNoClick()">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-container>
+<ng-container *ngIf="data.operacao == 'delete'">
+    <h1 mat-dialog-title style="text-align: center;">Excluir Produto de Ordem de Serviço</h1>
+    <div>
+        <form [formGroup]="newProdosForm" autocomplete="off">
+            <div class="row" style="margin-top: 4%">
+                <div class="col-md-12" style="font-size: xx-large; text-align: center;">
+                    Confirme a exclusão do produto de ordem de serviço
+                    <!-- <input type="text" class="form-control" formControlName="nome"> -->
+                </div>
+            </div>
+            <div class="row" style="margin-top: 5%;margin-top: 5%;text-align: center;display: inherit;">
+                <b style="font-size: xx-large;">{{data.nome | uppercase}} - {{data.valor | currency}}</b>
+            </div>
+            <div class="row" style="margin-top: 5%; justify-content: center;">
+                <div class="col-md-4">
+                    <button class="btn btn-primary" style="width:48%; margin-right: 4%;"
+                        (click)="deleteProdos()">Confirmar</button>
+                    <button class="btn btn-danger" style="width:48%;" (click)="onNoClick()">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-container>

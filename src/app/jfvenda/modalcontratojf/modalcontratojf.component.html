@@ -1,0 +1,315 @@
+<div class="row" style=" display: flow-root;">
+    <button class="no-print btn btn-primary" style="float: left;" (click)="print()">Imprimir</button>
+    <button class="close no-print" mat-button style="float: right;" (click)="onNoClick()">X</button>
+</div>
+<div id="printarea">
+    <div id="contrato" style="margin: auto; font-family: sans-serif; font-size: 14px;">
+        <div class="row" id="destitle">
+            CONTRATO DE FINANCIAMENTO PARTICULAR GRUPO JF – Nº {{data.venda.id}}
+        </div>
+        <div class="justtxt mt20">
+            <div class="block row">
+                CLÁUSULA PRIMEIRA – DAS PARTES
+            </div>
+            <div class="block row">
+                <b>Contratante: {{data.venda.fiador | uppercase}} - CPF: {{data.venda.cpffiador | mask:'000.000.000-00'}}</b>, Responsável
+                Financeiro
+                integrante deste contrato.
+            </div>
+            <div class="block row">
+                <b>Contratada:</b> {{razao}} com sede estabelecida na {{endereco}} - {{bairro}} -
+                {{ciduf}} - {{cep}}. CNPJ: {{cnpj}}.
+            </div>
+            <div class="block row">
+                <b>Paciente: {{data.venda.cliente | uppercase}}</b>, que recebeu avaliação de um profissional
+                qualificado e que fará
+                uso dos
+                serviços apresentados no odontograma e descritos no Quadro anexo.
+            </div>
+        </div>
+        <div class="justtxt mt20">
+            <div class="block row">
+                CLÁUSULA SEGUNDA – OBJETO
+            </div>
+            <div class="block row">
+                Através deste contrato, a administradora intermediará serviços odontológicos ao contratante ou a seus
+                financiados.
+            </div>
+            <div class="block row">
+                Parágrafo único: Para fins de esclarecimento, fica expresso que o presente contrato de
+                prestação de serviços não é plano de saúde, e nem de seguro saúde. Declara a contratada, neste ato, que
+                não
+                possui vínculo com a assistência de saúde e não está vinculada a ANS (Agência Nacional de Saúde
+                Suplementar). Assim, o presente contrato trata somente da forma combinatória dos pagamentos para o
+                tratamento odontológico.
+            </div>
+        </div>
+        <div class="justtxt mt20">
+            <div class="block row">
+                CLÁUSULA TERCEIRA – DOS FINANCIADOS
+            </div>
+            <div class="block row">
+                O contratante será o responsável financeiro de seus financiados que, farão jus aos benefícios do
+                tratamento estabelecidos.
+            </div>
+            <div class="block row">
+                Parágrafo único: Quando o contratante não for o paciente avaliado no odontograma, esse não fará jus aos
+                benefícios do tratamento contratado.
+            </div>
+        </div>
+        <div class="justtxt mt20">
+            <div class="block row">
+                CLÁUSULA QUARTA – DO PAGAMENTO E PREÇO
+            </div>
+            <div class="block row">
+                O contratante pagará o valor descrito no resumo da venda, na quantidade de parcelas escolhidas pelo
+                contratante.
+            </div>
+            <div class="block row">
+                PARÁGRAFO PRIMEIRO: O contratante se obriga a pagar a contratada pela compra expressa neste contrato nos
+                valores e prazos determinados na venda.
+            </div>
+            <div class="block row">
+                PARÁGRAFO SEGUNDO: É opcional ao contratante o pagamento de entrada para amortizar o valor total
+                financiado.
+            </div>
+            <div class="block row">
+                PARÁGRAFO TERCEIRO: A entrada pode ser paga em qualquer forma de pagamento aceita pela clínica.
+            </div>
+            <div class="block row">
+                PARÁGRAFO QUARTO: Sobre o valor financiado, o contratante pode optar entre 6 (seis) vezes sem juros ou
+                de 7 a 24 (sete a vinte e quatro) vezes corrigidas por juros mensais.
+            </div>
+            <div class="block row">
+                PARÁGRAFO QUINTO: A(s) parcela(s) pode(m) ser paga(s) em qualquer forma de pagamento aceita pela
+                clínica.
+            </div>
+            <div class="block row">
+                PARÁGRAFO SEXTO: O contratante se responsabiliza pela informação de pagamentos não presenciais na
+                clínica (depósitos, PIX, TED, DOC, e outros).
+            </div>
+            <div class="block row">
+                PARÁGRAFO SÉTIMO: O vencimento de cada parcela será no intervalo sequencial de 30 (trinta) dias a partir
+                da primeira. Em caso de atrasos ou não pagamento, o paciente pode ter o atendimento suspenso até a
+                regularização financeira.
+            </div>
+        </div>
+        <div class="justtxt mt20">
+            <div class="block row">
+                CLÁUSULA QUINTA – DAS CONDICIONAIS
+            </div>
+            <div class="block row">
+                O paciente só iniciará tratamento após pagar no mínimo 40% (quarenta por cento) do total dos serviços
+                contratados.
+            </div>
+            <div class="block row">
+                Caso haja pagamento de entrada, no ato da contratação, o valor somará para cálculo do percentual.
+            </div>
+        </div>
+        <div class="justtxt mt20">
+            <div class="block row">
+                CLÁUSULA SEXTA – DA RESCISÃO CONTRATUAL
+            </div>
+            <div class="block row">
+                PARÁGRAFO PRIMEIRO: A rescisão contratual está condicionada a uma prévia avaliação do setor de
+                atendimento ao cliente da unidade.
+            </div>
+            <div class="block row">
+                PARÁGRAFO SEGUNDO: A rescisão deve ser solicitada em condição formal e presencial na unidade, onde o
+                contratante preencherá um termo de solicitação (da rescisão) que será avaliado num prazo de 30 (trinta)
+                dias após a solicitação.
+            </div>
+            <div class="block row">
+                PARÁGRAFO TERCEIRO: Em caso de estorno/devolução de valores, o SAC fará o atendimento e abrirá um
+                requerimento que tem o prazo de 30 (trinta) dias para avaliação, resposta e estorno/devolução (caso seja
+                aprovado).
+            </div>
+            <div class="block row">
+                PARÁGRAFO QUARTO: O estorno/devolução de valores está condicionado aos serviços/materiais utilizados até
+                o momento do requerimento assinado – o valor das parcelas pagas deve ser igual ou superior ao valor dos
+                serviços e materiais utilizados até o momento do requerimento de estorno/devolução.
+            </div>
+            <div class="block row">
+                PARÁGRAFO QUINTO: Até que haja a solicitação de rescisão nos termos do parágrafo segundo da cláusula
+                sétima, o contratante obriga-se a manter os pagamentos nas condições contratadas nesse documento.
+            </div>
+        </div>
+        <div class="justtxt mt20">
+            <div class="block row">
+                CLÁUSULA SÉTIMA – DAS CONDIÇÕES GERAIS
+            </div>
+            <div class="block row">
+                O presente contrato resulta de consenso entre os pactuantes com relação ao seu conteúdo e forma.
+            </div>
+        </div>
+        <div class="justtxt mt20">
+            <div class="block row">
+                CLÁUSULA OITAVA – DO FORO
+            </div>
+            <div class="block row">
+                Este contrato é de natureza cívil elegendo livremente as partes o foro da comarca de Nova Iguaçu para
+                dirimir quaisquer dúvidas oriundas presente instrumento com renúncia expressa de qualquer outro foro por
+                mais privilégio que seja.
+            </div>
+            <div class="block row">
+                Assim, estando justas e contratadas, as partes firmam o presente instrumento, em duas vias de igual
+                teor, para todos os fins e efeitos de direito.
+            </div>
+        </div>
+        <div class="row" style="margin-top:50px; justify-content: end; text-align: end;">
+            {{cidade}}, {{data.venda.createdat | date: 'dd'}} de {{data.venda.createdat | date: 'MMMM'}} de
+            {{data.venda.createdat | date: 'yyyy'}}.
+        </div>
+        <div style="width: 65%; margin-top: 100px; page-break-after: always;">
+            <div class="row" style="padding-top: 6px; border-top: solid 1px;">
+                Contratante
+            </div>
+            <div class="row" style="padding-top: 6px; border-top: solid 1px; margin-top: 100px;">
+                Contratada
+            </div>
+        </div>
+        <div class="row" id="destitle">
+            DETALHES DA VENDA
+        </div>
+        <!-- <div style="text-align:left; overflow-y: auto;"> -->
+        <div class="vendrow row" style="border-top: solid 1px;">
+            <div class="vendcol col-md-8">
+                Cliente: <b>{{data.venda.cliente | uppercase}}</b>
+            </div>
+            <div class="lbor vendcol col-md-4">
+                CPF: <b>{{data.venda.cpfpaciente}}</b>
+            </div>
+        </div>
+        <div class="vendrow row">
+            <div class="vendcol col-md-6">
+                Financiador: <b>{{data.venda.financiador | uppercase}}</b>
+            </div>
+            <ng-container *ngIf="data.venda.isnotfiador == 0">
+                <div class="lbor vendcol col-md-6">
+                    Possui fiador? <b>NÃO</b>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="data.venda.isnotfiador == 1">
+                <div class="lbor vendcol col-md-6">
+                    Possui fiador? <b>SIM</b>
+                </div>
+            </ng-container>
+        </div>
+        <ng-container *ngIf="data.venda.isnotfiador == 1">
+            <div class="vendrow row">
+                <div class="vendcol col-md-8">
+                    Fiador: <b>{{data.venda.fiador | uppercase}}</b>
+                </div>
+                <div class="lbor vendcol col-md-4">
+                    CPF: <b>{{data.venda.cpffiador}}</b>
+                </div>
+            </div>
+        </ng-container>
+        <div class="vendrow row">
+            <div class="vendcol col-md-6">
+                DOC: <b>{{data.venda.docodc}}</b>
+            </div>
+            <div class="lbor vendcol col-md-6">
+                DOC Financeiro: <b *ngIf="data.venda.financiador == 'BANCO JF'">{{data.venda.id}}</b> <b
+                    *ngIf="data.venda.financiador != 'BANCO JF'">{{data.venda.docfinanceiro}}</b>
+            </div>
+        </div>
+        <div class="vendrow row">
+            <div class="vendcol col-md-4">
+                Valor total: <b>{{data.venda.valortotal | currency}}</b>
+            </div>
+            <div class="lbor vendcol col-md-4">
+                <ng-container *ngIf="data.venda.valoratual < data.venda.valortotal">
+                    Valor atual: <b>{{data.venda.valoratual | currency}}</b>
+                </ng-container>
+            </div>
+            <div class="lbor vendcol col-md-4">
+                <ng-container *ngIf="data.venda.parcela > 0">
+                    Parcelamento: <b>{{data.venda.parcela}}X de {{data.venda.valorparcela | currency}}</b>
+                </ng-container>
+                <ng-container *ngIf="data.venda.parcela == 0">
+                    Sem parcelamento
+                </ng-container>
+            </div>
+        </div>
+        <div class="vendrow row">
+            <div class="vendcol col-md-4">
+                Valor Comercial: <b>{{data.venda.valorcomercial | currency}}</b>
+            </div>
+            <div class="lbor vendcol col-md-4">
+                Valor Avaliacao: <b>{{data.venda.valoravaliacao | currency}}</b>
+            </div>
+            <div class="lbor vendcol col-md-4">
+                Valor Tabela: <b>{{data.venda.valortabela | currency}}</b>
+            </div>
+        </div>
+        <div class="vendrow row">
+            <div class="vendcol col-md-6">
+                Cadastrado por: <b>{{data.venda.createdby | uppercase}}</b>
+            </div>
+            <div class="lbor vendcol col-md-6">
+                Unidade: <b>{{data.venda.unidade | uppercase}}</b>
+            </div>
+        </div>
+        <div class="row" style="justify-content: space-around; margin-bottom: 3%; margin-top: 2%;">
+            <div style="width: 100%;">
+                <div class="row"
+                    style="justify-content: center; border-bottom: solid;border-top: solid; border-right: solid; border-left: solid; background-color: #18f534d9;">
+                    <b>PRODUTOS</b>
+                </div>
+                <div class="row" style="background-color: #80808085; border-bottom: solid;">
+                    <div class="col-md-2 cols" style="border-left: solid;">
+                        <b>Código</b>
+                    </div>
+                    <div class="col-md-10 cols" style="border-left: solid; border-right: solid;">
+                        <b>Nome</b>
+                    </div>
+                </div>
+                <ng-container *ngFor="let p of data.venda.produtos; let pi = index">
+                    <div class="row">
+                        <div class="col-md-2 cols" style="border-bottom: solid; border-left: solid;">
+                            {{p.produto}}
+                        </div>
+                        <div class="col-md-10 cols"
+                            style="border-bottom: solid; border-left: solid; border-right: solid;">
+                            {{p.nome | uppercase}}
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div class="row" style="justify-content: space-around; margin-bottom: 3%; margin-top: 2%;">
+            <div style="width: 100%;" *ngIf="data.venda.entradas.length > 0">
+                <div class="row"
+                    style="justify-content: center; border-bottom: solid;border-top: solid;border-left: solid; border-right: solid; background-color: #6a5acded;">
+                    <b>ENTRADAS</b>
+                </div>
+                <div class="row" style="background-color: #80808085; border-bottom: solid;">
+                    <div class="col-md-6 cols" style="border-left: solid;">
+                        <b>Tipo entrada</b>
+                    </div>
+                    <div class="col-md-3 cols" style="border-left: solid;">
+                        <b>Valor</b>
+                    </div>
+                    <div class="col-md-3 cols" style="border-left: solid; border-right: solid;">
+                        <b>DOC</b>
+                    </div>
+                </div>
+                <ng-container *ngFor="let e of data.venda.entradas; let ei = index">
+                    <div class="row">
+                        <div class="col-md-6 cols" style="border-bottom: solid; border-left: solid;">
+                            {{e.nome | uppercase}}
+                        </div>
+                        <div class="col-md-3 cols" style="border-bottom: solid; border-left: solid;">
+                            {{e.valor | currency}}
+                        </div>
+                        <div class="col-md-3 cols"
+                            style="border-bottom: solid; border-left: solid; border-right: solid;">
+                            {{e.cododc}}
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

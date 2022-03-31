@@ -1,0 +1,125 @@
+<div class="loader" *ngIf="sloader == 1"></div>
+
+<div class="no-print title">
+    CADASTRAR ORDEM DE SERVIÇO DE LABORATÓRIO EXTERNO
+</div>
+<form [formGroup]="ordemForm" autocomplete="off" style="padding-top: 2%;">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-8">
+                    Nome do Paciente:
+                    <input class="form-control"
+                        onkeypress='return (event.charCode==32) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)'
+                        formControlName="paciente" type="text" tabindex="1">
+                </div>
+                <div class="col-md-4">
+                    CPF do Paciente:
+                    <input class="form-control" formControlName="cpf" type="text" mask="000.000.000-00" tabindex="2"
+                        placeholder="Apenas números">
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-8">
+                    Laboratório:
+                    <select class="form-control"
+                        onkeypress='return (event.charCode==32) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)'
+                        formControlName="laboratorio" type="text" tabindex="3">
+                        <ng-container *ngFor="let l of laboratorios; let i = index">
+                            <option value="{{l.nome}}">{{l.nome}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    Nº do Documento ODC:
+                    <input class="form-control" onkeypress='return (event.charCode >= 48 && event.charCode <= 57)'
+                        formControlName="documento" type="text" tabindex="4" placeholder="Apenas números">
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-4">
+                    Valor contratado:
+                    <input class="form-control" onfocus="this.select()" formControlName="valor_contratado" tabindex="5"
+                        type="text" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                </div>
+                <div class="col-md-4">
+                    Custo dos materiais:
+                    <input class="form-control" readonly formControlName="custo_materiais" type="text"
+                        currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                </div>
+                <div class="col-md-4">
+                    <button style="height: 38px;position: absolute;padding: 0px 10px;bottom: 0; font-size: 13px;"
+                        (click)="showProdutosModal()" class="btn btn-primary">Adicionar / Remover Produtos</button>
+                </div>
+            </div>
+            <!-- <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-6">
+                    Data do envio:
+                    <input class="form-control" (focusout)="dateFunction()" formControlName="data_envio" type="date"
+                        min="1800-12-31" max="2999-12-31" tabindex="5" placeholder="DD/MM/AAAA">
+                </div>
+                <div class="col-md-6">
+                    Data prevista de recebimento: <ng-container *ngIf="prazomsg == 1"><a style="color: red;"> + que 15
+                            dias</a></ng-container>
+                    <input class="form-control" (focusout)="dateFunction()" formControlName="data_recebimento"
+                        type="date" min="1800-12-31" max="2999-12-31" tabindex="6" placeholder="DD/MM/AAAA">
+                </div>
+            </div> -->
+
+            <div class="row" style="margin-bottom: 10px;">
+                <button class="btn btn-primary" style="margin-left: 15px;margin-top: 5px;"
+                    (click)="saveOs()">Gravar</button>
+                <button class="btn btn-danger" style="margin-left: 15px;margin-top: 5px;"
+                    (click)="resetForm()">Limpar</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="itemrow row" style="justify-content: center; background-color: lightblue;">
+                <b>PRODUTOS</b>
+            </div>
+            <ng-container *ngIf="produtolist.length == 0">
+                <div class="itemrow row"
+                    style="justify-content: center; border-bottom:solid 2px; height: 170px; background-color: lightgray;">
+                    <div class="center col-md-12">
+                        <b>NÃO HÁ PRODUTOS</b>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="produtolist.length > 0">
+                <div style="border: solid 2px;">
+                    <ng-container *ngFor=" let p of produtolist; let i = index">
+                        <div *ngIf="i == 0" class="row" style="border-bottom: solid 2px; background-color: lightgray;">
+                            <div class="col-md-10" style="border-right: solid 1px;">
+                                <b>PRODUTO</b>
+                            </div>
+                            <div class="center col-md-2">
+                                <b>QTD</b>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="i >= 0 && (i + 1) < produtolist.length">
+                            <div class="row" style="border-bottom: solid 2px;">
+                                <div class="col-md-10" style="border-right: solid 1px;">
+                                    {{p.nome | uppercase}}
+                                </div>
+                                <div class="center col-md-2">
+                                    {{p.qtd}}
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="i >= 0 && (i + 1) == produtolist.length">
+                            <div class="row">
+                                <div class="col-md-10" style="border-right: solid 1px;">
+                                    {{p.nome | uppercase}}
+                                </div>
+                                <div class="center col-md-2">
+                                    {{p.qtd}}
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+</form>

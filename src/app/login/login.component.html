@@ -1,0 +1,57 @@
+<!-- <div class="container-fluid h-100">
+    <div class="row equal" style="height: 100%; width: 100%;">
+        <div class="col-sm-6">
+            <div class="loginbgimg">
+                <img class="img-fluid" src="assets/images/back.jpg">
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="bgcolor">
+                <form [formGroup]="inputForm" autocomplete="off">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">LOGIN:</label>
+                      <input formControlName="login" (keydown.enter)="login()" type="email" class="form-control" id="login">
+                      
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">SENHA:</label>
+                      <input formControlName="pwd" (keydown.enter)="login()" type="password" class="form-control" id="senha">
+                    </div>
+                      
+                    
+                    <button type="button" (click)="login()" class="btn btn-primary">Entrar</button>
+                     <button type="button" (click)="testValidJwt()" class="btn btn-primary">Token válido!</button>
+                    <button type="button" (click)="testInvalidJwt()" class="btn btn-primary">Token inválido!</button> 
+                  </form>
+            </div>
+
+        </div>
+
+    </div>
+</div> -->
+<div class="row" style="position: relative;">
+  <img class="img-fluid loginimg" src="assets/images/JFLOGO-SEMFUNDO.jpg">
+</div>
+<!-- <div class="row" style="width: 100%; height: 40%;">
+  <div class="col-md-4"></div>
+  <div class="col-md-4 bgimage"></div>
+  <div class="col-md-4"></div>
+</div> -->
+<div class="loginpanel row" style="height: 40%;">
+  <form [formGroup]="inputForm" autocomplete="off" style="max-height:100%; max-width: 500px;">
+    <div class="form-group">
+      <label for="exampleInputEmail1">USUÁRIO:</label>
+      <input formControlName="login" (keydown.enter)="login()" type="email" class="form-control" id="login">
+
+    </div>
+    <div class="form-group">
+      <label for="exampleInputPassword1">SENHA:</label>
+      <input formControlName="pwd" (keydown.enter)="login()" type="password" class="form-control" id="senha">
+    </div>
+
+
+    <button type="button" (click)="login()" class="btn btn-primary">Entrar</button>
+    <!-- <button type="button" (click)="testValidJwt()" class="btn btn-primary">Token válido!</button>
+        <button type="button" (click)="testInvalidJwt()" class="btn btn-primary">Token inválido!</button> -->
+  </form>
+</div>

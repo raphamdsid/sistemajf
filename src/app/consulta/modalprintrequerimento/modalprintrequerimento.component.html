@@ -1,0 +1,427 @@
+<div class="row" style=" display: flow-root;">
+    <button class="no-print btn btn-primary" style="float: left;" (click)="print()">Imprimir</button>
+    <button class="close no-print" mat-button style="float: right;" (click)="onNoClick()">X</button>
+</div>
+<ng-container *ngIf="data.tipo == 'normal'">
+    <div id="printarea">
+        <div style="margin: auto; font-family: sans-serif;">
+            <div class="row">
+                <img *ngIf="data.obj.venda.unidade != 'Partmed'" src="assets/images/odclogo.png" style="float:left;">
+                <img *ngIf="data.obj.venda.unidade == 'Partmed'" src="assets/images/logopartmed.png"
+                    style="float:right;">
+                <!-- <img *ngIf="data.obj.venda.financiador != 'BANCO JF'" src="/assets/images/odclogo.png" style="float:left;">
+    <img *ngIf="data.obj.venda.financiador == 'BANCO JF'" src="/assets/images/jflogo.png" style="float:left;"> -->
+            </div>
+            <div class="row" style=" justify-content: center;">
+                <p class="title" style="font-weight: bold; text-decoration: underline;">REQUERIMENTO</p>
+            </div>
+            <div style="height: 80px;">
+                VENHO ATRAVÉS DESTE SOLICITAR A DEVOLUÇÃO/ESTORNO DO VALOR <b>{{data.obj.waitestornovalor |
+                    currency}}</b>
+                REFERENTE
+                AO
+                PAGAMENTO DO CONTRATO: <b>{{ncontrato}}</b> <br>
+            </div>
+            <div style="height: 150px;">
+                MOTIVO: <br>
+                {{data.obj.waitestornotxt | uppercase}}
+
+            </div>
+            <div style="height: 550px;">
+                <div class="col-md-12" *ngIf="data.obj.venda.financiador != 'BANCO JF'"
+                    style="border: solid; margin-bottom: 1%; border-radius: 5px;">
+                    <div class="row" style="margin-top: 4px;">
+                        <div class="col-md-4">
+                            Cliente: <b>{{data.obj.venda.cliente | uppercase}}</b>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="data.obj.venda.isnotfiador==0">
+                        <div class="row" style="margin-top: 2px;">
+                            <div class="col-md-4">
+                                CPF Paciente: {{data.obj.venda.cpfpaciente}}
+                            </div>
+                            <div class="col-md-4">
+                                Possui fiador? <b>NÃO</b>
+                            </div>
+                            <!-- <div class="col-md-3">
+                        </div> -->
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="data.obj.venda.isnotfiador==1">
+                        <div class="row" style="margin-top: 2px;">
+                            <div class="col-md-4">
+                                CPF Paciente: {{data.obj.venda.cpfpaciente}}
+                            </div>
+                            <div class="col-md-4">
+                                Possui fiador? <b>SIM</b>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 2px;">
+                            <div class="col-md-4">
+                                CPF Fiador: {{data.obj.venda.cpffiador}}
+                            </div>
+                            <div class="col-md-8">
+                                Fiador: <b>{{data.obj.venda.fiador | uppercase}}</b>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-6">
+                            Financiador: {{data.obj.venda.financiador | uppercase}}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-4">
+                            Valor total: {{data.obj.venda.valortotal | currency}}
+                        </div>
+                        <ng-container *ngIf="data.obj.venda.stats != 'ativo'">
+                            <div class="col-md-4">
+                                <!-- Valor atual: {{data.obj.venda.valoratual | currency}} -->
+                            </div>
+                            <div class="col-md-4">
+                                <!-- Valor estornado: {{data.obj.venda.valorestorno | currency}} -->
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-6">
+                            Quantidade de parcelas: {{data.obj.venda.parcela}}
+                        </div>
+                        <div class="col-md-6">
+                            Valor das parcelas: {{data.obj.venda.valorparcela | currency}}
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-6">
+                            Doc Proposta Financeira: {{data.obj.venda.docfinanceiro}}
+                        </div>
+                        <div class="col-md-6">
+                            Doc Odontocompany: {{data.obj.venda.docodc}}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-6">
+                            Usuário: {{data.obj.venda.createdby}}
+                        </div>
+                        <div class="col-md-6">
+                            Unidade: {{data.obj.venda.unidade | uppercase}}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 4px; margin-top: 2px;">
+                        <div class="col-md-6">
+                            Cadastrado em: {{data.obj.venda.createdat | date:'dd/MM/yyyy'}} às
+                            {{data.obj.venda.createdat |
+                            date:'HH:mm'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" *ngIf="data.obj.venda.financiador == 'BANCO JF'"
+                    style="border: solid; margin-bottom: 1%; border-radius: 5px;">
+                    <div class="row" style="margin-top: 4px;">
+                        <div class="col-md-4">
+                            Cliente: <b>{{data.obj.venda.cliente | uppercase}}</b>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="data.obj.venda.isnotfiador==0">
+                        <div class="row" style="margin-top: 2px;">
+                            <div class="col-md-4">
+                                CPF Paciente: {{data.obj.venda.cpfpaciente}}
+                            </div>
+                            <div class="col-md-4">
+                                Possui fiador? <b>NÃO</b>
+                            </div>
+                            <!-- <div class="col-md-3">
+                        </div> -->
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="data.obj.venda.isnotfiador==1">
+                        <div class="row" style="margin-top: 2px;">
+                            <div class="col-md-4">
+                                CPF Paciente: {{data.obj.venda.cpfpaciente}}
+                            </div>
+                            <div class="col-md-4">
+                                Possui fiador? <b>SIM</b>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 2px;">
+                            <div class="col-md-4">
+                                CPF Fiador: {{data.obj.venda.cpffiador}}
+                            </div>
+                            <div class="col-md-8">
+                                Fiador: <b>{{data.obj.venda.fiador | uppercase}}</b>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-6">
+                            Financiador: {{data.obj.venda.financiador | uppercase}}
+                        </div>
+                        <div class="col-md-4">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-4">
+                            Valor total: {{data.obj.venda.valortotal | currency}}
+                        </div>
+                        <ng-container *ngIf="data.obj.venda.stats != 'ativo'">
+                            <div class="col-md-4">
+                                <!-- Valor atual: {{data.obj.venda.valoratual | currency}} -->
+                            </div>
+                            <div class="col-md-4">
+                                <!-- Valor estornado: {{data.obj.venda.valorestorno | currency}} -->
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-4">
+                            Valor tabelado: {{data.obj.venda.valortabela | currency}}
+                        </div>
+                        <div class="col-md-4">
+                            Valor avaliação: {{data.obj.venda.valoravaliacao | currency}}
+                        </div>
+                        <div class="col-md-4">
+                            Valor comercial: {{data.obj.venda.valorcomercial | currency}}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-4">
+                            Valor financiado: {{data.obj.venda.valorfinanciado | currency}}
+                        </div>
+                        <div class="col-md-4">
+                            Valor entrada: {{data.obj.venda.valorentrada | currency}}
+                        </div>
+                        <div class="col-md-4">
+                            <ng-container *ngIf="data.obj.venda.desconto > 0">
+                                Desconto: {{data.obj.venda.desconto}}%
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-6">
+                            Quantidade de parcelas: {{data.obj.venda.parcela}}
+                        </div>
+                        <div class="col-md-6">
+                            Valor das parcelas: {{data.obj.venda.valorparcela | currency}}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-6">
+                            Doc Proposta Financeira: {{data.obj.venda.id}}
+                        </div>
+                        <div class="col-md-6">
+                            Doc Odontocompany: {{data.obj.venda.docodc}}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-6">
+                            Usuário: {{data.obj.venda.createdby}}
+                        </div>
+                        <div class="col-md-6">
+                            Unidade: {{data.obj.venda.unidade | uppercase}}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 4px; margin-top: 2px;">
+                        <div class="col-md-6">
+                            Cadastrado em: {{data.obj.venda.createdat | date:'dd/MM/yyyy'}} às
+                            {{data.obj.venda.createdat |
+                            date:'HH:mm'}}
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row" id="destitle">
+        DADOS PARA DEVOLUÇÃO
+    </div>
+    <div class="rowdados row">
+        <div class="rbor col col-md-1">
+            NOME
+        </div>
+        <div class="col col-md-11">
+            {{data.obj.venda.cliente | uppercase}}
+        </div>
+    </div>
+    <div class="rowdados row">
+        <div class="rbor col col-md-1">
+            CPF
+        </div>
+        <div class="rbor col col-md-5">
+            {{data.obj.venda.cpfpaciente | uppercase}}
+        </div>
+        <div class="rbor col col-md-1">
+            TEL
+        </div>
+        <div class="col col-md-5">
+            {{data.obj.venda.cpfpaciente | uppercase}}
+        </div>
+    </div> -->
+            </div>
+            <div style="height: 90px;">
+                <b>OBS: SOLICITAÇÃO SERÁ AVALIADA PELO SETOR RESPONSÁVEL NO PRAZO DE ATÉ 30 DIAS. ESSE DOCUMENTO NÃO É
+                    CONSIDERADO COMO TERMOS DE DISTRATO/CANCELAMENTO. APÓS A ANÁLISE E APROVAÇÃO, SERÁ NECESSÁRIO O
+                    COMPARECIMENTO NESSA UNIDADE PARA EFETIVAÇÃO DO CANCELAMENTO E ASSINATURA DO DISTRATO.</b>
+            </div>
+            <div style="height: 200px;">
+                <div class="row" style="page-break-after: always;">
+                    <div class="col-md-6" style="padding-left: 0px; padding-right: 0px;">
+                        <div style="position: absolute;bottom: 20px;">
+                            {{endereco}} <br>
+                            {{bairro}} | {{ciduf}} <br>
+                            {{tel}} <br>
+                            <label style="margin-top:20px" id="site">{{site}}</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="padding-left: 0px; padding-right: 0px;text-align: end;">
+                        {{cidade}}, {{dia | date: 'dd'}} de {{dia | date: 'MMMM'}} de
+                        {{dia | date: 'yyyy'}}.<br><br><br><br>
+                        _______________________________________________________<br>
+                        SOLICITANTE<br><br><br>
+                        _______________________________________________________<br>
+                        REQUERENTE
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="data.tipo == 'especial'">
+    <div id="printarea">
+        <div style="margin: auto; font-family: sans-serif;">
+            <div class="row">
+                <img *ngIf="data.obj.unidade != 'Partmed'" src="assets/images/odclogo.png" style="float:left;">
+                <img *ngIf="data.obj.unidade == 'Partmed'" src="assets/images/logopartmed.png" style="float:right;">
+                <!-- <img *ngIf="data.obj.financiador != 'BANCO JF'" src="/assets/images/odclogo.png" style="float:left;">
+    <img *ngIf="data.obj.financiador == 'BANCO JF'" src="/assets/images/jflogo.png" style="float:left;"> -->
+            </div>
+            <div class="row" style=" justify-content: center;">
+                <p class="title" style="font-weight: bold; text-decoration: underline;">REQUERIMENTO</p>
+            </div>
+            <div style="height: 80px;">
+                VENHO ATRAVÉS DESTE SOLICITAR A DEVOLUÇÃO/ESTORNO DO VALOR <b>{{data.obj.valorestorno | currency}}</b>
+                REFERENTE AO DOCUMENTO ODC Nº: <b>{{data.obj.docodc}}</b> <br>
+            </div>
+            <div style="height: 150px;">
+                MOTIVO: <br>
+                {{data.obj.motivo | uppercase}}
+
+            </div>
+            <div style="height: 550px;">
+                <div class="col-md-12" style="border: solid; margin-bottom: 1%; border-radius: 5px;">
+                    <div class="row" style="margin-top: 4px;">
+                        <div class="col-md-12">
+                            Nome/Razão Social: <b>{{data.obj.nome | uppercase}}</b>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-6">
+                            {{cpfcnpj | uppercase}}: {{data.obj.cpfcnpj}}
+                        </div>
+                        <div class="col-md-6">
+                            Telefone: {{data.obj.tel}}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-12">
+                            E-mail: {{data.obj.email | lowercase}}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-5">
+                            Valor da compra: {{data.obj.valorcompra | currency}}
+                        </div>
+                        <div class="col-md-7">
+                            Forma de pagamento da compra: {{data.obj.fpagcompra | uppercase}}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-5">
+                            Valor a ser estornado: {{data.obj.valorestorno | currency}}
+                        </div>
+                        <div class="col-md-7">
+                            Forma de estorno: {{data.obj.tipo | uppercase}}
+                        </div>
+                    </div>
+                    <ng-container *ngIf="data.obj.tipo == 'TRANSFERÊNCIA BANCÁRIA'">
+                        <div class="row"
+                            style="justify-content: center; border-left: solid 1px; border-top: solid 1px; border-right: solid 1px;padding-top: 2px; padding-bottom: 2px;">
+                            <a style="font-weight: bold; font-size: large;">DADOS BANCÁRIOS</a>
+                        </div>
+                        <div class="row" style="border-left: solid 1px; border-right: solid 1px;padding-bottom: 2px;">
+                            <div class="col-md-12">
+                                Banco: {{data.obj.codbanco}} - {{data.obj.banco | uppercase}}
+                            </div>
+                        </div>
+                        <div class="row"
+                            style="border-left: solid 1px; border-bottom: solid 1px; border-right: solid 1px;padding-bottom: 2px;">
+                            <div class="col-md-3">
+                                Agência: {{data.obj.agencia}}
+                            </div>
+                            <div class="col-md-4">
+                                Conta: {{data.obj.conta}}
+                            </div>
+                            <div class="col-md-5">
+                                Tipo: {{data.obj.tipoconta | uppercase}}
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="data.obj.tipo == 'PIX'">
+                        <div class="row"
+                            style="justify-content: center; border-left: solid 1px; border-top: solid 1px; border-right: solid 1px;padding-top: 2px; padding-bottom: 2px;">
+                            <a style="font-weight: bold; font-size: large;">DADOS BANCÁRIOS</a>
+                        </div>
+                        <div class="row" style="border-left: solid 1px; border-right: solid 1px;padding-bottom: 2px;">
+                            <div class="col-md-12">
+                                Tipo de chave pix: {{data.obj.tipopix | uppercase}}
+                            </div>
+                        </div>
+                        <div class="row"
+                            style="border-left: solid 1px; border-bottom: solid 1px; border-right: solid 1px;padding-bottom: 2px;">
+                            <div class="col-md-12">
+                                Chave Pix: {{data.obj.chavepix}}
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div class="row" style="margin-top: 2px;">
+                        <div class="col-md-6">
+                            Usuário: {{data.obj.createdby}}
+                        </div>
+                        <div class="col-md-6">
+                            Unidade: {{data.obj.unidade | uppercase}}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 4px; margin-top: 2px;">
+                        <div class="col-md-6">
+                            Cadastrado em: {{data.obj.createdat | date:'dd/MM/yyyy'}} às
+                            {{data.obj.createdat |
+                            date:'HH:mm'}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 90px;">
+                <b>OBS: SOLICITAÇÃO SERÁ AVALIADA PELO SETOR RESPONSÁVEL NO PRAZO DE ATÉ 30 DIAS. ESSE DOCUMENTO NÃO É
+                    CONSIDERADO COMO TERMOS DE DISTRATO/CANCELAMENTO. APÓS A ANÁLISE E APROVAÇÃO, SERÁ NECESSÁRIO O
+                    COMPARECIMENTO NESSA UNIDADE PARA EFETIVAÇÃO DO CANCELAMENTO E ASSINATURA DO DISTRATO.</b>
+            </div>
+            <div style="height: 200px;">
+                <div class="row" style="page-break-after: always; margin-left: 0px; margin-right: 0px;">
+                    <div class="col-md-6" style="padding-left: 0px; padding-right: 0px;">
+                        <div style="position: absolute;bottom: 20px;">
+                            {{endereco}} <br>
+                            {{bairro}} | {{ciduf}} <br>
+                            {{tel}} <br>
+                            <label style="margin-top:20px" id="site">{{site}}</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="padding-left: 0px; padding-right: 0px;text-align: end;">
+                        {{cidade}}, {{dia | date: 'dd'}} de {{dia | date: 'MMMM'}} de
+                        {{dia | date: 'yyyy'}}.<br><br><br><br>
+                        _______________________________________________________<br>
+                        SOLICITANTE<br><br><br>
+                        _______________________________________________________<br>
+                        REQUERENTE
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

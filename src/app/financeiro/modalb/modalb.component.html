@@ -1,0 +1,19 @@
+<div>
+    <div class="row" style="justify-content: center;">
+        <p style="font-size: large; font-weight: bold;">{{modaltxt}}</p>
+    </div>
+
+
+    <mat-dialog-actions align="center">
+        <form [formGroup]="pwdForm" autocomplete="off">
+            <input type="password" formControlName="pwd" matInput>
+            <br />
+            <button class="btn btn-primary" (click)="confirm()">Enviar</button>
+            <button class="btn btn-danger" (click)="cancel()">Cancelar</button>
+        </form>
+
+        <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Sim</button>
+   -->
+
+    </mat-dialog-actions>
+</div>

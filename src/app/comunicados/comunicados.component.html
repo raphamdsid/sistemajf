@@ -1,0 +1,157 @@
+<div class="loader" *ngIf="sloader == 1"></div>
+<header>
+</header>
+
+<div class="no-print title">
+    COMUNICADOS
+</div>
+
+<ng-container *ngIf="role == 'admin'">
+    <div class="nomargl row" style="height: 600px;">
+        <div class="col-md-8">
+            <form [formGroup]="comunicaForm" autocomplete="off">
+                <ng-container *ngIf="newcomlayout == 0">
+                    <div style="margin-top: 2%; margin-bottom: 2%;">
+                        <div class="row" style="justify-content: center; margin-bottom: 1%;">
+                            <b>NOVO COMUNICADO</b>
+                        </div>
+                        <div class="row" style="justify-content: center; margin-bottom: 1%;">
+                            <div class="col-md-10">
+                                Título:
+                                <input class="form-control" type="text" formControlName="titulo">
+                            </div>
+                        </div>
+                        <div class="row" style="justify-content: center;">
+                            <div class="col-md-10">
+                                Texto:
+                                <textarea class="form-control" formControlName="texto"
+                                    style="height: 400px; overflow-y: auto; resize: none;">
+                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="newcomlayout == 1">
+                    <div style="margin-top: 2%; margin-bottom: 2%;">
+                        <div class="row" style="justify-content: center; margin-bottom: 1%;">
+                            <b>NOVO COMUNICADO</b>
+                        </div>
+                        <div class="row" style="justify-content: center; margin-bottom: 1%;">
+                            <div class="col-md-10">
+                                Título:
+                                <input readonly class="form-control" type="text" formControlName="titulo">
+                            </div>
+                        </div>
+                        <div class="row" style="justify-content: center;">
+                            <div class="col-md-10">
+                                Texto:
+                                <textarea readonly class="form-control" formControlName="texto"
+                                    style="height: 400px; overflow-y: auto; resize: none;">
+                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </form>
+            <ng-container *ngIf="newcomlayout == 0">
+                <div class="row" style="justify-content: center;">
+                    <div class="col-md-6" style="text-align: center;">
+                        <ng-container *ngIf="comunicaForm.valid == true">
+                            <button class="btn btn-primary" (click)="publicar()">Publicar</button>
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="newcomlayout == 1">
+                <div class="row" style="justify-content: center;">
+                    <div class="col-md-6" style="text-align: center;">
+                        <ng-container *ngIf="comunicaForm.valid == true">
+                            <button class="btn btn-primary" (click)="retiraComunica()">Retirar Comunicado</button>
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-md-4" style="overflow-y: auto;">
+            <div style="overflow-y: auto; overflow-x: hidden; height: 600px;">
+                <div class="nomargl row" style="justify-content: center; margin-top: 15px; margin-bottom: 25px;">
+                    <b>VISUALIZADORES</b>
+                </div>
+                <ng-container *ngIf="viewlog.length == 0">
+                    <div class="nomargl row">
+                        NÃO HÁ VISUALIZAÇÕES PARA ESTE COMUNICADO
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="viewlog.length > 0">
+                    <ng-container *ngFor="let v of viewlog; let i = index">
+                        <div class="nomargl row" style="margin-bottom: 3%; border: solid 1px; border-radius: 5px;">
+                            <div class="col-md-12">
+                                <div class="row" style="border-bottom: solid 1px; background-color: lightblue;border-top-right-radius: 5px;
+                                border-top-left-radius: 5px;">
+                                    <div class="col-md-12">
+                                        {{v.nome | uppercase}}
+                                    </div>
+                                </div>
+                                <div class="row" style="border-bottom: solid 1px;">
+                                    <div class="col-md-12">
+                                        {{v.role | uppercase}}
+                                    </div>
+                                </div>
+                                <div class="row" style="border-bottom: solid 1px;">
+                                    <div class="col-md-12">
+                                        {{v.createdat | date:'dd/MM/yyyy'}} - {{v.createdat | date:'HH:mm'}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {{v.unidade | uppercase}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="role == 'gerente'">
+    <ng-container *ngIf="newcomlayout == 0">
+        <div style="margin-top: 2%; margin-bottom: 2%; text-align: center; font-size: xx-large;">
+            NÃO HÁ COMUNICADOS
+        </div>
+    </ng-container>
+    <ng-container *ngIf="newcomlayout == 1">
+        <div class="nomargl row">
+            <button class="btn btn-primary" style="margin: 15px;" (click)="print()">Imprimir</button>
+        </div>
+        <div id="printarea" style="justify-content: center; text-align: center;">
+            <div style="width: 270mm;margin: auto;">
+                <div class="nomargl row">
+                    <img *ngIf="user.unidade != 'Partmed'" src="assets/images/odclogo.png" style="float:left;">
+                    <img *ngIf="user.unidade == 'Partmed'" src="assets/images/logopartmed.png" style="float:right;">
+                </div>
+                <div style="margin-bottom: 2%;">
+                    <div class="nomargl row" style="justify-content: center; margin-bottom: 1%; margin-top: 1%; font-size: x-large;">
+                        <div class="col-md-10" style="text-align: center;">
+                            <b>{{comunicado.titulo | uppercase}}</b>
+                        </div>
+                    </div>
+                    <div class="nomargl row" style="justify-content: center;">
+                        <div class="col-md-12" style="text-align: justify; display: flex;">
+                            <textarea readonly onload="resizeTxtArea()" #texto class="txt form-control"
+                                style="overflow: hidden; resize: none; border: none;text-align: justify; padding-left: 0px;padding-right: 0px; background-color: white;">{{comunicado.texto | uppercase}}
+                        </textarea>
+                        </div>
+                    </div>
+                    <div class="nomargl row" style="justify-content: center; margin-top: 2%;">
+                        <div class="col-md-12 form-control" style="text-align: end;border: none; padding-left: 15px;padding-right: 15px;">
+                            {{comunicado.createdat | date:'dd'}} de {{comunicado.createdat | date:'MMMM'}} de
+                            {{comunicado.createdat | date:'yyyy'}}.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</ng-container>

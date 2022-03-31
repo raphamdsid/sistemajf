@@ -1,0 +1,14 @@
+[
+    {
+        "nome": "Teste de Recorrente ODC 59,90",
+        "valor": 59.90,
+        "frequencia": 1,
+        "url": "https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=2c9380847ef794f8017efdeb71fc0185"
+    },
+    {
+        "nome": "Teste de Recorrente ODC GOLD 99,90",
+        "valor": 99.90,
+        "frequencia": 1,
+        "url": "https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=2c9380847f1b6b80017f21b442e90167"
+    }
+]

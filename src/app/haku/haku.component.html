@@ -1,0 +1,273 @@
+<div class="loader" *ngIf="sloader == 1"></div>
+<!-- <script src="https://sdk.mercadopago.com/js/v2"></script> -->
+<!-- <script>
+  const mp = new MercadoPago('TEST-5d21a6ef-6ec2-4520-9795-ed355329c1be');
+  // Add step #3
+  // Step #3
+  const cardForm = mp.cardForm({
+    amount: "100.5",
+    autoMount: true,
+    form: {
+      id: "form-checkout",
+      cardholderName: {
+        id: "form-checkout__cardholderName",
+        placeholder: "Titular do cartão",
+      },
+      cardholderEmail: {
+        id: "form-checkout__cardholderEmail",
+        placeholder: "E-mail",
+      },
+      cardNumber: {
+        id: "form-checkout__cardNumber",
+        placeholder: "Número do cartão",
+      },
+      cardExpirationDate: {
+        id: "form-checkout__cardExpirationDate",
+        placeholder: "Data de vencimento (MM/YYYY)",
+      },
+      securityCode: {
+        id: "form-checkout__securityCode",
+        placeholder: "Código de segurança",
+      },
+      installments: {
+        id: "form-checkout__installments",
+        placeholder: "Parcelas",
+      },
+      identificationType: {
+        id: "form-checkout__identificationType",
+        placeholder: "Tipo de documento",
+      },
+      identificationNumber: {
+        id: "form-checkout__identificationNumber",
+        placeholder: "Número do documento",
+      },
+      issuer: {
+        id: "form-checkout__issuer",
+        placeholder: "Banco emissor",
+      },
+    },
+    callbacks: {
+      onFormMounted: error => {
+        if (error) return console.warn("Form Mounted handling error: ", error);
+        console.log("Form mounted");
+      },
+      onSubmit: event => {
+        event.preventDefault();
+
+        const {
+          paymentMethodId: payment_method_id,
+          issuerId: issuer_id,
+          cardholderEmail: email,
+          amount,
+          token,
+          installments,
+          identificationNumber,
+          identificationType,
+        } = cardForm.getCardFormData();
+
+        fetch("http://192.168.1.200/jfapi/teste_mp/process_payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token,
+            issuer_id,
+            payment_method_id,
+            transaction_amount: Number(amount),
+            installments: Number(installments),
+            description: "Descrição do produto",
+            payer: {
+              email,
+              identification: {
+                type: identificationType,
+                number: identificationNumber,
+              },
+            },
+          }),
+        });
+      },
+      onFetching: (resource) => {
+        console.log("Fetching resource: ", resource);
+
+        // Animate progress bar
+        const progressBar = document.querySelector(".progress-bar");
+        progressBar.removeAttribute("value");
+
+        return () => {
+          progressBar.setAttribute("value", "0");
+        };
+      }
+    },
+  });
+</script> -->
+<!-- 
+<a mp-mode="dftl"
+  href="https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=2c9380847ef794f8017efdeb71fc0185"
+  name="MP-payButton" class='blue-ar-l-rn-none'>Assinar</a> -->
+
+<div style="overflow-y: scroll; overflow-x: hidden;">
+  <ng-container *ngFor="let p of planos; let pi = index">
+    <div class="row">
+      <a mp-mode="dftl" href="{{p.url}}" name="MP-payButton" class='blue-ar-l-rn-none'>{{p.nome}}</a>
+    </div>
+  </ng-container>
+</div>
+<!-- <div class="row" style="border-bottom: solid;">
+  <div class="col-md-6" style="padding: 5%;">
+    <div class="row" style="justify-content: center; margin-bottom: 5%;">
+      OPÇÃO 1: CHECKOUT NO MERCADO PAGO
+    </div>
+    <div class="row">
+      <div class="col-md-12" style="text-align: center;">
+        <a mp-mode="dftl"
+          href="https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=2c9380847ef794f8017efdeb71fc0185"
+          name="MP-payButton" class='blue-ar-l-rn-none'>Assinar</a>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- Valor da venda: {{valor_venda | currency}} -->
+<!-- <div class="col-md-6" style="padding: 5%; border-left: solid;">
+    <div class="row" style="justify-content: center; margin-bottom: 5%;">
+      OPÇÃO 2: CHECKOUT DENTRO DO SISTEMA
+    </div>
+    <div class="row">
+      <form [formGroup]="mpForm" style="width: 100%;">
+        <div class="martb row">
+          <div class="col-md-6">
+            <input class="form-control" placeholder="Número do Cartão" mask="{{cardmask}}" formControlName="cardNumber"
+              type="text" (keyup)="buscaBandeira()">
+          </div>
+          <ng-container *ngIf="validcard == 'valid'">
+            <div class="col-md-3">
+
+            </div>
+          </ng-container>
+          <ng-container *ngIf="validcard == 'invalid'">
+            <div class="col-md-3">
+              <div>
+                <b>CARTÃO INVÁLIDO</b>
+              </div>
+            </div>
+          </ng-container>
+
+
+        </div>
+        <ng-container *ngIf="showcardform == 1">
+          <div class="martb row">
+            <div class="col-md-6">
+              <input type="text" class="form-control cardicon" style="background-image: url({{cardthumb}});" readonly
+                formControlName="issuer">
+            </div>
+          </div>
+          <div class="martb row">
+            <div class="col-md-6">
+              <input class="form-control" placeholder="Data de vencimento (99/9999)" mask="00/0000"
+                formControlName="cardExpirationDate" type="text">
+            </div>
+          </div>
+          <div class="martb row">
+            <div class="col-md-6">
+              <input class="form-control" placeholder="Email" formControlName="cardholderEmail" type="email">
+            </div>
+          </div>
+          <div class="martb row">
+            <div class="col-md-6">
+              <input class="form-control" placeholder="Código de Segurança" formControlName="securityCode"
+                mask="{{pwdmask}}" type="text">
+            </div>
+          </div>
+          <div class="martb row">
+            <div class="col-md-6">
+              <input class="form-control" placeholder="Titular do cartão" formControlName="cardholderName" type="text">
+            </div>
+          </div>
+
+          <div class="martb row">
+            <div class="col-md-6">
+              <select class="form-control" (change)="resetId()" formControlName="identificationType">
+                <option value="">Selecione o tipo de documento</option>
+                <option value="CPF">CPF</option>
+                <option value="CNPJ">CNPJ</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="martb row">
+            <div class="col-md-6" *ngIf="mpForm.controls['identificationType'].value == ''">
+              <input class="form-control" style="visibility: hidden;" disabled readonly>
+            </div>
+            <div class="col-md-6" *ngIf="mpForm.controls['identificationType'].value == 'CPF'">
+              <input class="form-control" (focusout)="validId(1)" mask="000.000.000-00" placeholder="999.999.999-99"
+                formControlName="identificationNumber" type="text">
+            </div>
+            <div class="col-md-6" *ngIf="mpForm.controls['identificationType'].value == 'CNPJ'">
+              <input class="form-control" (focusout)="validId(2)" mask="00.000.000/0000-00"
+                placeholder="99.999.999/9999-99" formControlName="identificationNumber" type="text"
+                *ngIf="mpForm.controls['identificationType'].value == 'CNPJ'">
+            </div>
+          </div>
+          <div class="martb row">
+            <div class="col-md-6">
+              <select class="form-control" formControlName="installment">
+                <option value="">Selecione o parcelamento</option>
+                <ng-container *ngFor="let i of card.payer_costs">
+                  <option value="{{i.installments}}">{{i.installments}}x de
+                    {{((amount*(1+(i.installment_rate/100)))/i.installments) | currency}}
+                    ({{(amount*(1+(i.installment_rate/100)))
+                    | currency}})
+                  </option>
+                </ng-container>
+              </select>
+            </div>
+          </div>
+          <div class="martb row" style="margin-top: 10px;">
+            <div class="col-md-6">
+              <button class="btn btn-success" (click)="checkFormMP()">Testar Pagamento!</button>
+            </div>
+          </div>
+        </ng-container>
+      </form>
+    </div>
+  </div> -->
+
+<!-- <button (click)="clw()">cardForm</button>
+<button (click)="func()">Teste</button> -->
+
+<!-- <form id="form-checkout">
+  <input class="form-control" type="text" mask="0000 0000 0000 0000" name="cardNumber" id="form-checkout__cardNumber" />
+  <input class="form-control" type="text" mask="00/0000" name="cardExpirationDate" id="form-checkout__cardExpirationDate" />
+  <input class="form-control" type="text" name="cardholderName" id="form-checkout__cardholderName" />
+  <input class="form-control" type="email" name="cardholderEmail" id="form-checkout__cardholderEmail" />
+  <input class="form-control" type="text" mask="000" name="securityCode" id="form-checkout__securityCode" />
+  <select class="form-control" name="issuer" id="form-checkout__issuer"></select>
+  <select class="form-control" name="identificationType" id="form-checkout__identificationType"></select>
+  <input class="form-control" type="text" name="identificationNumber" id="form-checkout__identificationNumber" />
+  <select class="form-control" name="installments" id="form-checkout__installments"></select>
+  <button type="submit" id="form-checkout__submit">Pagar</button>
+  <progress value="0" class="progress-bar">Carregando...</progress>
+</form> -->
+
+
+
+
+
+
+
+
+
+<!-- <div class="container">
+  <div class="row title" style="text-align: center;">
+    <a style="margin-bottom:10px; margin-top: 10px;">FICHA PROTESE: FULANO BELTRANO - Nº 134567</a>
+  </div>
+  <div class="row" style="margin-top:2%">
+    CPF: 000.000.000-00
+  </div>
+  <div class="row" style="margin-top:2%">
+    DADOS DA PROTESE: DADOS DA PROTESE ENTRARÃO AQUI
+  </div>
+  <div class="row" style="justify-content: center; margin-top: 20%;">
+    <qrcode class="visible" [qrdata]="qrcodeurl" [width]="256" [errorCorrectionLevel]="'M'">PROTESE</qrcode>
+  </div>
+</div> -->
