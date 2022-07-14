@@ -7,7 +7,7 @@
       close
     </mat-icon>
   </button>
-  {{user.nome | uppercase}} - {{unidade | uppercase}}
+  {{user.nome | uppercase}} <ng-container *ngIf="user.role != ''">- {{role | uppercase}} </ng-container><ng-container *ngIf="user.unidade != ''">- {{unidade | uppercase}}</ng-container>
 </mat-toolbar>
 
 <mat-sidenav-container>
@@ -46,7 +46,8 @@
       <mat-icon>home</mat-icon>
       <span>Página inicial</span>
     </button>
-    <button *ngIf="unidade == 'Partmed' || role == 'admin'" style="padding-right: 0px;" mat-button class="menu-button" [routerLink]="home" (click)="goToUrl()">
+    <button *ngIf="unidade == 'Partmed' || role == 'admin'" style="padding-right: 0px;" mat-button class="menu-button"
+      [routerLink]="home" (click)="goToUrl()">
       <mat-icon>video_label</mat-icon>
       <span>Partmed Essencial</span>
     </button>
@@ -124,6 +125,18 @@
       </button>
     </ng-container>
     <!-- /PROTESE -->
+    <!-- CRC-->
+    <ng-container *ngIf="role == 'CRC'">
+      <button mat-button class="menu-button" [routerLink]="crc" (click)="sidenav.toggle()">
+        <mat-icon>headset_mic</mat-icon>
+        <span>CRC</span>
+      </button>
+      <button mat-button class="menu-button" [routerLink]="config" (click)="sidenav.toggle()">
+        <mat-icon>settings</mat-icon>
+        <span>Configurações</span>
+      </button>
+    </ng-container>
+    <!-- /CRC-->
     <button mat-button class="menu-button" (click)="logout()">
       <mat-icon>exit_to_app</mat-icon>
       <span>Sair</span>

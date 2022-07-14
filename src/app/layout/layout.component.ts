@@ -31,6 +31,7 @@ export class LayoutComponent implements OnInit {
   public config = "/config";
   public admin = "/adminpanel";
   public carne = "/carne";
+  public crc = "/crc";
   public comunicados = "/comunicados";
   public relatorioprotese = "/relatorioprotese";
   public consultaprotese = "/consultaprotese";
@@ -72,6 +73,9 @@ export class LayoutComponent implements OnInit {
     }
     if (path == 'carne') {
       this.router.navigate(['/carne']);
+    }
+    if (path == 'crc') {
+      this.router.navigate(['/crc']);
     }
     //this.sidenav.close;
     this.drawer.close;

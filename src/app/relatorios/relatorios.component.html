@@ -44,32 +44,9 @@
                         <a>Unidade:</a>
                         <select class="form-control" id="inputunidade" formControlName="unidade" required>
                             <option value="todas" selected>Todas</option>
-                            <option value="ODC Nova Iguaçu I (Centro)">ODC Nova Iguaçu I
-                                (Centro)
-                            </option>
-                            <option value="ODC Nova Iguaçu II (Centro)">ODC Nova Iguaçu II
-                                (Centro)
-                            </option>
-                            <option value="ODC Nova Iguaçu III (Centro)">ODC Nova Iguaçu III
-                                (Centro)
-                            </option>
-                            <option value="ODC Nova Iguaçu IV (Centro)">ODC Nova Iguaçu IV
-                                (Centro)
-                            </option>
-                            <option value="ODC Belford Roxo (Centro)">ODC Belford Roxo
-                                (Centro)
-                            </option>
-                            <option value="ODC São João de Meriti (Centro)">ODC São João de
-                                Meriti
-                                (Centro)</option>
-                            <option value="ODC Vilar dos Teles (Centro)">ODC Vilar dos Teles
-                                (Centro)</option>
-                            <option value="ODC Pavuna (Centro)">ODC Pavuna
-                                (Centro)</option>
-                            <option value="Partmed">Partmed</option>
-                            <!-- <option value="Partmed">Partmed</option>
-                        <option value="Pramelhor">Pramelhor</option> -->
-                            <!-- <option value="Outro local">Outro local</option> -->
+                            <ng-container *ngFor="let u of unidlist;let ui = index">
+                                <option value="{{u.val}}">{{u.nome}}</option>
+                            </ng-container>
                         </select>
                     </div>
                     <div class="col-md-3">

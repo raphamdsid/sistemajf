@@ -16,12 +16,15 @@ import { ModalbComponent } from '../financeiro/modalb/modalb.component';
 import { EstornamodalComponent } from './estornamodal/estornamodal.component';
 import { EditvendamodalComponent } from './editvendamodal/editvendamodal.component';
 import { ConfirmeditvendamodalComponent } from './confirmeditvendamodal/confirmeditvendamodal.component';
+import { DelvenComponent } from './delven/delven.component';
 import { ModalsolicitaestornoComponent } from './modalsolicitaestorno/modalsolicitaestorno.component';
 import { ModaldetailsjfComponent } from './modaldetailsjf/modaldetailsjf.component';
 import { ModalprintrequerimentoComponent } from './modalprintrequerimento/modalprintrequerimento.component';
 import { ModalcontratojfComponent } from '../jfvenda/modalcontratojf/modalcontratojf.component';
 import { ModaldetailsosComponent } from '../consultaprotese/modaldetailsos/modaldetailsos.component';
 import { ToolsService } from '../services/tools.service';
+import { ModalComponent } from '../modal/modal.component';
+
 
 
 @Component({
@@ -144,8 +147,14 @@ export class ConsultaComponent implements OnInit {
   ngOnInit(): void {
     this.auth.isAuth();
     this.getSessionItem();
-    let unitemp:any = [];
-    unitemp = this.tools.uniList();
+    let unitemp: any = [];
+    this.tools.unidList().subscribe(data => {
+      for (let x = 0; x < data.length; x++) {
+        if (data[x].ativo == 1) {
+          this.unidlist.push(data[x]);
+        }
+      }
+    });
     // unitemp = JSON.parse(JSON.stringify(unitemp));
     console.log(unitemp);
     console.log(this.unidlist);
@@ -537,7 +546,18 @@ export class ConsultaComponent implements OnInit {
       }
     });
   }
-
+  deletaVenda(index: any) {
+    const dialogRef = this.dialog.open(ModalComponent, {
+      data: {
+        tipo: 'delvenda',
+        obj: this.vendalist[index]
+      },
+      panelClass: 'modalestorno'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    });
+  }
   cancelaEstorno(index: any) {
     if (this.vendalist[index].waitestornostatus == 0) {
       let id = this.vendalist[index].id;

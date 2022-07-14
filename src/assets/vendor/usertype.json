@@ -1,0 +1,44 @@
+[
+    {
+        "val": "comercial",
+        "nome": "Comercial",
+        "admin_exclusive":0,
+        "has_unidade":1,
+        "ativo": 1
+    },
+    {
+        "val": "gerente",
+        "nome": "Gerente",
+        "admin_exclusive":0,
+        "has_unidade":1,
+        "ativo": 1
+    },
+    {
+        "val": "responsavel tecnico",
+        "nome": "Responsavel Tecnico",
+        "admin_exclusive":0,
+        "has_unidade":1,
+        "ativo": 1
+    },
+    {
+        "val": "ASB",
+        "nome": "Auxiliar de Saúde Bucal",
+        "admin_exclusive":0,
+        "has_unidade":1,
+        "ativo": 1
+    },
+    {
+        "val": "CRC",
+        "nome": "CRC",
+        "admin_exclusive":1,
+        "has_unidade":0,
+        "ativo": 1
+    },
+    {
+        "val": "admin",
+        "nome": "Administrador",
+        "admin_exclusive":1,
+        "has_unidade":0,
+        "ativo": 1
+    }
+]

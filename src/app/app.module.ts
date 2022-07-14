@@ -7,21 +7,19 @@ import { HomeComponent } from './home/home.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CadastroclienteComponent } from './cadastrocliente/cadastrocliente.component';
 import { NgxMaskModule, IConfig } from 'ngx-mask'
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTabsModule } from '@angular/material/tabs';
 import { HakuComponent } from './haku/haku.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CadastrodepComponent } from './cadastrodep/cadastrodep.component';
 import { ConsultaComponent } from './consulta/consulta.component';
 import { FinanceiroComponent } from './financeiro/financeiro.component';
 import { RelatoriosComponent } from './relatorios/relatorios.component';
 import { ConfiguracaoComponent } from './configuracao/configuracao.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModaltitComponent } from './modaltit/modaltit.component';
-import { ModalComponent } from './cadastrocliente/modal/modal.component';
+// import { ModalComponent } from './modal/modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgxCurrencyModule } from "ngx-currency";
 
@@ -29,19 +27,14 @@ import { AngularCreatePdfModule } from 'angular-create-pdf';
 import { LOCALE_ID, DEFAULT_CURRENCY_CODE } from '@angular/core';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
-//import { CarneComponent } from './cadastrocliente/carne/carne.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ConsultaService } from './services/consulta.service';
-import { ConsultaclientemodalComponent } from './cadastrocliente/consultaclientemodal/consultaclientemodal.component';
-import { CadastrotypeComponent } from './cadastrotype/cadastrotype.component';
-import { CadastrovendedorComponent } from './cadastrovendedor/cadastrovendedor.component';
 import { ModalaComponent } from './financeiro/modala/modala.component';
 import { ModalbComponent } from './financeiro/modalb/modalb.component';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { AuthService } from './auth/auth.service';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { DatePipe } from '@angular/common';
-import { ModalfinComponent } from './cadastrocliente/modalfin/modalfin.component';
 import { ModalfinnComponent } from './financeiro/modalfin/modalfin.component';
 import { ModalconfigComponent } from './configuracao/modalconfig/modalconfig.component';
 import { JfvendaComponent } from './jfvenda/jfvenda.component';
@@ -99,6 +92,11 @@ import { ComunicadosComponent } from './comunicados/comunicados.component';
 import { ScriptService } from './services/script.service.service';
 import { NgxMercadopagoModule } from 'ngx-mercadopago';
 import { ModalfpagComponent } from './financeiro/modalfpag/modalfpag.component';
+import { CrcComponent } from './crc/crc.component';
+import { ContatomodalComponent } from './crc/contatomodal/contatomodal.component';
+import { DelvenComponent } from './consulta/delven/delven.component';
+import { ModalComponent } from './modal/modal.component';
+
 
 registerLocaleData(localePt, 'pt');
 
@@ -115,8 +113,6 @@ const maskConfig: Partial<IConfig> = {
     HomeComponent,
     LayoutComponent,
     LoginComponent,
-    CadastroclienteComponent,
-    CadastrodepComponent,
     ConsultaComponent,
     FinanceiroComponent,
     RelatoriosComponent,
@@ -124,14 +120,9 @@ const maskConfig: Partial<IConfig> = {
     ModaltitComponent,
     ModalComponent,
     ModalfinnComponent,
-    //CarneComponent,
-    ConsultaclientemodalComponent,
-    CadastrotypeComponent,
-    CadastrovendedorComponent,
     ModalaComponent,
     ModalbComponent,
     ModalconfigComponent,
-    ModalfinComponent,
     JfvendaComponent,
     ModaljfComponent,
     SidemenuComponent,
@@ -177,9 +168,13 @@ const maskConfig: Partial<IConfig> = {
     ModalupdateosComponent,
     ModaleditosComponent,
     ComunicadosComponent,
-    ModalfpagComponent
+    ModalfpagComponent,
+    CrcComponent,
+    ContatomodalComponent,
+    DelvenComponent
 
   ],
+
   imports: [
     BrowserModule,
     ReactiveFormsModule,

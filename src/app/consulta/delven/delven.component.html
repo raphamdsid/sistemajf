@@ -1,0 +1,163 @@
+<!-- <h1 mat-dialog-title style="text-align: center;"><a>Registrar Contato</a></h1> -->
+<div class="vendrow row" style="border-top: solid 1px;">
+    <div class="vendcol col-md-8">
+        Cliente: <b>{{objeto.cliente | uppercase}}</b>
+    </div>
+    <div class="lbor vendcol col-md-4">
+        CPF: <b>{{objeto.cpfpaciente}}</b>
+    </div>
+</div>
+<div class="vendrow row">
+    <div class="vendcol col-md-6">
+        Financiador: <b>{{objeto.financiador | uppercase}}</b>
+    </div>
+    <ng-container *ngIf="objeto.isnotfiador == 0">
+        <div class="lbor vendcol col-md-6">
+            Possui fiador? <b>NÃO</b>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="objeto.isnotfiador == 1">
+        <div class="lbor vendcol col-md-6">
+            Possui fiador? <b>SIM</b>
+        </div>
+    </ng-container>
+</div>
+<ng-container *ngIf="objeto.isnotfiador == 1">
+    <div class="vendrow row">
+        <div class="vendcol col-md-8">
+            Fiador: <b>{{objeto.fiador | uppercase}}</b>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            CPF: <b>{{objeto.cpffiador}}</b>
+        </div>
+    </div>
+</ng-container>
+<div class="vendrow row">
+    <div class="vendcol col-md-6">
+        DOC ODC: <b>{{objeto.docodc}}</b>
+    </div>
+    <div class="lbor vendcol col-md-6">
+        DOC Financeiro: <b *ngIf="objeto.financiador == 'BANCO JF'">{{objeto.id}}</b> <b
+            *ngIf="objeto.financiador != 'BANCO JF'">{{objeto.docfinanceiro}}</b>
+    </div>
+</div>
+<ng-container *ngIf="objeto.financiador != 'BANCO JF'">
+    <div class="vendrow row">
+        <div class="vendcol col-md-4">
+            Valor total: <b>{{objeto.valortotal | currency}}</b>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            <ng-container *ngIf="objeto.valoratual < objeto.valortotal">
+                Valor atual: <b>{{objeto.valoratual | currency}}</b>
+            </ng-container>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            Parcelamento: <b>{{objeto.parcela}}X de {{objeto.valorparcela | currency}}</b>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="objeto.financiador == 'BANCO JF'">
+    <div class="vendrow row">
+        <div class="vendcol col-md-4">
+            Valor total: <b>{{objeto.valortotal | currency}}</b>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            <ng-container *ngIf="objeto.valoratual < objeto.valortotal">
+                Valor atual: <b>{{objeto.valoratual | currency}}</b>
+            </ng-container>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            <ng-container *ngIf="objeto.parcela > 0">
+                Parcelamento: <b>{{objeto.parcela}}X de {{objeto.valorparcela | currency}}</b>
+            </ng-container>
+            <ng-container *ngIf="objeto.parcela == 0">
+                Sem parcelamento
+            </ng-container>
+        </div>
+    </div>
+    <div class="vendrow row">
+        <div class="vendcol col-md-4">
+            Valor Comercial: <b>{{objeto.valorcomercial | currency}}</b>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            Valor Avaliacao: <b>{{objeto.valoravaliacao | currency}}</b>
+        </div>
+        <div class="lbor vendcol col-md-4">
+            Valor Tabela: <b>{{objeto.valortabela | currency}}</b>
+        </div>
+    </div>
+    <div class="vendrow row">
+        <div class="vendcol col-md-6">
+            Cadastrado por: <b>{{objeto.createdby | uppercase}}</b>
+        </div>
+        <div class="lbor vendcol col-md-6">
+            Unidade: <b>{{objeto.unidade | uppercase}}</b>
+        </div>
+    </div>
+    <div class="row" style="height: 200px; overflow-y:scroll" *ngIf="objeto.financiador == 'BANCO JF'">
+        <div class="col-md-12">
+            <div class="row" style="justify-content: space-around; margin-bottom: 3%; margin-top: 2%;">
+                <div class="col-md-12" style="border-top: solid;">
+                    <div class="row"
+                        style="justify-content: center; border-bottom: solid; border-right: solid; border-left: solid; background-color: #18f534d9;">
+                        <b>PRODUTOS</b>
+                    </div>
+                    <div class="row" style="background-color: #80808085; border-bottom: solid;">
+                        <div class="col-md-2 cols" style="border-left: solid;">
+                            <b>Código</b>
+                        </div>
+                        <div class="col-md-10 cols" style="border-left: solid; border-right: solid;">
+                            <b>Nome</b>
+                        </div>
+                    </div>
+                    <ng-container *ngFor="let p of objeto.produtos; let pi = index">
+                        <div class="row">
+                            <div class="col-md-2 cols" style="border-bottom: solid; border-left: solid;">
+                                {{p.produto}}
+                            </div>
+                            <div class="col-md-10 cols"
+                                style="border-bottom: solid; border-left: solid; border-right: solid;">
+                                {{p.nome | uppercase}}
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="row" style="justify-content: space-around; margin-bottom: 3%; margin-top: 2%;">
+                <div class="col-md-12" style="border-top: solid;" *ngIf="objeto.entradas.length > 0">
+                    <div class="row"
+                        style="justify-content: center; border-bottom: solid;border-left: solid; border-right: solid; background-color: #6a5acded;">
+                        <b>ENTRADAS</b>
+                    </div>
+                    <div class="row" style="background-color: #80808085; border-bottom: solid;">
+                        <div class="col-md-6 cols" style="border-left: solid;">
+                            <b>Tipo entrada</b>
+                        </div>
+                        <div class="col-md-3 cols" style="border-left: solid;">
+                            <b>Valor</b>
+                        </div>
+                        <div class="col-md-3 cols" style="border-left: solid; border-right: solid;">
+                            <b>DOC</b>
+                        </div>
+                    </div>
+                    <ng-container *ngFor="let e of objeto.entradas; let ei = index">
+                        <div class="row">
+                            <div class="col-md-6 cols" style="border-bottom: solid; border-left: solid;">
+                                {{e.nome | uppercase}}
+                            </div>
+                            <div class="col-md-3 cols" style="border-bottom: solid; border-left: solid;">
+                                {{e.valor | currency}}
+                            </div>
+                            <div class="col-md-3 cols"
+                                style="border-bottom: solid; border-left: solid; border-right: solid;">
+                                {{e.cododc}}
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <button (click)="confirm()">Teste</button>
+    </div>

@@ -1,4 +1,5 @@
 import { formatCurrency } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit, ViewChild, HostListener, Renderer2 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogActions } from '@angular/material/dialog';
@@ -16,6 +17,7 @@ import { ModalprintrequerimentoComponent } from '../modalprintrequerimento/modal
 export class ModalsolicitaestornoComponent implements OnInit {
   key: any;
   globalListenFunc: any;
+  forma_estornos: any = [];
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     this.key = event.key;
@@ -25,7 +27,7 @@ export class ModalsolicitaestornoComponent implements OnInit {
   valor: Number = 0;
   page = 0;
   sloader = 0;
-  constructor(private renderer: Renderer2, private auth: AuthService, private service: ConsultaService, private tools: ToolsService, public dialog: MatDialog, private dialogRef: MatDialogRef<ModalsolicitaestornoComponent>, private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA)
+  constructor(private httpClient: HttpClient, private renderer: Renderer2, private auth: AuthService, private service: ConsultaService, private tools: ToolsService, public dialog: MatDialog, private dialogRef: MatDialogRef<ModalsolicitaestornoComponent>, private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA)
   public data: {
     venda: any,
     id: any,
@@ -42,6 +44,7 @@ export class ModalsolicitaestornoComponent implements OnInit {
         this.dialogRef.close();
       }
     });
+    this.formaEstornoList();
     this.solicitaEstornoForm = new FormGroup({
       valor: new FormControl(0, Validators.required),
       fpag: new FormControl('', Validators.required),
@@ -161,6 +164,12 @@ export class ModalsolicitaestornoComponent implements OnInit {
     });
     dialogRefa.afterClosed().subscribe(result2 => {
       console.log(result2);
+    });
+  }
+  formaEstornoList() {
+    this.httpClient.get("assets/vendor/formas_estorno.json").subscribe(data => {
+      console.log(data);
+      this.forma_estornos = data;
     });
   }
 }

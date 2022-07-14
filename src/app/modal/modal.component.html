@@ -1,7 +1,8 @@
-<p>modal works!</p>
-
-<!-- <mat-dialog-actions align="center">
-    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Sim</button>
-    <button mat-button mat-dialog-close>Não</button>
-  
-  </mat-dialog-actions> -->
+<ng-container *ngIf="data.tipo == 'delvenda'">
+    <div class="row" style=" display: flow-root;">
+        <!-- <button class="no-print btn btn-primary" style="float: left;" (click)="print()">Imprimir</button> -->
+        <button class="close no-print" mat-button style="float: right;" (click)="onNoClick()">X</button>
+        <h1 mat-dialog-title style="text-align: center; margin: 0px 0 8px;"><a>Apagar Venda</a></h1>
+    </div>
+    <app-delven [objeto]="data.obj"></app-delven>
+</ng-container>

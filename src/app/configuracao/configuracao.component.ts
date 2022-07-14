@@ -11,7 +11,6 @@ import { validate } from 'gerador-validador-cpf';
 import { AuthService } from '../auth/auth.service';
 import jwt_decode from "jwt-decode";
 import { Router } from '@angular/router';
-import { ModalComponent } from '../modal/modal.component';
 import { ModalaComponent } from '../financeiro/modala/modala.component';
 import { ModalconfigComponent } from './modalconfig/modalconfig.component';
 

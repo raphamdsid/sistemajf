@@ -35,43 +35,19 @@
                     </div>
                     <div class="col-md-2">
                         Tipo:
-                        <select formControlName="tipo" tabindex="4" class="form-control" type="text" required>
-                            <!-- <Option value="vendedor">Vendedor</Option> -->
-                            <Option value="comercial" selected>Comercial</Option>
-                            <Option value="gerente">Gerente</Option>
-                            <Option value="responsavel tecnico" *ngIf="role=='admin'">Responsavel Tecnico</Option>
-                            <Option value="ASB" *ngIf="role=='admin'">Auxiliar de Saúde Bucal</Option>
-                            <Option value="admin" *ngIf="role=='admin'">Administrador</Option>
+                        <select formControlName="tipo" tabindex="4" class="form-control" type="text" required
+                            (change)="userChange('admin')">
+                            <ng-container *ngFor="let user of usertypes; let userindex = index">
+                                <Option value="{{userindex}}">{{user.nome}}</Option>
+                            </ng-container>
                         </select>
                     </div>
-                    <div class="col-md-4" *ngIf="newuserForm.value.tipo != 'admin'">
+                    <div class="col-md-4" *ngIf="showunidade == 1">
                         <a>Unidade:</a>
                         <select class="form-control" id="inputunidade" formControlName="unidade">
-                            <option value="ODC Nova Iguaçu I (Centro)" selected>ODC Nova Iguaçu I
-                                (Centro)
-                            </option>
-                            <option value="ODC Nova Iguaçu II (Centro)">ODC Nova Iguaçu II
-                                (Centro)
-                            </option>
-                            <option value="ODC Nova Iguaçu III (Centro)">ODC Nova Iguaçu III
-                                (Centro)
-                            </option>
-                            <option value="ODC Nova Iguaçu IV (Centro)">ODC Nova Iguaçu IV
-                                (Centro)
-                            </option>
-                            <option value="ODC Belford Roxo (Centro)">ODC Belford Roxo
-                                (Centro)
-                            </option>
-                            <option value="ODC São João de Meriti (Centro)">ODC São João de
-                                Meriti
-                                (Centro)</option>
-                            <option value="ODC Vilar dos Teles (Centro)">ODC Vilar dos Teles
-                                (Centro)</option>
-                            <option value="ODC Pavuna (Centro)">ODC Pavuna (Centro)
-                            </option>
-                            <option value="Partmed">Partmed</option>
-                            <!-- <option value="Pramelhor">Pramelhor</option> -->
-                            <!-- <option value="Outro local">Outro local</option> -->
+                            <ng-container *ngFor="let u of unidades">
+                                <option value="u.val">{{u.val}}</option>
+                            </ng-container>
                         </select>
                     </div>
                 </div>

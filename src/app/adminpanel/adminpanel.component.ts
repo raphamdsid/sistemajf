@@ -11,7 +11,6 @@ import { validate } from 'gerador-validador-cpf';
 import { AuthService } from '../auth/auth.service';
 import jwt_decode from "jwt-decode";
 import { Router } from '@angular/router';
-import { ModalComponent } from '../modal/modal.component';
 import { ModalaComponent } from '../financeiro/modala/modala.component';
 import { AdminmodalComponent } from './adminmodal/adminmodal.component';
 import { ModalunidadeComponent } from './modalunidade/modalunidade.component';
@@ -95,6 +94,9 @@ export class AdminpanelComponent implements OnInit {
     pwd: any;
     laboratorios: any = [];
     produtosordemservico: any = [];
+    unidades: any = [];
+    usertypes: any = [];
+    showunidade: number = 1;
     constructor(public dialog: MatDialog, private auth: AuthService, private service: ConsultaService, public tools: ToolsService,
         private formBuilder: FormBuilder, private http: HttpClient, private router: Router) { }
 
@@ -109,6 +111,34 @@ export class AdminpanelComponent implements OnInit {
         let today = formatDate(new Date(), 'yyyy-MM-dd', 'en');
         this.today = today;
         console.log(role);
+        this.tools.unidList().subscribe(data => {
+            console.log(data);
+            for (let x = 0; x < data.length; x++) {
+                if (data[x].ativo == 1) {
+                    this.unidades.push(data[x]);
+                }
+            }
+            console.log(this.unidades);
+        });
+        this.tools.usertypeList().subscribe(data => {
+            console.log(data);
+            if (role == 'admin') {
+
+                for (let x = 0; x < data.length; x++) {
+                    if (data[x].ativo == 1) {
+                        this.usertypes.push(data[x]);
+                    }
+                }
+            }
+            if (role != 'admin') {
+                for (let x = 0; x < data.length; x++) {
+                    if (data[x].ativo == 1 && data[x].has_unidade == 1 && data[x].admin_exclusive == 0) {
+                        this.usertypes.push(data[x]);
+                    }
+                }
+            }
+            console.log(this.usertypes);
+        });
         if (role != 'admin' && role != 'gerente') {
             this.router.navigate(['/home']);
         }
@@ -347,7 +377,19 @@ export class AdminpanelComponent implements OnInit {
             }
         });
     }
-
+    userChange(type: any) {
+        if (type == 'admin') {
+            let i = this.newuserForm.controls["tipo"].value;
+            console.log(i);
+            console.log(this.usertypes[i]);
+            if (this.usertypes[i].has_unidade == 1) {
+                this.showunidade = 1;
+            }
+            if (this.usertypes[i].has_unidade == 0) {
+                this.showunidade = 0;
+            }
+        }
+    }
     getJurosTaxas() {
         this.service.getTaxas().subscribe(t => {
             // //console.log(t.Valores[0]);
@@ -1161,10 +1203,10 @@ export class AdminpanelComponent implements OnInit {
         if (this.newuserForm.valid) {
             this.sloader = 1;
             let unidade;
-            if (this.newuserForm.controls["tipo"].value == 'admin') {
+            if (this.usertypes[this.newuserForm.controls["tipo"].value].has_unidade == 0) {
                 unidade = null;
             }
-            if (this.newuserForm.controls["tipo"].value != 'admin') {
+            if (this.usertypes[this.newuserForm.controls["tipo"].value].has_unidade == 1) {
                 unidade = this.newuserForm.controls["unidade"].value;
             }
             let objuser = {
@@ -1172,7 +1214,7 @@ export class AdminpanelComponent implements OnInit {
                 cpf: this.newuserForm.controls["cpf"].value,
                 username: this.newuserForm.controls["username"].value,
                 pwd: this.newuserForm.controls["cpf"].value,
-                tipo: this.newuserForm.controls["tipo"].value,
+                tipo: this.usertypes[this.newuserForm.controls["tipo"].value].val,
                 stats: 'ativo',
                 unidade: unidade
             }

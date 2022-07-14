@@ -14,10 +14,9 @@
                     <div class="col-md-5" *ngIf="data.venda.financiador == 'BANCO JF'">
                         Forma de pagamento do estorno:
                         <select class="form-control" formControlName="fpag" tabindex="2">
-                            <option value="PIX">PIX</option>
-                            <option value="TRANSFERÊNCIA BANCÁRIA">TRANSFERÊNCIA BANCÁRIA</option>
-                            <option value="CRÉDITO NO CARTÃO">CRÉDITO NO CARTÃO</option>
-                            <option value="DINHEIRO">DINHEIRO</option>
+                            <ng-container *ngFor="let u of forma_estornos;let ui = index">
+                                <option value="{{u.nome}}">{{u.nome}}</option>
+                            </ng-container>
                         </select>
                     </div>
                 </div>

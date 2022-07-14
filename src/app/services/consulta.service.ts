@@ -12,16 +12,17 @@ export class ConsultaService {
   buscacpf: String = '';
   online = 'https://sistema.grupojf.com.br';
   offline = 'http://192.168.1.200';
-  url = this.offline;
+  hamachi = 'http://25.46.48.46'
+  url = this.hamachi;
   unilist: any = [];
   constructor(
     private http: HttpClient
 
   ) { }
   getUrlPartmed() {
-    let online = 'https://essencial.partmednovaiguacu.com.br/#/login/:';
+    let online = 'http://essencial.partmednovaiguacu.com.br/#/login/:';
     let offline = 'http://192.168.1.200:62571/#/login/:';
-    return offline;
+    return online;
   }
   uniList() {
     let array: any = [];
@@ -95,7 +96,18 @@ export class ConsultaService {
   getViewlogComunicado(obj: any): Observable<any> {
     return this.http.post(this.url + `/jfapi/api/comunicado_viewlog_get.php`, obj);
   }
-
+  getContasReceber(obj: any): Observable<any> {
+    return this.http.post(this.url + `/jfapi/api/contas_a_receber.php`, obj);
+  }
+  getProdDocs(obj: any): Observable<any> {
+    return this.http.post(this.url + `/jfapi/api/produto_doc.php`, obj);
+  }
+  getManutInad(obj: any): Observable<any> {
+    return this.http.post(this.url + `/jfapi/api/manut_inad.php`, obj);
+  }
+  getCrcDebitosPaciente(obj: any): Observable<any> {
+    return this.http.post(this.url + `/jfapi/api/crc_debitos_paciente.php`, obj);
+  }
   getNewestComunicado(): Observable<any> {
     return this.http.get(this.url + `/jfapi/api/comunicado_get_newest.php`);
   }

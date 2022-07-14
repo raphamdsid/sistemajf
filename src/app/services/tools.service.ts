@@ -160,6 +160,10 @@ export class ToolsService {
       return false;
     }
   }
+  getNumbersFromString(_string: any) {
+    let matchPattern = _string.match(/\d+/g);
+    return matchPattern.join('');
+  }
 
   getCreditCardType(creditCardNumber: any) {
     // start without knowing the credit card type
@@ -307,9 +311,9 @@ export class ToolsService {
       }
     }
   }
- public uniList() {
+  public uniList() {
     let array: any = [];
-    let result: any = []; 
+    let result: any = [];
     this.httpClient.get("assets/vendor/unidades.json").subscribe(data => {
       array = data;
       for (let x = 0; x < array.length; x++) {
@@ -320,6 +324,12 @@ export class ToolsService {
       console.log(result);
       return (result);
     });
+  }
+  public unidList(): Observable<any> {
+    return this.httpClient.get("assets/vendor/unidades.json");
+  }
+  public usertypeList(): Observable<any> {
+    return this.httpClient.get("assets/vendor/usertype.json");
   }
   // confirmaSenha(pwd: any): Observable<any> {
   //   const username = this.auth.getUser();

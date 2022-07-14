@@ -12,6 +12,7 @@ import jwt_decode from "jwt-decode";
 import { AuthService } from '../auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ToolsService } from '../services/tools.service';
 
 
 
@@ -87,7 +88,9 @@ export class RelatoriosComponent implements OnInit {
   countprotex: number = 0;
   totalprotex: number = 0;
   laboratorios: any = [];
-  constructor(private auth: AuthService, private formBuilder: FormBuilder, public dialog: MatDialog, private service: ConsultaService,
+  unidlist: any = [];
+
+  constructor(private tools: ToolsService, private auth: AuthService, private formBuilder: FormBuilder, public dialog: MatDialog, private service: ConsultaService,
     private router: Router) {
 
     this.userForm = this.formBuilder.group({
@@ -108,6 +111,13 @@ export class RelatoriosComponent implements OnInit {
     console.log(today);
     console.log(this.today);
     let test = 456.327;
+    this.tools.unidList().subscribe(data => {
+      for (let x = 0; x < data.length; x++) {
+        if (data[x].ativo == 1) {
+          this.unidlist.push(data[x]);
+        }
+      }
+    });
     this.service.getFinanciadores().subscribe(f => {
       console.log(f)
       this.financiadores = f;

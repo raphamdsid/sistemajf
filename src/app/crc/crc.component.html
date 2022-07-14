@@ -1,0 +1,328 @@
+<header>
+</header>
+
+<div class="loader" *ngIf="sloader == 1"></div>
+<div class="no-print title">
+    CRC
+</div>
+<mat-tab-group dynamicHeight dynamicWidth [(selectedIndex)]="tabindex">
+    <mat-tab label="Contas a Receber">
+        <form [formGroup]="contasForm" style="padding-left: 3%;">
+            <div class="row no-print" style="padding-top: 2%; width: 50%;">
+                <div class="padcol col-md-6">
+                    De:
+                    <input class="form-control" formControlName="dtinicio" type="date" min="1800-12-31" max="2999-12-31"
+                        placeholder="DD/MM/AAAA">
+                </div>
+                <div class="padcol col-md-6">
+                    Até:
+                    <input class="form-control" formControlName="dtfim" type="date" min="1800-12-31" max="2999-12-31"
+                        placeholder="DD/MM/AAAA">
+                </div>
+            </div>
+            <div class="row no-print" style="padding-top: 1%; width: 100%;">
+                <!-- <div class="padcol col-md-3">
+            CPF:
+            <input class="form-control" formControlName="cpf" type="text" mask="000.000.000-99"
+                placeholder="Apenas números">
+        </div> -->
+                <div class="padcol col-md-3">
+                    <a>Unidade:</a>
+                    <select class="form-control" id="inputunidade" formControlName="unidade" required>
+                        <!-- <option value="todas" selected>Todas</option> -->
+                        <ng-container *ngFor="let u of unidades;let ui = index">
+                            <option value="{{u.abrev}}">{{u.nome}}</option>
+                        </ng-container>
+                        <!-- <option value="Partmed">Partmed</option>
+            <option value="Pramelhor">Pramelhor</option> -->
+                        <!-- <option value="Outro local">Outro local</option> -->
+                    </select>
+                </div>
+            </div>
+            <button class="no-print btn btn-primary" style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                (click)="getContas()">Buscar</button>
+            <!-- <button class="no-print btn btn-primary" style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+    (click)="download()">Download?</button> -->
+        </form>
+        <ng-container *ngIf="contas.length > 0">
+            <ng-container *ngFor="let c of contas; let ci = index">
+                <div style="border: solid 2px; border-radius: 5px; margin: 8px;">
+                    <div class="nomarg row borderbottom toprow">
+                        <div class="padcol col-md-6" style="border-right: solid 1px">
+                            <b>{{c.nome | uppercase}}</b>
+                        </div>
+                        <div class="padcol col-md-6">
+                            <b>CPF: {{c.cpf}}</b>
+                        </div>
+                    </div>
+                    <div class="nomarg row borderbottom telrow">
+                        <div class="padcol col-md-3" style="border-right: solid 1px">
+                            <a>Tel 1: {{c.tel1}}</a> <img *ngIf="c.tel1 != null && c.tel1.length > 0" class="chaticon"
+                                title="Abrir no WhatsApp Web" src='assets/images/whatsapp_icon.jpg'
+                                (click)="whatsappChat(c.tel1)">
+
+                        </div>
+                        <div class="padcol col-md-3" style="border-right: solid 1px">
+                            <a>Tel 2: {{c.tel2}}</a> <img *ngIf="c.tel2 != null && c.tel2.length > 0" class="chaticon"
+                                title="Abrir no WhatsApp Web" src='assets/images/whatsapp_icon.jpg'
+                                (click)="whatsappChat(c.tel2)">
+
+                        </div>
+                        <div class="padcol col-md-6">
+                            <a><b>Total de dívidas no período: {{c.totaldeb | currency}}</b></a>
+                        </div>
+                    </div>
+                    <div class="nomarg row borderbottom middlerow">
+                        <div class="padcol col-md-3" style="border-right: solid 1px">
+                            DOCUMENTO
+                        </div>
+                        <div class="padcol col-md-2" style="border-right: solid 1px">
+                            VENCIMENTO
+                        </div>
+                        <div class="padcol col-md-2" style="border-right: solid 1px">
+                            VALOR ATUAL
+                        </div>
+                        <div class="padcol col-md-5">
+                            OBS
+                        </div>
+                    </div>
+                    <ng-container *ngFor="let d of contas[ci]; let di = index">
+                        <div class="nomarg row" [ngClass]="{'borderbottom' : di < (contas[ci].length - 1)}">
+                            <div class="padcol col-md-3" style="border-right: solid 1px;background-color: #00000012;">
+                                <a class="docstyle"
+                                    (click)="getProdDoc(d.DOCUMENTO, c.unidade, ci, di)">{{d.DOCUMENTO}}</a>
+                                <img class="errorico" src='assets/images/loader_hg.gif'
+                                    *ngIf="contas[ci][di].showloader == 1">
+                                <img class="errorico" src='assets/images/xerror.png'
+                                    *ngIf="contas[ci][di].showloader == 2">
+                            </div>
+                            <div class="padcol col-md-2" style="border-right: solid 1px;background-color: #00000012;">
+                                {{d.VENCIMENTO | date:'dd/MM/yyyy'}}
+                            </div>
+                            <div class="padcol col-md-2" style="border-right: solid 1px;background-color: #00000012;">
+                                {{d.VALOR_ATUAL | currency}}
+                            </div>
+                            <div class="padcol col-md-5" style="background-color: #00000012;">
+                                {{d.OBS | uppercase}}
+                            </div>
+                            <ng-container *ngIf="contas[ci][di].prods.length > 0">
+                                <div style="width: 100%; border-top: solid 1px;">
+                                    <a style="position: absolute;right: 17px;font-weight: bold;cursor: pointer;margin-top: -1px;"
+                                        (click)="delProdlist(ci, di)">X</a>
+                                    <div style="padding: 16px 4px 16px 4px;background-color: #ffe2be;">
+                                        <ng-container *ngFor="let p of contas[ci][di].prods; let pi = index">
+                                            <div class="nomargrow" *ngIf="pi==0"
+                                                style="background-color: #d0ffec;; display: flex; border-left: solid 1px; border-right: solid 1px; border-top: solid 1px;">
+                                                <!-- <div class="padcol col-md-2" style="border-right: solid 1px;">
+                                                    DOC
+                                                </div> -->
+                                                <div class="padcol col-md-5" style="border-right: solid 1px;">
+                                                    PRODUTO
+                                                </div>
+                                                <div class="padcol col-md-5" style="border-right: solid 1px;">
+                                                    RESPONSÁVEL ATEND
+                                                </div>
+                                                <div class="padcol col-md-2">
+                                                    DATA ATEND
+                                                </div>
+                                            </div>
+                                            <div class="nomargrow"
+                                                style=" display: flex; border-top: solid 1px; border-left: solid 1px; border-right: solid 1px;background-color: white;"
+                                                [ngClass]="{'borderbottom' : pi == (contas[ci][di].prods.length - 1)}">
+                                                <!-- <div class="padcol col-md-2" style="border-right: solid 1px;">
+                                                    {{p.DOCUMENTO}}
+                                                </div> -->
+                                                <div class="padcol col-md-5" style="border-right: solid 1px;">
+                                                    {{p.NOME_PRODUTO}}
+                                                </div>
+                                                <ng-container *ngIf="p.DATA_ATEND != null">
+                                                    <div class="padcol col-md-5" style="border-right: solid 1px;">
+                                                        {{p.NOME_RESP_ATEND}}
+                                                    </div>
+                                                    <div class="padcol col-md-2">
+                                                        {{p.DATA_ATEND | date: 'dd/MM/yyyy'}}
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="p.DATA_ATEND == null">
+                                                    <div class="padcol col-md-5" style="color:red;">
+                                                        NÃO ATENDIDO
+                                                    </div>
+                                                    <div class="padcol col-md-2">
+
+                                                    </div>
+                                                </ng-container>
+
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+
+                    </ng-container>
+                    <div class="nomarg row" style="border-top: solid 1px; background-color: #afeeee;">
+                        <div class="padcol col-md-6">
+                            <b>CONTATOS REALIZADOS: </b><b>{{c.contatos.length}}</b> <button
+                                class="btndetails btn btn-primary" *ngIf="c.showcont == false"
+                                (click)="showCont(0, ci)">Detalhes</button> <button *ngIf="c.showcont == true"
+                                class="btndetails btn btn-danger" (click)="hideCont(0, ci)">Recolher</button>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="c.showcont == true">
+                        <div class="nomarg row" style="border-top: solid 1px;">
+                            <button class="btnnewc btn btn-info" (click)="openContatoModal(c, ci)">Novo contato</button>
+                        </div>
+                        <ng-container *ngIf="c.contatos.length > 0">
+                            <ng-container *ngFor="let con of c.contatos; let coni = index">
+                                <div class="nomarg row" style="border-top: solid 1px; background-color: #bc96ff;">
+                                    <div class="padcol col-md-12">
+                                        <b> USUÁRIO: {{con.usuario | uppercase}}</b>
+                                    </div>
+                                    <!-- <div class="padcol col-md-4">
+                                    UNIDADE: {{con.unidade | uppercase}}
+                                </div> -->
+                                </div>
+                                <div class="nomarg row" style="border-top: solid 1px">
+                                    <div class="padcol col-md-12">
+                                        OBS: {{con.obs | uppercase}}
+                                    </div>
+                                </div>
+                                <div class="nomarg row" style="border-top: solid 1px">
+                                    <div class="padcol col-md-4" style="border-right: solid 1px;">
+                                        Telefone adicional:
+                                        <ng-container *ngIf="con.tel != null && con.tel.length == 11"> {{con.tel |
+                                            mask:'(99)99999-9999'}} </ng-container>
+                                        <ng-container *ngIf="con.tel != null && con.tel.length == 10"> {{con.tel |
+                                            mask:'(99)9999-9999'}} </ng-container>
+                                        <img *ngIf="con.tel != null && con.tel.length > 0" class="chaticon"
+                                            title="Abrir no WhatsApp Web" src='assets/images/whatsapp_icon.jpg'
+                                            (click)="whatsappChat(con.tel)">
+                                    </div>
+                                    <div class="padcol col-md-4" style="border-right: solid 1px;">
+                                        Data do contato: {{con.dt_contato | date:'dd/MM/yyyy'}}
+                                    </div>
+                                    <div class="padcol col-md-4">
+                                        Data de retorno: {{con.dt_retorno | date:'dd/MM/yyyy'}}
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="c.contatos.length == 0">
+                            <div class="nomarg row" style="border-top: solid 1px; background-color: #d4d4d4;">
+                                <div class="padcol col-md-12">
+                                    NÃO HÁ CONTATOS REGISTRADOS PARA ESTE CLIENTE
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </ng-container>
+    </mat-tab>
+    <mat-tab label="Orto - Devedores">
+        <form [formGroup]="manutForm" style="padding-left: 3%;">
+            <div class="row no-print" style="padding-top: 2%; width: 50%;">
+                <div class="padcol col-md-6">
+                    De:
+                    <input class="form-control" formControlName="dtinicio" type="date" min="1800-12-31" max="2999-12-31"
+                        placeholder="DD/MM/AAAA">
+                </div>
+                <div class="padcol col-md-6">
+                    Até:
+                    <input class="form-control" formControlName="dtfim" type="date" min="1800-12-31" max="2999-12-31"
+                        placeholder="DD/MM/AAAA">
+                </div>
+            </div>
+            <div class="row no-print" style="padding-top: 1%; width: 100%;">
+                <!-- <div class="padcol col-md-3">
+            CPF:
+            <input class="form-control" formControlName="cpf" type="text" mask="000.000.000-99"
+                placeholder="Apenas números">
+        </div> -->
+                <div class="padcol col-md-3">
+                    <a>Unidade:</a>
+                    <select class="form-control" id="inputunidade" formControlName="unidade" required>
+                        <!-- <option value="todas" selected>Todas</option> -->
+                        <ng-container *ngFor="let u of unidades;let ui = index">
+                            <option value="{{u.abrev}}">{{u.nome}}</option>
+                        </ng-container>
+                        <!-- <option value="Partmed">Partmed</option>
+            <option value="Pramelhor">Pramelhor</option> -->
+                        <!-- <option value="Outro local">Outro local</option> -->
+                    </select>
+                </div>
+            </div>
+            <button class="no-print btn btn-primary" style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+                (click)="getManutInad()">Buscar</button>
+            <!-- <button class="no-print btn btn-primary" style="margin-top: 15px; margin-bottom: 20px; margin-right: 10px;"
+    (click)="download()">Download?</button> -->
+        </form>
+        <ng-container *ngIf="manut.length > 0">
+            <ng-container *ngFor="let c of manut; let ci = index">
+                <div style="border: solid 2px; border-radius: 5px; margin: 5px;">
+                    <div class="nomarg row borderbottom toprow">
+                        <div class="padcol col-md-6" style="border-right: solid 1px">
+                            <b>{{c.nome | uppercase}}</b>
+                        </div>
+                        <div class="padcol col-md-6">
+                            CPF: {{c.cpf}}
+                        </div>
+                    </div>
+                    <div class="nomarg row borderbottom telrow">
+                        <div class="padcol col-md-4" style="border-right: solid 1px">
+                            Tel 1: {{c.tel1}} <img *ngIf="c.tel1 != null && c.tel1.length > 0" class="chaticon"
+                                title="Abrir no WhatsApp Web" src='assets/images/whatsapp_icon.jpg'
+                                (click)="whatsappChat(c.tel1)">
+
+                        </div>
+                        <div class="padcol col-md-4" style="border-right: solid 1px">
+                            Tel 2: {{c.tel2}} <img *ngIf="c.tel2 != null && c.tel2.length > 0" class="chaticon"
+                                title="Abrir no WhatsApp Web" src='assets/images/whatsapp_icon.jpg'
+                                (click)="whatsappChat(c.tel2)">
+
+                        </div>
+                        <div class="padcol col-md-4">
+                            <b>Total de dívidas no período: {{c.totaldeb | currency}}</b>
+                        </div>
+                    </div>
+                    <div class="nomarg row borderbottom middlerow">
+                        <div class="padcol col-md-3" style="border-right: solid 1px">
+                            LANÇAMENTO
+                        </div>
+                        <div class="padcol col-md-2" style="border-right: solid 1px">
+                            VENCIMENTO
+                        </div>
+                        <div class="padcol col-md-2" style="border-right: solid 1px">
+                            VALOR PARCELA
+                        </div>
+                        <div class="padcol col-md-1" style="border-right: solid 1px">
+                            ATIVO
+                        </div>
+                        <div class="padcol col-md-4">
+                            MOTIVO
+                        </div>
+                    </div>
+                    <ng-container *ngFor="let d of manut[ci]; let di = index">
+                        <div class="nomarg row" [ngClass]="{'borderbottom' : di < (manut[ci].length - 1)}">
+                            <div class="padcol col-md-3" style="border-right: solid 1px">
+                                {{d.LANCAMENTO}}
+                            </div>
+                            <div class="padcol col-md-2" style="border-right: solid 1px">
+                                {{d.VENCIMENTO | date:'dd/MM/yyyy'}}
+                            </div>
+                            <div class="padcol col-md-2" style="border-right: solid 1px">
+                                {{d.VALOR_PARCELA | currency}}
+                            </div>
+                            <div class="padcol col-md-1" style="border-right: solid 1px">
+                                {{d.ATIVO | uppercase}}
+                            </div>
+                            <div class="padcol col-md-4">
+                                <ng-container *ngIf="d.ATIVO == 'N'">{{d.MOTIVO_ATIVO | uppercase}}</ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </ng-container>
+    </mat-tab>
+</mat-tab-group>

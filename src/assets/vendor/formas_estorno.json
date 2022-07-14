@@ -1,0 +1,22 @@
+[
+    {
+        "nome":"PIX",
+        "ativo": 1
+    },
+    {
+        "nome":"DINHEIRO",
+        "ativo": 1
+    },
+    {
+        "nome":"TRANSFERÊNCIA BANCÁRIA",
+        "ativo": 1
+    },
+    {
+        "nome":"CRÉDITO NO CARTÃO",
+        "ativo": 1
+    },
+    {
+        "nome":"ABATIMENTO NO CARNÊ",
+        "ativo": 1
+    }
+]

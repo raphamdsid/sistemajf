@@ -1,0 +1,263 @@
+<div class="loader" *ngIf="sloader == 1"></div>
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<h1 mat-dialog-title style="text-align: center;"><a>Registrar Contato</a></h1>
+<ng-container *ngIf="page == 0">
+    <form [formGroup]="contatoForm" autocomplete="off">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <b>PACIENTE: {{data.obj.nome | uppercase}}</b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <b>CPF: {{data.obj.cpf}}</b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        Tel 1: {{data.obj.tel1}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        Tel 2: {{data.obj.tel2}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        Telefone adicional (Opcional)
+                        <input class="form-control" (keypress)="phoneMask()" (focusout)="checkPhone()" type="text"
+                            formControlName="tel" mask="(00)0000-0000||(00)00000-0000">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7"
+                style="width: 100%;justify-content: center;margin-left: 0px;margin-right: 0px;border: solid;padding-left: 0px;padding-right: 0px;">
+                <div class="row"
+                    style="width: 100%;justify-content: center;font-weight: bold;border-bottom: solid 3px;margin-left: 0px;margin-right: 0px;">
+                    PAGAMENTOS EM ABERTO
+                </div>
+                <div style="overflow-y: auto; width: 100%; height: 7rem;">
+                    <ng-container *ngIf="debitos.status == 'ok'">
+                        <div style="background-color: #74ef79bf;">
+                            <div class="row"
+                                style="font-weight: bold;width: 100%;margin-left: 0px;margin-right: 0px;border-bottom: solid 1px;">
+                                <div class="col-md-12" style="text-align:center; padding-left: 3px;padding-right: 3px;">
+                                    CLÍNICO
+                                </div>
+                            </div>
+                            <div class="row"
+                                style="font-weight: bold;width: 100%;margin-left: 0px;margin-right: 0px;border-bottom: solid 1px;">
+                                <div class="col-md-4"
+                                    style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                    DOC</div>
+                                <div class="col-md-4"
+                                    style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                    VALOR</div>
+                                <div class="col-md-4" style="padding-left: 3px;padding-right: 3px;">VENCIMENTO</div>
+                            </div>
+                            <ng-container *ngFor="let d of debitos.array; let di = index">
+                                <div class="row"
+                                    style="width: 100%;margin-left: 0px;margin-right: 0px;border-bottom: solid 1px;">
+                                    <div class="col-md-4"
+                                        style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                        {{d.DOCUMENTO}}
+                                    </div>
+                                    <div class="col-md-4"
+                                        style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                        {{d.VALOR_ATUAL | currency}}
+                                    </div>
+                                    <div class="col-md-4" style="padding-left: 3px;padding-right: 3px;">
+                                        {{d.VENCIMENTO | date:'dd/MM/yyyy'}}
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <div class="row"
+                                style="width: 100%;margin-left: 0px;margin-right: 0px; border-bottom:  solid 1px;">
+                                <div class="col-md-4"
+                                    style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                    <b>TOTAL CLÍNICO:</b>
+                                </div>
+                                <div class="col-md-8" style="padding-left: 3px;padding-right: 3px;">
+                                    <b>{{debitos.total | currency}}</b>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="debitos.status == 'ok'">
+                        <div style="background-color: #74d2efbf;">
+                            <div class="row"
+                                style="font-weight: bold;width: 100%;margin-left: 0px;margin-right: 0px;border-bottom: solid 1px;">
+                                <div class="col-md-12" style="text-align:center; padding-left: 3px;padding-right: 3px;">
+                                    CLÍNICO
+                                </div>
+                            </div>
+                            <div class="row"
+                                style="font-weight: bold;width: 100%;margin-left: 0px;margin-right: 0px;border-bottom: solid 1px;">
+                                <div class="col-md-4"
+                                    style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                    DOC</div>
+                                <div class="col-md-4"
+                                    style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                    VALOR</div>
+                                <div class="col-md-4" style="padding-left: 3px;padding-right: 3px;">VENCIMENTO</div>
+                            </div>
+                            <ng-container *ngFor="let d of debitos.array; let di = index">
+                                <div class="row"
+                                    style="width: 100%;margin-left: 0px;margin-right: 0px;border-bottom: solid 1px;">
+                                    <div class="col-md-4"
+                                        style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                        {{d.DOCUMENTO}}
+                                    </div>
+                                    <div class="col-md-4"
+                                        style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                        {{d.VALOR_ATUAL | currency}}
+                                    </div>
+                                    <div class="col-md-4" style="padding-left: 3px;padding-right: 3px;">
+                                        {{d.VENCIMENTO | date:'dd/MM/yyyy'}}
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <div class="row"
+                                style="width: 100%;margin-left: 0px;margin-right: 0px; border-bottom:  solid 1px;">
+                                <div class="col-md-4"
+                                    style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                    <b>TOTAL CLÍNICO:</b>
+                                </div>
+                                <div class="col-md-8" style="padding-left: 3px;padding-right: 3px;">
+                                    <b>{{debitos.total | currency}}</b>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="debitos.status == 'ok'">
+                        <div style="background-color: #8674efbf;">
+                            <div class="row"
+                                style="font-weight: bold;width: 100%;margin-left: 0px;margin-right: 0px;border-bottom: solid 1px;">
+                                <div class="col-md-12" style="text-align:center; padding-left: 3px;padding-right: 3px;">
+                                    CLÍNICO
+                                </div>
+                            </div>
+                            <div class="row"
+                                style="font-weight: bold;width: 100%;margin-left: 0px;margin-right: 0px;border-bottom: solid 1px;">
+                                <div class="col-md-4"
+                                    style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                    DOC</div>
+                                <div class="col-md-4"
+                                    style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                    VALOR</div>
+                                <div class="col-md-4" style="padding-left: 3px;padding-right: 3px;">VENCIMENTO</div>
+                            </div>
+                            <ng-container *ngFor="let d of debitos.array; let di = index">
+                                <div class="row"
+                                    style="width: 100%;margin-left: 0px;margin-right: 0px;border-bottom: solid 1px;">
+                                    <div class="col-md-4"
+                                        style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                        {{d.DOCUMENTO}}
+                                    </div>
+                                    <div class="col-md-4"
+                                        style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                        {{d.VALOR_ATUAL | currency}}
+                                    </div>
+                                    <div class="col-md-4" style="padding-left: 3px;padding-right: 3px;">
+                                        {{d.VENCIMENTO | date:'dd/MM/yyyy'}}
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <div class="row"
+                                style="width: 100%;margin-left: 0px;margin-right: 0px; border-bottom:  solid 1px;">
+                                <div class="col-md-4"
+                                    style="border-right: solid 1px;padding-left: 3px;padding-right: 3px;">
+                                    <b>TOTAL CLÍNICO:</b>
+                                </div>
+                                <div class="col-md-8" style="padding-left: 3px;padding-right: 3px;">
+                                    <b>{{debitos.total | currency}}</b>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-12">
+                Observação sobre o contato
+                <textarea class="form-control" ngOnChanges placeholder="MÁXIMO 1000 CARACTERES" formControlName="obs"
+                    style="height: 8rem;resize: none;overflow-y: auto; text-transform: uppercase;"
+                    maxlength="1000"></textarea>
+                <a style="float: right; margin-top: 5px;">{{remainlength -
+                    contatoForm.controls["obs"].value.length}}</a>
+            </div>
+        </div>
+        <!-- <div class="row" style="margin-bottom: 20px;"> -->
+        <!-- <div class="col-md-6">
+            Telefone adicional (Opcional)
+            <input class="form-control" type="text" formControlname="tel" mask="(00)0000-0000||(00)0000-0000">
+        </div> -->
+        <!-- </div> -->
+        <div class="row" style="margin-bottom: 20px;">
+            <div class="col-md-4">
+                Status:
+                <select class="form-control" (change)="changeStats()" formControlName="status">
+                    <option value="contato_ok">Contato realizado</option>
+                    <option value="contato_fail">Falha no contato</option>
+                    <option value="acordo">Acordo fechado</option>
+                </select>
+            </div>
+        </div>
+        <ng-container *ngIf="contatoForm.controls['status'].value == 'contato_ok'">
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col-md-6">
+                    Agendar recontato <input type="checkbox" (change)="recChange(1)" formControlName="recontato"
+                        style="bottom: 4px; position: absolute; margin-left: 5px;">
+                </div>
+            </div>
+            <ng-container *ngIf="contatoForm.controls['recontato'].value == true">
+                <div class="row">
+                    <div class="col-md-4">
+                        Data do próximo contato
+                        <input class="form-control" type="date" formControlName="data_rec"
+                            (change)="checkDate('data_rec')">
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="contatoForm.controls['status'].value == 'acordo'">
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col-md-6">
+                    Agendar data prevista de pagamento <input type="checkbox" (change)="recChange(2)"
+                        formControlName="dtpagstats" style="bottom: 4px; position: absolute; margin-left: 5px;">
+                </div>
+            </div>
+            <ng-container *ngIf="contatoForm.controls['dtpagstats'].value == true">
+                <div class="row">
+                    <div class="col-md-4">
+                        Data prevista de pagamento
+                        <input class="form-control" type="date" formControlName="data_pag"
+                            (change)="checkDate('data_pag')">
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </form>
+    <div class="row" style="justify-content: center;">
+        <button class="btn btn-primary" *ngIf="contatoForm.valid == true" (click)="nextPage()">Prosseguir</button>
+    </div>
+</ng-container>
+<ng-container *ngIf="page == 1">
+    <div class="row">
+        <div class="col-md-7">
+            <b>PACIENTE: {{data.obj.nome | uppercase}}</b>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <b>CPF: {{data.obj.cpf}}</b>
+        </div>
+    </div>
+    <div class="row" style="justify-content: center;">
+        <button class="btn btn-danger" (click)="prevPage()">Retornar</button>
+    </div>
+</ng-container>
